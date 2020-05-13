@@ -1,124 +1,89 @@
-import React from 'react';
+import React, { ChangeEvent } from 'react';
 import { connect } from 'react-redux';
+import { User } from 'firebase';
 import {
-  Empty,
   Card,
-  Select,
   Input,
-  Checkbox,
+  Button,
+  Empty,
 } from 'antd';
 
 import actions from '../../actions';
-import { IState, ISettings, ISettingItem } from '../../reducers';
+import { IState, ISettings } from '../../reducers/index';
 
 interface IDashboardProps {
   settings: ISettings | false;
   loading: boolean;
+  user: User | null;
 }
 
-interface IDashboardState {
-  formEnabled: boolean;
-}
-
-export class Settings extends React.Component<IDashboardProps, IDashboardState> {
-  state = { formEnabled: false };
-
-  componentDidMount = () => {
-    actions.getSettings({});
+export class Settings extends React.Component<IDashboardProps, ISettings> {
+  state = {
+    displayName: '',
   };
 
-  getFormItem = (setting: ISettingItem) => {
-    const { formEnabled } = this.state;
-    const {
-      type,
-      value,
-      options,
-    } = setting;
-
-    switch (type) {
-      case 'image': {
-        return (
-          <div>
-            <Card>
-              <img src={value} alt=""/>
-            </Card>
-            <Input
-              defaultValue={value}
-              disabled={!formEnabled}
-            />
-          </div>
-        )
-      }
-      case 'select': {
-        return (
-          <Select
-            defaultValue={value}
-            disabled={!formEnabled}
-          >
-            {Object.values(options).map(v => (
-              <Select.Option value={v} key={v}>
-                {v}
-              </Select.Option>
-            ))}
-          </Select>
-        )
-      }
-      case 'string':
-      default: {
-        return (
-          <Input
-            defaultValue={value}
-            disabled={!formEnabled}
-          />
-        )
-      }
+  componentDidMount = () => {
+    const { user } = this.props;
+    if (user) {
+      actions.getSettings({ uid: user.uid });
     }
   };
 
-  get content() {
-    const { settings } = this.props;
-    const { formEnabled } = this.state;
+  onChange = (field: string) => (event: ChangeEvent<HTMLInputElement>) =>
+    // @ts-ignore
+    this.setState({ [field]: event.target.value });
 
-    return (
-      <div>
-        {Object.values(settings).map((value) => (
-          <Card bordered={false}>
-            {value.label}
-            <br/>
-            {this.getFormItem(value)}
-          </Card>
-        ))}
-        <Card
-          hoverable
-          onClick={() => this.setState({ formEnabled: !formEnabled })}
-        >
-          Enable inputs {formEnabled && ' (they still can\'t be saved)'}
-          <br/>
-          <Checkbox checked={formEnabled}/>
-        </Card>
-      </div>
-    )
-  }
+  onSubmit = () => {
+    const { user } = this.props;
+    if (user) {
+      actions.setSettings({
+        uid: user.uid,
+        settings: this.state,
+      });
+    }
+  };
 
   render = () => {
-    const { settings } = this.props;
+    const { settings, loading } = this.props;
+
+    if (!settings) {
+      return (
+        <Empty/>
+      )
+    }
 
     return (
       <Card>
-        {settings
-          ? (
-            this.content
-          ) : (
-            <Empty/>
-          )}
+        {Object
+          .entries(settings)
+          .map(([key, value]) => (
+            <Card
+              key={key}
+              title={key}
+            >
+              <Input
+                defaultValue={value}
+                onChange={this.onChange(key)}
+                disabled={loading}
+              />
+            </Card>
+          ))
+        }
+
+        <Button
+          onClick={this.onSubmit}
+          disabled={loading}
+        >
+          Submit
+        </Button>
       </Card>
     )
   }
 }
 
 const mapStateToProps = (state: IState) => {
-  const { settings, loading } = state;
-  return { settings, loading };
+  const { settings, loading, user } = state;
+  return { settings, loading, user };
 };
 
 export default connect(mapStateToProps)(Settings);

@@ -2,7 +2,7 @@ import React from 'react';
 import {
   Switch,
   Route,
-  Link, Redirect,
+  Link
 } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { Button, Empty, Card } from 'antd';
@@ -18,22 +18,15 @@ interface IRouterProps {
 function Router(props: IRouterProps) {
   return (
     <Switch>
-      <Route
-        key="login"
-        path="/login"
-        component={Login}
-      />
-      {props.isLoggedIn
-        ? (
-          routes.map((value: IRoute) =>
-            <Route
-              key={value.path}
-              path={value.path}
-              component={value.component}
-            />
-          )
-        ) : (
-          <Redirect to="/login"/>
+      {
+        routes.map((value: IRoute) =>
+          <Route
+            key={value.path}
+            path={value.path}
+            component={props.isLoggedIn
+              ? value.component
+              : Login}
+          />
         )
       }
       <Route path='/'>

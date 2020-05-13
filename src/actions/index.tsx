@@ -3,7 +3,7 @@ import { camelize } from '../helpers/utils';
 
 const dispatch = store.dispatch;
 
-interface IPayload {
+export interface IPayload {
   [key: string]: any;
 }
 
@@ -27,8 +27,10 @@ const createAsyncAction = (type: string) => {
 
 const actions: IActions = {
   ...createAsyncAction('LOGIN'),
-  ...createAsyncAction('GET_DASHBOARD'),
+  ...createAsyncAction('GET_MESSAGES'),
   ...createAsyncAction('GET_SETTINGS'),
+  ...createAsyncAction('SET_SETTINGS'),
+  ...createAsyncAction('SEND_MESSAGE'),
   logout: createAction('LOGOUT'),
 };
 

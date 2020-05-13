@@ -1,4 +1,4 @@
-import { IState } from '../reducers';
+import { IState } from '../reducers/index';
 
 export const camelize = (str: string) => {
   return str
