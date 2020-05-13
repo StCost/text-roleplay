@@ -31,6 +31,8 @@ const actions: IActions = {
   ...createAsyncAction('GET_SETTINGS'),
   ...createAsyncAction('SET_SETTINGS'),
   ...createAsyncAction('SEND_MESSAGE'),
+  ...createAsyncAction('SUBSCRIBE'),
+  ...createAsyncAction('UNSUBSCRIBE'),
   logout: createAction('LOGOUT'),
 };
 

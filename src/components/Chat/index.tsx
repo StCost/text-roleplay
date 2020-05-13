@@ -6,8 +6,10 @@ import {
   Card,
   Input,
   message as notify,
+  Button,
 } from 'antd';
 
+import './chat.scss';
 import actions from '../../actions';
 import { IMessage, ISettings, IState } from '../../reducers';
 
@@ -30,24 +32,28 @@ class Chat extends Component<IChatProps, IChatState> {
   };
 
   componentDidMount = () => {
-    this.setState({ message: localStorage.getItem('message') || ''});
-    actions.getMessages({});
+    actions.subscribe({});
+    this.setState({ message: localStorage.getItem('message') || '' });
   };
 
-  onChangeMessage = (event: ChangeEvent<HTMLInputElement>) => {
-    const message = event.target.value;
-    localStorage.setItem('message', message);
-    this.setState({ message });
+  componentWillUnmount = () => {
+    actions.unsubscribe({});
   };
 
   componentDidUpdate = (prevProps: IChatProps) => {
-    if (prevProps.loading && !this.props.loading && this.state.sending) {
+    if (this.state.sending && prevProps.messages !== this.props.messages) {
       localStorage.setItem('message', '');
       this.setState({
         message: '',
         sending: false,
       });
     }
+  };
+
+  onChangeMessage = (event: ChangeEvent<HTMLTextAreaElement>) => {
+    const message = event.target.value;
+    localStorage.setItem('message', message);
+    this.setState({ message });
   };
 
   onSendMessage = async () => {
@@ -80,22 +86,32 @@ class Chat extends Component<IChatProps, IChatState> {
     });
   };
 
+  getTime = (time: string) => {
+    const date = new Date(time);
+    return `${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}`
+  };
+
   render = () => {
     const { messages, loading } = this.props;
 
     return (
-      <Card>
-        {messages.map((m: IMessage) => (
-          <Card
-            title={m.author}
-            key={m.time}
-          >
-            {m.body}
-          </Card>
-        ))}
-        <div>
-          <Input
+      <div className="chat-wrapper">
+        <div className="chat-body">
+          {messages.map((m: IMessage) => (
+            <Card
+              className="chat-message"
+              title={m.author}
+              key={m.time}
+              extra={this.getTime(m.time)}
+            >
+              {m.body}
+            </Card>
+          ))}
+        </div>
+        <div className="chat-controls">
+          <Input.TextArea
             placeholder="Enter message"
+            autoSize={{ minRows: 1, maxRows: 10 }}
             onChange={this.onChangeMessage}
             onPressEnter={this.onSendMessage}
             value={this.state.message}
@@ -105,7 +121,7 @@ class Chat extends Component<IChatProps, IChatState> {
             onClick={this.onSendMessage}
           />
         </div>
-      </Card>
+      </div>
     )
   }
 }

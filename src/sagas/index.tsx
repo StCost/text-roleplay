@@ -27,25 +27,6 @@ function* logout() {
   yield auth.signOut();
 }
 
-function* getMessages(payload: IPayload) {
-  const { startFrom = 0 } = payload;
-
-  try {
-    const rawMessages = yield database
-      .ref('messages')
-      .orderByChild('time')
-      .startAt(startFrom)
-      .limitToLast(10)
-      .once('value');
-
-    const messages = rawMessages.val() || {};
-    actions.getMessagesSuccess({ messages: Object.values(messages) });
-  } catch (error) {
-    console.error(error);
-    actions.getMessagesFail({ error });
-  }
-}
-
 function* getSettings(payload: IPayload) {
   const { uid } = payload;
 
@@ -81,14 +62,16 @@ function* setSettings(payload: IPayload) {
 
 function* sendMessage(payload: IPayload) {
   const { uid, message } = payload;
+  const time = new Date().getTime();
 
   try {
     yield database
       .ref('messages')
-      .push({
+      .child(`${time}`)
+      .set({
+        time,
         author: uid,
         body: message,
-        time: new Date().getTime(),
       });
     localStorage.setItem('message', '');
     actions.sendMessageSuccess({});
@@ -98,11 +81,27 @@ function* sendMessage(payload: IPayload) {
   }
 }
 
+function subscribe() {
+  database
+    .ref('messages')
+    .orderByKey()
+    .limitToLast(100)
+    .on('value', (rawMessages) => {
+      const messages = Object.values(rawMessages.val());
+      actions.getMessagesSuccess({ messages });
+    });
+}
+
+function unsubscribe() {
+  database.ref('messages').off();
+}
+
 export default function* watchForActions() {
   yield takeEvery('LOGIN', login);
   yield takeEvery('LOGOUT', logout);
-  yield takeEvery('GET_MESSAGES', getMessages);
   yield takeEvery('GET_SETTINGS', getSettings);
   yield takeEvery('SET_SETTINGS', setSettings);
   yield takeEvery('SEND_MESSAGE', sendMessage);
+  yield takeEvery('SUBSCRIBE', subscribe);
+  yield takeEvery('UNSUBSCRIBE', unsubscribe);
 }

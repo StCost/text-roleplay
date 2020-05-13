@@ -2,7 +2,8 @@ import React from 'react';
 import {
   Switch,
   Route,
-  Link
+  Link,
+  Redirect,
 } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { Button, Empty, Card } from 'antd';
@@ -25,16 +26,22 @@ function Router(props: IRouterProps) {
             path={value.path}
             component={props.isLoggedIn
               ? value.component
-              : Login}
+              : Login
+            }
           />
         )
       }
-      <Route path='/'>
+      <Redirect
+        from="/"
+        to="/chat"
+        exact
+      />
+      <Route path="*">
         <Card>
           <Empty description="404 страница не найдена"/>
           <br/>
           <Card.Meta description={
-            <Link to='/login'>
+            <Link to='/chat'>
               <Button
                 type='primary'
                 style={{ width: '100%' }}

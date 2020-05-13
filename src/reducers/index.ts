@@ -83,7 +83,6 @@ const reducer = (state = initialState, action: IAction) => {
       }
     }
     case 'GET_SETTINGS_SUCCESS': {
-      console.log(action);
       return {
         ...state,
         settings: action.settings || defaultSettings,
