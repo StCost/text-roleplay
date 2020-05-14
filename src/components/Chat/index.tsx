@@ -1,4 +1,4 @@
-import React, { ChangeEvent, Component } from 'react';
+import React, { ChangeEvent, Component, KeyboardEvent } from 'react';
 import { connect } from 'react-redux';
 import { User } from 'firebase';
 import { SendOutlined } from '@ant-design/icons';
@@ -6,7 +6,6 @@ import {
   Card,
   Input,
   message as notify,
-  Button,
 } from 'antd';
 
 import './chat.scss';
@@ -56,7 +55,15 @@ class Chat extends Component<IChatProps, IChatState> {
     this.setState({ message });
   };
 
-  onSendMessage = async () => {
+  onKeyDown = (event: KeyboardEvent<HTMLTextAreaElement>) => {
+    if (event.key === 'Enter' && !event.shiftKey) {
+      event.preventDefault();
+
+      this.onSendMessage();
+    }
+  };
+
+  onSendMessage = () => {
     const { message } = this.state;
     const { settings, user, loading } = this.props;
 
@@ -113,7 +120,7 @@ class Chat extends Component<IChatProps, IChatState> {
             placeholder="Enter message"
             autoSize={{ minRows: 1, maxRows: 10 }}
             onChange={this.onChangeMessage}
-            onPressEnter={this.onSendMessage}
+            onKeyDown={this.onKeyDown}
             value={this.state.message}
             disabled={loading}
           />

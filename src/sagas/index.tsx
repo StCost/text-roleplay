@@ -87,7 +87,7 @@ function subscribe() {
     .orderByKey()
     .limitToLast(100)
     .on('value', (rawMessages) => {
-      const messages = Object.values(rawMessages.val());
+      const messages = Object.values(rawMessages.val()).reverse();
       actions.getMessagesSuccess({ messages });
     });
 }

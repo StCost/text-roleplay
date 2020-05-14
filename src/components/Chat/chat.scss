@@ -1,19 +1,22 @@
 .chat-wrapper {
   display: flex;
   flex-direction: column;
-  min-height: 100vh;
   height: auto;
   width: 600px;
+  justify-content: flex-end;
 
   .chat-body {
     display: flex;
-    flex-direction: column;
+    flex-direction: column-reverse;
+    height: 100vh;
+    overflow: auto;
 
     .chat-message {
       margin: 6px 0;
 
       .ant-card-body {
         word-break: break-word;
+        white-space: pre-line;
       }
     }
   }
@@ -25,7 +28,9 @@
     position: sticky;
     bottom: 0;
     background: white;
+    padding-top: 4px;
     padding-bottom: 32px;
+    border-top: 1px solid lightgray;
 
     > span {
       padding: 6px;
