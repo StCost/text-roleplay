@@ -103,7 +103,7 @@ function* getMessages() {
   const rawMessages = yield database
     .ref('messages')
     .orderByKey()
-    .limitToLast(5)
+    .limitToLast(30)
     .once('value');
 
   const messages = Object.values(rawMessages.val());

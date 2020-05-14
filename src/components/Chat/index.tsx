@@ -104,14 +104,22 @@ class Chat extends Component<IChatProps, IChatState> {
     actions.getMoreMessages({ firstMessage: this.props.messages[this.props.messages.length - 1] })
   };
 
+  onScroll = (event: any) => {
+    if (event.target.scrollTop <= 50) {
+      this.getMoreMessages();
+    }
+  };
+
   render = () => {
     const { messages, loading } = this.props;
 
     return (
-      <div className="chat-wrapper">
-        <button onClick={this.getMoreMessages}>Load more</button>
-        <Spin spinning={loading}>
-          <div className="chat-body">
+      <Spin spinning={loading}>
+        <div className={`chat-wrapper`}>
+          <div
+            className="chat-body"
+            onScroll={this.onScroll}
+          >
             {messages.map((m: IMessage) => (
               <Card
                 className="chat-message"
@@ -123,21 +131,20 @@ class Chat extends Component<IChatProps, IChatState> {
               </Card>
             ))}
           </div>
-        </Spin>
-        <div className="chat-controls">
-          <Input.TextArea
-            placeholder="Enter message"
-            autoSize={{ minRows: 1, maxRows: 10 }}
-            onChange={this.onChangeMessage}
-            onKeyDown={this.onKeyDown}
-            value={this.state.message}
-            disabled={loading}
-          />
-          <SendOutlined
-            onClick={this.onSendMessage}
-          />
+          <div className="chat-controls">
+            <Input.TextArea
+              placeholder="Enter message"
+              autoSize={{ minRows: 1, maxRows: 10 }}
+              onChange={this.onChangeMessage}
+              onKeyDown={this.onKeyDown}
+              value={this.state.message}
+            />
+            <SendOutlined
+              onClick={this.onSendMessage}
+            />
+          </div>
         </div>
-      </div>
+      </Spin>
     )
   }
 }
