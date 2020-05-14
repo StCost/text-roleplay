@@ -41,6 +41,7 @@ const reducer = (state = initialState, action: IAction) => {
   switch (action.type) {
     case 'LOGIN':
     case 'GET_MESSAGES':
+    case 'GET_MORE_MESSAGES':
     case 'SEND_MESSAGE':
     case 'GET_SETTINGS':
     case 'SET_SETTINGS': {
@@ -51,8 +52,9 @@ const reducer = (state = initialState, action: IAction) => {
     }
     case 'LOGIN_FAIL':
     case 'GET_MESSAGES_FAIL':
+    case 'GET_MORE_MESSAGES_SUCCESS':
+    case 'GET_MORE_MESSAGES_FAIL':
     case 'SEND_MESSAGE_FAIL':
-    case 'SEND_MESSAGE_SUCCESS':
     case 'GET_SETTINGS_FAIL':
     case 'SET_SETTINGS_SUCCESS':
     case 'SET_SETTINGS_FAIL': {
@@ -76,9 +78,17 @@ const reducer = (state = initialState, action: IAction) => {
       }
     }
     case 'GET_MESSAGES_SUCCESS': {
+      const messages = action.concat
+        ? [...state.messages, ...action.messages]
+        : action.messages;
+
       return {
         ...state,
-        messages: action.messages,
+        messages: messages
+          .sort((a: IMessage, b: IMessage) => parseInt(b.time) - parseInt(a.time))
+          .filter((item: IMessage, pos: number, self: IMessage[]) =>
+            self.findIndex((_i: IMessage) => _i.time === item.time) === pos
+          ),
         loading: false,
       }
     }

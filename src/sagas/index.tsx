@@ -85,15 +85,43 @@ function subscribe() {
   database
     .ref('messages')
     .orderByKey()
-    .limitToLast(100)
+    .limitToLast(1)
     .on('value', (rawMessages) => {
-      const messages = Object.values(rawMessages.val()).reverse();
-      actions.getMessagesSuccess({ messages });
+      const messages = Object.values(rawMessages.val());
+      actions.getMessagesSuccess({
+        messages,
+        concat: true
+      });
     });
 }
 
 function unsubscribe() {
   database.ref('messages').off();
+}
+
+function* getMessages() {
+  const rawMessages = yield database
+    .ref('messages')
+    .orderByKey()
+    .limitToLast(5)
+    .once('value');
+
+  const messages = Object.values(rawMessages.val());
+  actions.getMessagesSuccess({ messages });
+}
+
+function* getMoreMessages(payload: IPayload) {
+  const { firstMessage } = payload;
+
+  const rawMessages = yield database
+    .ref('messages')
+    .orderByKey()
+    .endAt(`${firstMessage.time}`)
+    .limitToLast(5)
+    .once('value');
+
+  const messages = Object.values(rawMessages.val());
+  actions.getMessagesSuccess({ messages, concat: true });
 }
 
 export default function* watchForActions() {
@@ -102,6 +130,8 @@ export default function* watchForActions() {
   yield takeEvery('GET_SETTINGS', getSettings);
   yield takeEvery('SET_SETTINGS', setSettings);
   yield takeEvery('SEND_MESSAGE', sendMessage);
+  yield takeEvery('GET_MESSAGES', getMessages);
+  yield takeEvery('GET_MORE_MESSAGES', getMoreMessages);
   yield takeEvery('SUBSCRIBE', subscribe);
   yield takeEvery('UNSUBSCRIBE', unsubscribe);
 }
