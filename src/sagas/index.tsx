@@ -87,7 +87,7 @@ function subscribe() {
     .orderByKey()
     .limitToLast(1)
     .on('value', (rawMessages) => {
-      const messages = Object.values(rawMessages.val());
+      const messages = Object.values(rawMessages.val() || {});
       actions.getMessagesSuccess({
         messages,
         concat: true
@@ -106,7 +106,7 @@ function* getMessages() {
     .limitToLast(30)
     .once('value');
 
-  const messages = Object.values(rawMessages.val());
+  const messages = Object.values(rawMessages.val() || {});
   actions.getMessagesSuccess({ messages });
 }
 
@@ -120,7 +120,7 @@ function* getMoreMessages(payload: IPayload) {
     .limitToLast(5)
     .once('value');
 
-  const messages = Object.values(rawMessages.val());
+  const messages = Object.values(rawMessages.val() || {});
   actions.getMessagesSuccess({ messages, concat: true });
 }
 
