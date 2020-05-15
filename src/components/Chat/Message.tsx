@@ -30,7 +30,7 @@ const Message = (props: IMessageProps) => {
   const messageDate = [date.getDate(), date.getMonth() + 1, date.getFullYear()].map(dd).join('.');
 
   const title = user && (
-    <Link to={`/user/${user.uid}`}>
+    <Link to={`./user/${user.uid}`}>
       <div className="chat-message__title">
         <Avatar
           avatar={user.avatar}

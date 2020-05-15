@@ -13,17 +13,17 @@ export interface IRoute {
 const routes: IRoute[] = [
   {
     label: 'Chat',
-    path: '/chat',
+    path: '/text-roleplay/chat',
     component: Chat,
   },
   {
     label: 'Settings',
-    path: '/settings',
+    path: '/text-roleplay/settings',
     component: Settings,
   },
   {
     label: 'Logout',
-    path: '/logout',
+    path: '/text-roleplay/logout',
     component: Logout,
   },
 ];

@@ -23,6 +23,7 @@ function* login(action: AnyAction) {
 }
 
 function* logout() {
+  localStorage.removeItem('user');
   localStorage.setItem('loggedIn', 'false');
   yield auth.signOut();
 }

@@ -17,6 +17,17 @@ interface IRouterProps {
 }
 
 function Router(props: IRouterProps) {
+  if (!props.isLoggedIn) {
+    return (
+      <Switch>
+        <Route
+          path="*"
+          component={Login}
+        />
+      </Switch>
+    )
+  }
+
   return (
     <Switch>
       {
@@ -24,39 +35,11 @@ function Router(props: IRouterProps) {
           <Route
             key={value.path}
             path={value.path}
-            component={props.isLoggedIn
-              ? value.component
-              : Login
-            }
+            component={value.component}
           />
         )
       }
-      <Redirect
-        from="/"
-        to="/chat"
-        exact
-      />
-      <Redirect
-        from="/text-roleplay"
-        to="/chat"
-        exact
-      />
-      <Route path="*">
-        <Card>
-          <Empty description="404 страница не найдена"/>
-          <br/>
-          <Card.Meta description={
-            <Link to='/chat'>
-              <Button
-                type='primary'
-                style={{ width: '100%' }}
-              >
-                Go to working page
-              </Button>
-            </Link>
-          }/>
-        </Card>
-      </Route>
+      <Redirect to="/text-roleplay/chat"/>
     </Switch>
   );
 }
