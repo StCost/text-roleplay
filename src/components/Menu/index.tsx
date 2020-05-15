@@ -9,7 +9,7 @@ import routes, { IRoute } from '../../configs/routes';
 function Menu(props: RouteComponentProps) {
   return (
     <AntdMenu
-      style={{ width: 256 }}
+      style={{ width: '124px' }}
       mode="inline"
       selectedKeys={[props.location.pathname]}
     >
