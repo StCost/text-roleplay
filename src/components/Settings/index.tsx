@@ -40,11 +40,18 @@ export class Settings extends React.Component<ISettingsProps, ISettings> {
     this.setState({ [field]: event.target.value });
 
   onSubmit = () => {
-    const { user } = this.props;
+    const { user, settings } = this.props;
+
     if (user) {
+      const newSettings = {};
+      Object.entries(settings).forEach(([key, value]) => {
+        // @ts-ignore
+        newSettings[key] = this.state[key] || value;
+      });
+
       actions.setSettings({
         uid: user.uid,
-        settings: this.state,
+        settings: newSettings,
       });
     }
   };
@@ -63,13 +70,17 @@ export class Settings extends React.Component<ISettingsProps, ISettings> {
               disabled={loading}
             />
             <Avatar
-              avatar={avatar}
+              avatar={avatar || value}
               nickname={nickname || (settings && settings.nickname) || ''}
               size={128}
               style={{ margin: '8px auto', display: 'block' }}
             />
           </div>
         );
+
+      // Don't display UID editor
+      case 'uid':
+        return false;
 
       default:
         return (
@@ -96,14 +107,17 @@ export class Settings extends React.Component<ISettingsProps, ISettings> {
         <Spin spinning={loading}>
           {Object
             .entries(settings)
-            .map(([key, value]) => (
-              <Card
-                key={key}
-                title={key.toUpperCase()}
-              >
-                {this.getField(key, value)}
-              </Card>
-            ))
+            .map(([key, value]) => {
+              const field = this.getField(key, value);
+              return field && (
+                <Card
+                  key={key}
+                  title={key.toUpperCase()}
+                >
+                  {field}
+                </Card>
+              )
+            })
           }
         </Spin>
 

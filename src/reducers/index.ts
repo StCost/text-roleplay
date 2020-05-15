@@ -18,6 +18,7 @@ export interface IState {
   settings: ISettings | false;
   loading: boolean;
   messages: IMessage[];
+  users: {[key: string]: ISettings}
 }
 
 const user = JSON.parse(localStorage.getItem('user') || 'null');
@@ -27,16 +28,19 @@ export const initialState: IState = {
   settings: false,
   loading: false,
   messages: [],
+  users: {},
 };
 
 export interface ISettings {
   nickname: string;
   avatar: string;
+  uid: string,
 }
 
 export const defaultSettings = {
   nickname: '',
   avatar: '',
+  uid: '',
 };
 
 const reducer = (state = initialState, action: IAction) => {
@@ -46,6 +50,7 @@ const reducer = (state = initialState, action: IAction) => {
     case 'GET_MORE_MESSAGES':
     case 'SEND_MESSAGE':
     case 'GET_SETTINGS':
+    case 'GET_USER':
     case 'SET_SETTINGS': {
       return {
         ...state,
@@ -59,6 +64,7 @@ const reducer = (state = initialState, action: IAction) => {
     case 'SEND_MESSAGE_FAIL':
     case 'GET_SETTINGS_FAIL':
     case 'SET_SETTINGS_SUCCESS':
+    case 'GET_USER_FAIL':
     case 'SET_SETTINGS_FAIL': {
       return {
         ...state,
@@ -98,6 +104,16 @@ const reducer = (state = initialState, action: IAction) => {
       return {
         ...state,
         settings: action.settings || defaultSettings,
+        loading: false,
+      }
+    }
+    case 'GET_USER_SUCCESS': {
+      return {
+        ...state,
+        users: {
+          ...state.users,
+          [action.user.uid]: action.user,
+        },
         loading: false,
       }
     }

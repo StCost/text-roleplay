@@ -51,7 +51,10 @@ function* setSettings(payload: IPayload) {
     yield database
       .ref('settings')
       .child(uid)
-      .set(settings);
+      .set({
+        ...settings,
+        uid,
+      });
 
     actions.setSettingsSuccess({});
     actions.getSettings({ uid });
