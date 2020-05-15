@@ -161,7 +161,7 @@ function* updateLastOnline() {
     .set(time);
 }
 
-function* uploadFile(payload: IPayload) {
+function uploadFile(payload: IPayload) {
   const { file, uid } = payload;
 
   const request = new XMLHttpRequest();

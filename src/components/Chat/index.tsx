@@ -120,8 +120,7 @@ class Chat extends Component<IChatProps, IChatState> {
     }
   };
 
-  uploadFile = (file: File, preventDefault: () => void) => {
-    console.log(file);
+  uploadFile = (file: File, event: ClipboardEvent<HTMLTextAreaElement> | DragEvent<HTMLTextAreaElement>) => {
     const { user } = this.props;
     if (file && user) {
       if (file.type.indexOf('image') > -1) {
@@ -129,18 +128,18 @@ class Chat extends Component<IChatProps, IChatState> {
       } else {
         notify.error('Only images can be uploaded');
       }
-      preventDefault();
+      event.preventDefault();
     }
   };
 
   onPaste = (e: ClipboardEvent<HTMLTextAreaElement>) => {
-    this.uploadFile(e.clipboardData.files[0], e.preventDefault)
+    this.uploadFile(e.clipboardData.files[0], e)
   };
 
   onDrop = (e: DragEvent<HTMLTextAreaElement>) => {
     const file = e.dataTransfer.items[0].getAsFile();
     if (file)
-      this.uploadFile(file, e.preventDefault)
+      this.uploadFile(file, e)
   };
 
   render = () => {
