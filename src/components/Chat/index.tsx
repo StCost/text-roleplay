@@ -1,4 +1,10 @@
-import React, { ChangeEvent, Component, KeyboardEvent } from 'react';
+import React, {
+  ChangeEvent,
+  Component,
+  KeyboardEvent,
+  ClipboardEvent,
+  DragEvent,
+} from 'react';
 import { connect } from 'react-redux';
 import { User } from 'firebase';
 import { SendOutlined } from '@ant-design/icons';
@@ -108,10 +114,33 @@ class Chat extends Component<IChatProps, IChatState> {
     actions.getMoreMessages({ firstMessage: this.props.messages[this.props.messages.length - 1] })
   };
 
-  onScroll = (event: any) => {
-    if (event.target.scrollTop <= 50) {
+  onScroll = (event: React.UIEvent<HTMLDivElement, UIEvent>) => {
+    if (event.currentTarget.scrollTop <= 50) {
       this.getMoreMessages();
     }
+  };
+
+  uploadFile = (file: File, preventDefault: () => void) => {
+    console.log(file);
+    const { user } = this.props;
+    if (file && user) {
+      if (file.type.indexOf('image') > -1) {
+        actions.uploadFile({ uid: user.uid, file });
+      } else {
+        notify.error('Only images can be uploaded');
+      }
+      preventDefault();
+    }
+  };
+
+  onPaste = (e: ClipboardEvent<HTMLTextAreaElement>) => {
+    this.uploadFile(e.clipboardData.files[0], e.preventDefault)
+  };
+
+  onDrop = (e: DragEvent<HTMLTextAreaElement>) => {
+    const file = e.dataTransfer.items[0].getAsFile();
+    if (file)
+      this.uploadFile(file, e.preventDefault)
   };
 
   render = () => {
@@ -139,6 +168,8 @@ class Chat extends Component<IChatProps, IChatState> {
               onChange={this.onChangeMessage}
               onKeyDown={this.onKeyDown}
               value={this.state.message}
+              onPaste={this.onPaste}
+              onDrop={this.onDrop}
             />
             <SendOutlined
               onClick={this.onSendMessage}

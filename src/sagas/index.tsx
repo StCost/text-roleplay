@@ -161,6 +161,30 @@ function* updateLastOnline() {
     .set(time);
 }
 
+function* uploadFile(payload: IPayload) {
+  const { file, uid } = payload;
+
+  const request = new XMLHttpRequest();
+  const formData = new FormData();
+
+  formData.append('image', file);
+
+  request.open('POST', 'https://api.imgur.com/3/image/');
+  request.setRequestHeader('Authorization', `Client-ID ea2c833b74d4583`);
+  request.onreadystatechange = () => {
+    if (request.status === 200 && request.readyState === 4) {
+      let res = JSON.parse(request.responseText);
+
+      actions.sendMessage({
+        uid,
+        message: res.data.link,
+      });
+    }
+  };
+
+  request.send(formData);
+}
+
 export default function* watchForActions() {
   yield takeLatest('LOGIN', login);
   yield takeLatest('LOGOUT', logout);
@@ -173,4 +197,5 @@ export default function* watchForActions() {
   yield takeLatest('SUBSCRIBE', subscribe);
   yield takeLatest('UPDATE_LAST_ONLINE', updateLastOnline);
   yield takeLatest('UNSUBSCRIBE', unsubscribe);
+  yield takeLatest('UPLOAD_FILE', uploadFile);
 }

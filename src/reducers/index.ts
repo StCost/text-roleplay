@@ -58,6 +58,7 @@ const reducer = (state = initialState, action: IAction) => {
     case 'GET_MORE_MESSAGES':
     case 'SEND_MESSAGE':
     case 'GET_SETTINGS':
+    case 'UPLOAD_FILE':
     case 'SET_SETTINGS': {
       return {
         ...state,

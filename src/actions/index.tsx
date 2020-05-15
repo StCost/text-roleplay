@@ -35,6 +35,7 @@ const actions: IActions = {
   ...createAsyncAction('SEND_MESSAGE'),
   ...createAsyncAction('SUBSCRIBE'),
   ...createAsyncAction('UNSUBSCRIBE'),
+  ...createAsyncAction('UPLOAD_FILE'),
   updateLastOnline: createAction('UPDATE_LAST_ONLINE'),
   logout: createAction('LOGOUT'),
 };

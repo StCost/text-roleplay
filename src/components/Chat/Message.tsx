@@ -4,12 +4,13 @@ import { Link } from 'react-router-dom';
 
 import { IMessage, ISettings } from '../../reducers';
 import Avatar from '../Avatar';
+import MessageBody from './MessageBody';
 import {
   getDate,
   getFullTime,
   getTime,
   isOnline
-} from "../../helpers/utils";
+} from '../../helpers/utils';
 
 interface IMessageProps {
   message: IMessage,
@@ -55,7 +56,7 @@ const Message = (props: IMessageProps) => {
         </Tooltip>
       )}
     >
-      {body}
+      <MessageBody message={body}/>
     </Card>
   );
 };
