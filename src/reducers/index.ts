@@ -1,4 +1,5 @@
 import { User } from 'firebase';
+import { processMessages } from '../helpers/utils';
 
 export interface IAction {
   type: string;
@@ -10,6 +11,8 @@ export interface IMessage {
   author: string;
   time: number;
   body: string;
+  // Remove header and top margin of message, because author is the same
+  grouped?: boolean;
 }
 
 export interface IUsers {
@@ -99,11 +102,7 @@ const reducer = (state = initialState, action: IAction) => {
 
       return {
         ...state,
-        messages: messages
-          .sort((a: IMessage, b: IMessage) => b.time - a.time)
-          .filter((item: IMessage, pos: number, self: IMessage[]) =>
-            self.findIndex((_i: IMessage) => _i.time === item.time) === pos
-          ),
+        messages: processMessages(messages),
         loading: false,
       }
     }

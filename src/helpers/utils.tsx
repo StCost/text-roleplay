@@ -1,4 +1,5 @@
 import actions from '../actions';
+import { IMessage } from "../reducers";
 
 export const camelize = (str: string) => {
   return str
@@ -75,4 +76,24 @@ export const isURL = (str: string) => {
     '(\\?[;&a-z\\d%_.~+=-]*)?'+ // query string
     '(\\#[-a-z\\d_]*)?$','i'); // fragment locator
   return !!pattern.test(str);
+};
+
+export const processMessages = (messages: IMessage[]) => {
+  return messages
+    .filter((item: IMessage, pos: number, self: IMessage[]) =>
+      self.findIndex((_i: IMessage) => _i.time === item.time) === pos
+    )
+    .sort((a: IMessage, b: IMessage) => b.time - a.time)
+    .map((m: IMessage, index: number, messages: IMessage[]) => {
+      if (index < messages.length - 2) {
+        console.log(m.body, messages[index + 1].body, m.author === messages[index + 1].author);
+        if (m.author === messages[index + 1].author) {
+          return {
+            ...m,
+            grouped: true,
+          }
+        }
+      }
+      return m;
+    })
 };

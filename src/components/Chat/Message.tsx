@@ -22,6 +22,7 @@ const Message = (props: IMessageProps) => {
     message: {
       time,
       body,
+      grouped,
     },
     user,
   } = props;
@@ -47,7 +48,7 @@ const Message = (props: IMessageProps) => {
 
   return (
     <Card
-      className="chat-message"
+      className={`chat-message ${grouped ? 'grouped' : ''}`}
       title={title}
       key={time}
       extra={(
