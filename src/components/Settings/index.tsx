@@ -9,6 +9,8 @@ import {
   Spin,
 } from 'antd';
 
+import { ClearOutlined } from '@ant-design/icons';
+
 import actions from '../../actions';
 import { IState, ISettings, defaultSettings } from '../../reducers';
 import Avatar from '../Avatar';
@@ -29,26 +31,28 @@ export class Settings extends React.Component<ISettingsProps, ISettings> {
     }
   };
 
-  componentDidUpdate = () => {
-    if (this.props.settings && this.state !== this.props.settings) {
-      // this.setState(this.props.settings)
-    }
-  };
-
   onChange = (field: string) => (event: ChangeEvent<HTMLInputElement>) =>
     // @ts-ignore
     this.setState({ [field]: event.target.value });
 
+  getNewSettings = () => {
+    const { settings } = this.props;
+
+    const newSettings = {};
+    Object.entries(settings).forEach(([key, value]) => {
+      // @ts-ignore
+      newSettings[key] = this.state[key] || value;
+    });
+    return newSettings;
+  };
+
   onSubmit = () => {
-    const { user, settings } = this.props;
+    this.setSettings(this.getNewSettings());
+  };
 
+  setSettings = (newSettings: {}) => {
+    const { user } = this.props;
     if (user) {
-      const newSettings = {};
-      Object.entries(settings).forEach(([key, value]) => {
-        // @ts-ignore
-        newSettings[key] = this.state[key] || value;
-      });
-
       actions.setSettings({
         uid: user.uid,
         settings: newSettings,
@@ -64,11 +68,22 @@ export class Settings extends React.Component<ISettingsProps, ISettings> {
       case 'avatar':
         return (
           <div>
-            <Input
-              defaultValue={value}
-              onChange={this.onChange(key)}
-              disabled={loading}
-            />
+            <div style={{ display: 'flex' }}>
+              <Input
+                defaultValue={avatar || value}
+                onChange={this.onChange(key)}
+                disabled={loading}
+              />
+              <Button
+                onClick={() => this.setSettings({
+                  ...this.getNewSettings(),
+                  avatar: '',
+                })}
+                disabled={!(avatar || value)}
+              >
+                <ClearOutlined/>
+              </Button>
+            </div>
             <Avatar
               avatar={avatar || value}
               nickname={nickname || (settings && settings.nickname) || ''}

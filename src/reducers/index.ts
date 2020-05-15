@@ -12,13 +12,17 @@ export interface IMessage {
   body: string;
 }
 
+export interface IUsers {
+  [key: string]: ISettings;
+}
+
 export interface IState {
   user: User | null;
   isLoggedIn: boolean;
   settings: ISettings | false;
   loading: boolean;
   messages: IMessage[];
-  users: {[key: string]: ISettings}
+  users: IUsers;
 }
 
 const user = JSON.parse(localStorage.getItem('user') || 'null');
@@ -50,7 +54,6 @@ const reducer = (state = initialState, action: IAction) => {
     case 'GET_MORE_MESSAGES':
     case 'SEND_MESSAGE':
     case 'GET_SETTINGS':
-    case 'GET_USER':
     case 'SET_SETTINGS': {
       return {
         ...state,
@@ -64,7 +67,6 @@ const reducer = (state = initialState, action: IAction) => {
     case 'SEND_MESSAGE_FAIL':
     case 'GET_SETTINGS_FAIL':
     case 'SET_SETTINGS_SUCCESS':
-    case 'GET_USER_FAIL':
     case 'SET_SETTINGS_FAIL': {
       return {
         ...state,
@@ -114,7 +116,6 @@ const reducer = (state = initialState, action: IAction) => {
           ...state.users,
           [action.user.uid]: action.user,
         },
-        loading: false,
       }
     }
     default:

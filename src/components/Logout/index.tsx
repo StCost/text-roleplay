@@ -12,6 +12,7 @@ const Logout = () => {
       <Avatar
         src={byeLink}
         size={256}
+        style={{ margin: '0 auto', display: 'block' }}
       />
       <br/>
       <br/>

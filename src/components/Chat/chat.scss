@@ -18,6 +18,20 @@
     .chat-message {
       margin: 6px 0;
 
+      .chat-message__title {
+        display: flex;
+        align-items: center;
+        color: black;
+
+        .chat-message__nickname {
+          margin-left: 24px;
+        }
+      }
+
+      .chat-time {
+        cursor: pointer;
+      }
+
       .ant-card-body {
         word-break: break-word;
         white-space: pre-line;

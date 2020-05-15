@@ -128,10 +128,27 @@ function* getMoreMessages(payload: IPayload) {
   actions.getMessagesSuccess({ messages, concat: true });
 }
 
+const requestedUsers: {[key: string]: true} = {};
+function getUser(payload: IPayload) {
+  const { uid } = payload;
+
+  if (requestedUsers[uid]) return;
+  requestedUsers[uid] = true;
+  console.log('sub', uid, new Date().getTime())
+  database
+    .ref('settings')
+    .child(uid)
+    .on('value', (rawUser) => {
+      const user = rawUser.val() || {};
+      actions.getUserSuccess({ user });
+    });
+}
+
 export default function* watchForActions() {
   yield takeEvery('LOGIN', login);
   yield takeEvery('LOGOUT', logout);
   yield takeEvery('GET_SETTINGS', getSettings);
+  yield takeEvery('GET_USER', getUser);
   yield takeEvery('SET_SETTINGS', setSettings);
   yield takeEvery('SEND_MESSAGE', sendMessage);
   yield takeEvery('GET_MESSAGES', getMessages);

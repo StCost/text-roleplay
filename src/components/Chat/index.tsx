@@ -11,13 +11,15 @@ import {
 
 import './chat.scss';
 import actions from '../../actions';
-import { IMessage, ISettings, IState } from '../../reducers';
+import { IMessage, ISettings, IState, IUsers } from '../../reducers';
+import Message from './Message';
 
 interface IChatProps {
   messages: IMessage[],
   user: User | null,
   settings: ISettings | false,
   loading: boolean,
+  users: IUsers;
 }
 
 interface IChatState {
@@ -42,13 +44,21 @@ class Chat extends Component<IChatProps, IChatState> {
   };
 
   componentDidUpdate = (prevProps: IChatProps) => {
-    if (this.state.sending && prevProps.messages !== this.props.messages) {
+    const { messages, users } = this.props;
+
+    if (this.state.sending && prevProps.messages !== messages) {
       localStorage.setItem('message', '');
       this.setState({
         message: '',
         sending: false,
       });
     }
+
+    messages.forEach((m: IMessage) => {
+      if (!users[m.author]) {
+        actions.getUser({ uid: m.author });
+      }
+    });
   };
 
   onChangeMessage = (event: ChangeEvent<HTMLTextAreaElement>) => {
@@ -111,7 +121,7 @@ class Chat extends Component<IChatProps, IChatState> {
   };
 
   render = () => {
-    const { messages, loading } = this.props;
+    const { messages, loading, users } = this.props;
 
     return (
       <Spin spinning={loading}>
@@ -121,14 +131,11 @@ class Chat extends Component<IChatProps, IChatState> {
             onScroll={this.onScroll}
           >
             {messages.map((m: IMessage) => (
-              <Card
-                className="chat-message"
-                title={m.author}
+              <Message
                 key={m.time}
-                extra={this.getTime(m.time)}
-              >
-                {m.body}
-              </Card>
+                message={m}
+                user={users[m.author]}
+              />
             ))}
           </div>
           <div className="chat-controls">
@@ -150,13 +157,14 @@ class Chat extends Component<IChatProps, IChatState> {
 }
 
 const mapStateToProps = (state: IState) => {
-  const { messages, user, settings, loading } = state;
+  const { messages, user, settings, loading, users, } = state;
 
   return {
     messages,
     user,
     settings,
     loading,
+    users,
   };
 };
 
