@@ -78,6 +78,19 @@ class Chat extends Component<IChatProps, IChatState> {
 
       this.onSendMessage();
     }
+
+    const { user } = this.props;
+    if (user && (event.key === 'Up' || event.key === 'ArrowUp')) {
+      const message = this.props.messages.find((m: IMessage) => m.author === user.uid);
+      if (message) {
+        const { currentTarget: { value, selectionStart } } = event;
+        if (value.substr(0, selectionStart).split('\n').length === 1) {
+          const { body } = message;
+          localStorage.setItem('message', body);
+          this.setState({ message: body });
+        }
+      }
+    }
   };
 
   onSendMessage = () => {
