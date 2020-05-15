@@ -26,7 +26,8 @@ export interface IState {
 }
 
 const user = JSON.parse(localStorage.getItem('user') || 'null');
-localStorage.setItem('uid', user.uid);
+if (user)
+  localStorage.setItem('uid', user.uid);
 export const initialState: IState = {
   user,
   isLoggedIn: user !== null,

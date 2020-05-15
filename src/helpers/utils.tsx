@@ -8,11 +8,6 @@ export const camelize = (str: string) => {
     .replace(/_/g, '')
 };
 
-export const mapLoggedToProps = (state: IState) => {
-  const { isLoggedIn } = state;
-  return { isLoggedIn };
-};
-
 export const colorFromString = (str: string) => {
   let hash = 0;
   for (let i = 0; i < str.length; i++) {

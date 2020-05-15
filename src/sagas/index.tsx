@@ -14,9 +14,10 @@ function* login(action: AnyAction) {
   } catch (error) {
     console.error(error);
     if (error.code === 'auth/user-not-found') {
-      const user = auth.createUserWithEmailAndPassword(email, password);
+      const user = yield auth.createUserWithEmailAndPassword(email, password);
       actions.loginSuccess({ user });
-      localStorage.setItem('user', JSON.stringify(user));
+      localStorage.setItem('user', JSON.stringify(user.user));
+      localStorage.setItem('uid', user.uid);
     } else {
       actions.loginFail({ error });
     }
