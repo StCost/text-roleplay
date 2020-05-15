@@ -35,7 +35,7 @@ function* getSettings(payload: IPayload) {
 
   try {
     const rawSettings = yield database
-      .ref('settings')
+      .ref('users')
       .child(uid)
       .once('value');
 
@@ -52,7 +52,7 @@ function* setSettings(payload: IPayload) {
 
   try {
     yield database
-      .ref('settings')
+      .ref('users')
       .child(uid)
       .set({
         ...settings,
@@ -139,7 +139,7 @@ function getUser(payload: IPayload) {
   if (requestedUsers[uid]) return;
   requestedUsers[uid] = true;
   database
-    .ref('settings')
+    .ref('users')
     .child(uid)
     .on('value', (rawUser) => {
       const user = rawUser.val() || {};
@@ -154,7 +154,7 @@ function* updateLastOnline() {
 
   localStorage.setItem('lastActivity', `${time}`);
   yield database
-    .ref('settings')
+    .ref('users')
     .child(`${uid}`)
     .child('lastOnline')
     .set(time);

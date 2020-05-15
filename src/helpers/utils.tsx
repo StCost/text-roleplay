@@ -70,4 +70,5 @@ export const listenForActivity = () => {
   ].forEach((eventName) => {
     document.addEventListener(eventName, callback, true);
   });
+  callback();
 };
