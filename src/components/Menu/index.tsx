@@ -4,17 +4,9 @@ import { Link, withRouter, RouteComponentProps } from 'react-router-dom';
 import { connect } from 'react-redux';
 
 import routes, { IRoute } from '../../configs/routes';
-import { mapLoggedToProps } from '../../helpers/utils';
 
-interface IMenuProps extends RouteComponentProps {
-  isLoggedIn: boolean;
-}
 
-function Menu(props: IMenuProps) {
-  if (!props.isLoggedIn) {
-    return <React.Fragment/>;
-  }
-
+function Menu(props: RouteComponentProps) {
   return (
     <AntdMenu
       style={{ width: 256 }}
@@ -35,4 +27,4 @@ function Menu(props: IMenuProps) {
   );
 }
 
-export default connect(mapLoggedToProps)(withRouter(Menu));
+export default connect()(withRouter(Menu));

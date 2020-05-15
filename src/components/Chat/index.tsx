@@ -3,7 +3,6 @@ import { connect } from 'react-redux';
 import { User } from 'firebase';
 import { SendOutlined } from '@ant-design/icons';
 import {
-  Card,
   Input,
   message as notify,
   Spin,
@@ -103,11 +102,6 @@ class Chat extends Component<IChatProps, IChatState> {
       uid: user.uid,
       message,
     });
-  };
-
-  getTime = (time: string) => {
-    const date = new Date(time);
-    return `${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}`
   };
 
   getMoreMessages = () => {

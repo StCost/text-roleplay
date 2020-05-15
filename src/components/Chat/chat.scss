@@ -23,6 +23,20 @@
         align-items: center;
         color: black;
 
+        &.online {
+          .ant-avatar {
+            border-color: #1890ff;
+          }
+        }
+
+        .ant-avatar {
+          background-color: transparent;
+          border: 2px solid lightgrey;
+          margin: -4px 0;
+          display: block;
+          box-sizing: content-box;
+        }
+
         .chat-message__nickname {
           margin-left: 24px;
         }

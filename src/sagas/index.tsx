@@ -1,4 +1,4 @@
-import { takeEvery } from 'redux-saga/effects';
+import { takeLatest } from 'redux-saga/effects';
 import { AnyAction } from 'redux';
 
 import { auth, database } from '../helpers/firebase';
@@ -10,6 +10,7 @@ function* login(action: AnyAction) {
     const user = yield auth.signInWithEmailAndPassword(email, password);
     actions.loginSuccess({ user });
     localStorage.setItem('user', JSON.stringify(user.user));
+    localStorage.setItem('uid', user.uid);
   } catch (error) {
     console.error(error);
     if (error.code === 'auth/user-not-found') {
@@ -24,7 +25,8 @@ function* login(action: AnyAction) {
 
 function* logout() {
   localStorage.removeItem('user');
-  localStorage.setItem('loggedIn', 'false');
+  localStorage.removeItem('uid');
+  localStorage.removeItem('loggedIn');
   yield auth.signOut();
 }
 
@@ -129,13 +131,13 @@ function* getMoreMessages(payload: IPayload) {
   actions.getMessagesSuccess({ messages, concat: true });
 }
 
-const requestedUsers: {[key: string]: true} = {};
+const requestedUsers: { [key: string]: true } = {};
+
 function getUser(payload: IPayload) {
   const { uid } = payload;
 
   if (requestedUsers[uid]) return;
   requestedUsers[uid] = true;
-  console.log('sub', uid, new Date().getTime())
   database
     .ref('settings')
     .child(uid)
@@ -145,15 +147,29 @@ function getUser(payload: IPayload) {
     });
 }
 
+function* updateLastOnline() {
+  const uid = localStorage.getItem('uid');
+  if (!uid) return;
+  const time = new Date().getTime();
+
+  localStorage.setItem('lastActivity', `${time}`);
+  yield database
+    .ref('settings')
+    .child(`${uid}`)
+    .child('lastOnline')
+    .set(time);
+}
+
 export default function* watchForActions() {
-  yield takeEvery('LOGIN', login);
-  yield takeEvery('LOGOUT', logout);
-  yield takeEvery('GET_SETTINGS', getSettings);
-  yield takeEvery('GET_USER', getUser);
-  yield takeEvery('SET_SETTINGS', setSettings);
-  yield takeEvery('SEND_MESSAGE', sendMessage);
-  yield takeEvery('GET_MESSAGES', getMessages);
-  yield takeEvery('GET_MORE_MESSAGES', getMoreMessages);
-  yield takeEvery('SUBSCRIBE', subscribe);
-  yield takeEvery('UNSUBSCRIBE', unsubscribe);
+  yield takeLatest('LOGIN', login);
+  yield takeLatest('LOGOUT', logout);
+  yield takeLatest('GET_SETTINGS', getSettings);
+  yield takeLatest('GET_USER', getUser);
+  yield takeLatest('SET_SETTINGS', setSettings);
+  yield takeLatest('SEND_MESSAGE', sendMessage);
+  yield takeLatest('GET_MESSAGES', getMessages);
+  yield takeLatest('GET_MORE_MESSAGES', getMoreMessages);
+  yield takeLatest('SUBSCRIBE', subscribe);
+  yield takeLatest('UPDATE_LAST_ONLINE', updateLastOnline);
+  yield takeLatest('UNSUBSCRIBE', unsubscribe);
 }

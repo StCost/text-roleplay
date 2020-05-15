@@ -5,22 +5,10 @@ import {
   Input,
   Button,
 } from 'antd';
-import { Redirect, RouteComponentProps } from 'react-router-dom';
 
 import actions from '../../actions';
-import { mapLoggedToProps } from '../../helpers/utils';
 
-interface ILoginProps extends RouteComponentProps {
-  isLoggedIn: boolean;
-}
-
-const Login = (props: ILoginProps) => {
-  if (props.isLoggedIn) {
-    return (
-      <Redirect to="/chat"/>
-    )
-  }
-
+const Login = () => {
   return (
     <Form
       onFinish={(values) => actions.login(values)}
@@ -48,4 +36,4 @@ const Login = (props: ILoginProps) => {
   );
 };
 
-export default connect(mapLoggedToProps)(Login);
+export default connect()(Login);

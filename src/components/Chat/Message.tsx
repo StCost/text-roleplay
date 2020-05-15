@@ -4,42 +4,43 @@ import { Link } from 'react-router-dom';
 
 import { IMessage, ISettings } from '../../reducers';
 import Avatar from '../Avatar';
+import {
+  getDate,
+  getFullTime,
+  getTime,
+  isOnline
+} from "../../helpers/utils";
 
 interface IMessageProps {
   message: IMessage,
   user: ISettings,
 }
 
-// Make double digit (dd)
-const dd = (str: number) => `${str}`.length === 1
-  ? `0${str}`
-  : str;
-
 const Message = (props: IMessageProps) => {
   const {
     message: {
-      author,
       time,
       body,
     },
-    user
+    user,
   } = props;
-
-  const date = new Date(time);
-  const messageTime = [date.getHours(), date.getMinutes(), date.getSeconds()].map(dd).join(':');
-  const messageDate = [date.getDate(), date.getMonth() + 1, date.getFullYear()].map(dd).join('.');
 
   const title = user && (
     <Link to={`./user/${user.uid}`}>
-      <div className="chat-message__title">
-        <Avatar
-          avatar={user.avatar}
-          nickname={user.nickname}
-        />
-        <div className="chat-message__nickname">
-          {user.nickname}
+      <Tooltip
+        title={`Last activity: ${getFullTime(user.lastOnline)}`}
+        placement="left"
+      >
+        <div className={`chat-message__title ${isOnline(user.lastOnline) ? 'online' : ''}`}>
+          <Avatar
+            avatar={user.avatar}
+            nickname={user.nickname}
+          />
+          <div className="chat-message__nickname">
+            {user.nickname}
+          </div>
         </div>
-      </div>
+      </Tooltip>
     </Link>
   );
 
@@ -49,8 +50,8 @@ const Message = (props: IMessageProps) => {
       title={title}
       key={time}
       extra={(
-        <Tooltip title={messageDate}>
-          <div className="chat-time">{messageTime}</div>
+        <Tooltip title={getDate(time)}>
+          <div className="chat-time">{getTime(time)}</div>
         </Tooltip>
       )}
     >

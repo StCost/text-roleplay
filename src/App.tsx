@@ -1,13 +1,16 @@
 import React from 'react';
 import { BrowserRouter } from 'react-router-dom';
+import 'antd/dist/antd.css';
 
 import Menu from './components/Menu';
 import Router from './components/Router';
 
 import './App.css';
-import 'antd/dist/antd.css';
+import { listenForActivity } from './helpers/utils';
 
 function App() {
+  listenForActivity();
+
   return (
     <BrowserRouter>
       <Menu/>

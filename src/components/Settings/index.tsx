@@ -93,8 +93,9 @@ export class Settings extends React.Component<ISettingsProps, ISettings> {
           </div>
         );
 
-      // Don't display UID editor
+      // Don't display UID and lastOnline editor
       case 'uid':
+      case 'lastOnline':
         return false;
 
       default:

@@ -8,7 +8,7 @@ export interface IAction {
 
 export interface IMessage {
   author: string;
-  time: string;
+  time: number;
   body: string;
 }
 
@@ -26,6 +26,7 @@ export interface IState {
 }
 
 const user = JSON.parse(localStorage.getItem('user') || 'null');
+localStorage.setItem('uid', user.uid);
 export const initialState: IState = {
   user,
   isLoggedIn: user !== null,
@@ -39,12 +40,14 @@ export interface ISettings {
   nickname: string;
   avatar: string;
   uid: string,
+  lastOnline: number;
 }
 
 export const defaultSettings = {
   nickname: '',
   avatar: '',
   uid: '',
+  lastOnline: 0,
 };
 
 const reducer = (state = initialState, action: IAction) => {
@@ -95,7 +98,7 @@ const reducer = (state = initialState, action: IAction) => {
       return {
         ...state,
         messages: messages
-          .sort((a: IMessage, b: IMessage) => parseInt(b.time) - parseInt(a.time))
+          .sort((a: IMessage, b: IMessage) => b.time - a.time)
           .filter((item: IMessage, pos: number, self: IMessage[]) =>
             self.findIndex((_i: IMessage) => _i.time === item.time) === pos
           ),

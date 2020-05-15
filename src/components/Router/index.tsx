@@ -2,15 +2,13 @@ import React from 'react';
 import {
   Switch,
   Route,
-  Link,
   Redirect,
 } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { Button, Empty, Card } from 'antd';
 
 import routes, { IRoute } from '../../configs/routes';
-import { mapLoggedToProps } from '../../helpers/utils';
-import Login from "../Login";
+import Login from '../Login';
+import { IState } from "../../reducers";
 
 interface IRouterProps {
   isLoggedIn: boolean;
@@ -44,4 +42,4 @@ function Router(props: IRouterProps) {
   );
 }
 
-export default connect(mapLoggedToProps)(Router);
+export default connect((state: IState) => ({ isLoggedIn: state.isLoggedIn }))(Router);
