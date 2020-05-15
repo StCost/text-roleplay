@@ -36,6 +36,11 @@ function Router(props: IRouterProps) {
         to="/chat"
         exact
       />
+      <Redirect
+        from="/text-roleplay"
+        to="/chat"
+        exact
+      />
       <Route path="*">
         <Card>
           <Empty description="404 страница не найдена"/>
