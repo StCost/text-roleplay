@@ -54,6 +54,7 @@ function* setSettings(payload: IPayload) {
       .set(settings);
 
     actions.setSettingsSuccess({});
+    actions.getSettings({ uid });
   } catch (error) {
     console.error(error);
     actions.setSettingsFail({ error });

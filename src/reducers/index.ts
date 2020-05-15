@@ -6,10 +6,6 @@ export interface IAction {
   [key: string]: any; // Payload could be any type or size
 }
 
-export interface ISettings {
-  displayName: string;
-}
-
 export interface IMessage {
   author: string;
   time: string;
@@ -33,8 +29,14 @@ export const initialState: IState = {
   messages: [],
 };
 
-const defaultSettings = {
-  displayName: '',
+export interface ISettings {
+  nickname: string;
+  avatar: string;
+}
+
+export const defaultSettings = {
+  nickname: '',
+  avatar: '',
 };
 
 const reducer = (state = initialState, action: IAction) => {

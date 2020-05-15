@@ -6,26 +6,32 @@ import {
   Input,
   Button,
   Empty,
+  Spin,
 } from 'antd';
 
 import actions from '../../actions';
-import { IState, ISettings } from '../../reducers/index';
+import { IState, ISettings, defaultSettings } from '../../reducers';
+import Avatar from '../Avatar';
 
-interface IDashboardProps {
+interface ISettingsProps {
   settings: ISettings | false;
   loading: boolean;
   user: User | null;
 }
 
-export class Settings extends React.Component<IDashboardProps, ISettings> {
-  state = {
-    displayName: '',
-  };
+export class Settings extends React.Component<ISettingsProps, ISettings> {
+  state = defaultSettings;
 
   componentDidMount = () => {
     const { user } = this.props;
     if (user) {
       actions.getSettings({ uid: user.uid });
+    }
+  };
+
+  componentDidUpdate = () => {
+    if (this.props.settings && this.state !== this.props.settings) {
+      // this.setState(this.props.settings)
     }
   };
 
@@ -43,6 +49,39 @@ export class Settings extends React.Component<IDashboardProps, ISettings> {
     }
   };
 
+  getField = (key: string, value: string) => {
+    const { loading, settings } = this.props;
+    const { avatar, nickname } = this.state;
+
+    switch (key) {
+      case 'avatar':
+        return (
+          <div>
+            <Input
+              defaultValue={value}
+              onChange={this.onChange(key)}
+              disabled={loading}
+            />
+            <Avatar
+              avatar={avatar}
+              nickname={nickname || (settings && settings.nickname) || ''}
+              size={128}
+              style={{ margin: '8px auto', display: 'block' }}
+            />
+          </div>
+        );
+
+      default:
+        return (
+          <Input
+            defaultValue={value}
+            onChange={this.onChange(key)}
+            disabled={loading}
+          />
+        )
+    }
+  };
+
   render = () => {
     const { settings, loading } = this.props;
 
@@ -53,22 +92,20 @@ export class Settings extends React.Component<IDashboardProps, ISettings> {
     }
 
     return (
-      <Card>
-        {Object
-          .entries(settings)
-          .map(([key, value]) => (
-            <Card
-              key={key}
-              title={key}
-            >
-              <Input
-                defaultValue={value}
-                onChange={this.onChange(key)}
-                disabled={loading}
-              />
-            </Card>
-          ))
-        }
+      <div>
+        <Spin spinning={loading}>
+          {Object
+            .entries(settings)
+            .map(([key, value]) => (
+              <Card
+                key={key}
+                title={key.toUpperCase()}
+              >
+                {this.getField(key, value)}
+              </Card>
+            ))
+          }
+        </Spin>
 
         <Button
           onClick={this.onSubmit}
@@ -76,7 +113,7 @@ export class Settings extends React.Component<IDashboardProps, ISettings> {
         >
           Submit
         </Button>
-      </Card>
+      </div>
     )
   }
 }

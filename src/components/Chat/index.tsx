@@ -78,7 +78,7 @@ class Chat extends Component<IChatProps, IChatState> {
       return;
     }
 
-    if (!settings.displayName) {
+    if (!settings.nickname) {
       notify.error('User name is not defined. Go to settings and set it');
       return;
     }
