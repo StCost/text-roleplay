@@ -1,4 +1,3 @@
-import { User } from 'firebase';
 import { processMessages } from '../helpers/utils';
 import { IRoll } from "../helpers/dice";
 
@@ -22,13 +21,13 @@ export interface IMessage {
 }
 
 export interface IUsers {
-  [key: string]: ISettings;
+  [key: string]: IUser;
 }
 
 export interface IState {
-  user: User | null;
+  user: IUser | null;
   isLoggedIn: boolean;
-  settings: ISettings | false;
+  settings: IUser | false;
   loading: boolean;
   messages: IMessage[];
   users: IUsers;
@@ -46,14 +45,14 @@ export const initialState: IState = {
   users: {},
 };
 
-export interface ISettings {
+export interface IUser {
   nickname: string;
   avatar: string;
   uid: string,
   lastOnline: number;
 }
 
-export const defaultSettings = {
+export const defaultUser = {
   nickname: '',
   avatar: '',
   uid: '',
@@ -90,7 +89,6 @@ const reducer = (state = initialState, action: IAction) => {
     case 'LOGIN_SUCCESS': {
       return {
         ...state,
-        user: action.user,
         isLoggedIn: action.user !== null,
       }
     }
@@ -115,7 +113,7 @@ const reducer = (state = initialState, action: IAction) => {
     case 'GET_SETTINGS_SUCCESS': {
       return {
         ...state,
-        settings: action.settings || defaultSettings,
+        settings: action.settings || defaultUser,
         loading: false,
       }
     }

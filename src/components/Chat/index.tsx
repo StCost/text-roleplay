@@ -6,7 +6,6 @@ import React, {
   DragEvent,
 } from 'react';
 import { connect } from 'react-redux';
-import { User } from 'firebase';
 import { SendOutlined } from '@ant-design/icons';
 import {
   Input,
@@ -16,13 +15,13 @@ import {
 
 import './chat.scss';
 import actions from '../../actions';
-import { IMessage, ISettings, IState, IUsers } from '../../reducers';
+import { IMessage, IUser, IState, IUsers } from '../../reducers';
 import Message from './Message';
 
 interface IChatProps {
   messages: IMessage[],
-  user: User | null,
-  settings: ISettings | false,
+  user: IUser | null,
+  settings: IUser | false,
   loading: boolean,
   users: IUsers;
 }
@@ -194,7 +193,7 @@ class Chat extends Component<IChatProps, IChatState> {
 }
 
 const mapStateToProps = (state: IState) => {
-  const { messages, user, settings, loading, users, } = state;
+  const { messages, user, settings, loading, users } = state;
 
   return {
     messages,

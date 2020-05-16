@@ -8,6 +8,7 @@ export interface IRoute {
   label: string;
   path: string;
   component: ConnectedComponent<any, any>;
+  exact?: boolean;
 }
 
 const routes: IRoute[] = [
@@ -20,6 +21,7 @@ const routes: IRoute[] = [
     label: 'Settings',
     path: '/text-roleplay/settings',
     component: Settings,
+    exact: true,
   },
   {
     label: 'Logout',

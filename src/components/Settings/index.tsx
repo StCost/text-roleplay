@@ -1,6 +1,5 @@
 import React, { ChangeEvent } from 'react';
 import { connect } from 'react-redux';
-import { User } from 'firebase';
 import {
   Card,
   Input,
@@ -8,21 +7,23 @@ import {
   Empty,
   Spin,
 } from 'antd';
+import { RouteComponentProps } from 'react-router';
 
 import { ClearOutlined } from '@ant-design/icons';
 
 import actions from '../../actions';
-import { IState, ISettings, defaultSettings } from '../../reducers';
+import { IState, IUser, defaultUser } from '../../reducers';
 import Avatar from '../Avatar';
 
-interface ISettingsProps {
-  settings: ISettings | false;
+interface ISettingsProps extends RouteComponentProps {
+  settings: IUser | false;
   loading: boolean;
-  user: User | null;
+  user: IUser | null;
+  uid: string;
 }
 
-export class Settings extends React.Component<ISettingsProps, ISettings> {
-  state = defaultSettings;
+export class Settings extends React.Component<ISettingsProps, IUser> {
+  state = defaultUser;
 
   componentDidMount = () => {
     const { user } = this.props;

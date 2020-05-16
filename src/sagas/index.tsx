@@ -11,7 +11,7 @@ function* login(action: AnyAction) {
     const user = yield auth.signInWithEmailAndPassword(email, password);
     actions.loginSuccess({ user });
     localStorage.setItem('user', JSON.stringify(user.user));
-    localStorage.setItem('uid', user.uid);
+    localStorage.setItem('uid', user.user.uid);
   } catch (error) {
     console.error(error);
     if (error.code === 'auth/user-not-found') {
@@ -151,7 +151,7 @@ function getUser(payload: IPayload) {
 
 function* updateLastOnline() {
   const uid = localStorage.getItem('uid');
-  if (!uid) return;
+  if (!uid || uid === 'undefined') return;
   const time = new Date().getTime();
 
   localStorage.setItem('lastActivity', `${time}`);

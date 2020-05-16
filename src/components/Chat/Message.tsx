@@ -2,7 +2,7 @@ import React from 'react';
 import { Card, Tooltip } from 'antd';
 import { Link } from 'react-router-dom';
 
-import { IMessage, ISettings } from '../../reducers';
+import { IMessage, IUser } from '../../reducers';
 import Avatar from '../Avatar';
 import MessageBody from './MessageBody';
 import {
@@ -14,7 +14,7 @@ import {
 
 interface IMessageProps {
   message: IMessage,
-  user: ISettings,
+  user: IUser,
 }
 
 const Message = (props: IMessageProps) => {
@@ -29,7 +29,7 @@ const Message = (props: IMessageProps) => {
   } = props;
 
   const title = user && (
-    <Link to={`./user/${user.uid}`}>
+    <Link to={`./${user.uid}/settings`}>
       <Tooltip
         title={`Last activity: ${getFullTime(user.lastOnline)}`}
         placement="left"

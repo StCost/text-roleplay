@@ -34,6 +34,7 @@ function Router(props: IRouterProps) {
             key={value.path}
             path={value.path}
             component={value.component}
+            exact={value.exact || false}
           />
         )
       }

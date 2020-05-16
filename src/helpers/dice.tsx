@@ -29,7 +29,6 @@ export const exportRolls = (str: string) => {
       const amount = parseInt(_amount);
       const size = parseInt(_size);
       const results = rollDice(amount, size);
-      console.log(results);
 
       return ({
         maxResult: size * amount,
