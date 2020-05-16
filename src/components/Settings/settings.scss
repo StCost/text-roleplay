@@ -1,0 +1,12 @@
+.settings {
+  position: relative;
+
+  .loader {
+    position: absolute;
+    top: -16px;
+    right: -16px;
+    z-index: 1;
+    font-size: 32px;
+    line-height: 32px;
+  }
+}

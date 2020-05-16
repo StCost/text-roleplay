@@ -1,0 +1,14 @@
+[
+  {
+    "label": "Chat",
+    "path": "/text-roleplay/chat"
+  },
+  {
+    "label": "Settings",
+    "path": "/text-roleplay/settings"
+  },
+  {
+    "label": "Logout",
+    "path": "/text-roleplay/logout"
+  }
+]

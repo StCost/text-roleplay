@@ -65,22 +65,20 @@ const reducer = (state = initialState, action: IAction) => {
     case 'GET_MESSAGES':
     case 'GET_MORE_MESSAGES':
     case 'SEND_MESSAGE':
-    case 'GET_SETTINGS':
-    case 'UPLOAD_FILE':
-    case 'SET_SETTINGS': {
+    case 'SET_USER':
+    case 'UPLOAD_FILE': {
       return {
         ...state,
         loading: true,
       }
     }
     case 'LOGIN_FAIL':
+    case 'SET_USER_SUCCESS':
+    case 'SET_USER_FAIL':
     case 'GET_MESSAGES_FAIL':
     case 'GET_MORE_MESSAGES_SUCCESS':
     case 'GET_MORE_MESSAGES_FAIL':
-    case 'SEND_MESSAGE_FAIL':
-    case 'GET_SETTINGS_FAIL':
-    case 'SET_SETTINGS_SUCCESS':
-    case 'SET_SETTINGS_FAIL': {
+    case 'SEND_MESSAGE_FAIL': {
       return {
         ...state,
         loading: false,
@@ -107,13 +105,6 @@ const reducer = (state = initialState, action: IAction) => {
       return {
         ...state,
         messages: processMessages(messages),
-        loading: false,
-      }
-    }
-    case 'GET_SETTINGS_SUCCESS': {
-      return {
-        ...state,
-        settings: action.settings || defaultUser,
         loading: false,
       }
     }

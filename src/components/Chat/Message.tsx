@@ -31,7 +31,7 @@ const Message = (props: IMessageProps) => {
   const title = user && (
     <Link to={`./${user.uid}/settings`}>
       <Tooltip
-        title={`Last activity: ${getFullTime(user.lastOnline)}`}
+        title={user.lastOnline && `Last activity: ${getFullTime(user.lastOnline)}`}
         placement="left"
       >
         <div className={`chat-message__title ${isOnline(user.lastOnline) ? 'online' : ''}`}>

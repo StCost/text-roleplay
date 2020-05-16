@@ -32,40 +32,23 @@ function* logout() {
   yield auth.signOut();
 }
 
-function* getSettings(payload: IPayload) {
-  const { uid } = payload;
-
-  try {
-    const rawSettings = yield database
-      .ref('users')
-      .child(uid)
-      .once('value');
-
-    const settings = rawSettings.val();
-    actions.getSettingsSuccess({ settings });
-  } catch (error) {
-    console.error(error);
-    actions.getSettingsFail({ error });
-  }
-}
-
-function* setSettings(payload: IPayload) {
-  const { uid, settings } = payload;
+function* setUser(payload: IPayload) {
+  const { uid, user } = payload;
 
   try {
     yield database
       .ref('users')
       .child(uid)
       .set({
-        ...settings,
+        ...user,
         uid,
       });
 
-    actions.setSettingsSuccess({});
-    actions.getSettings({ uid });
+    actions.setUserSuccess({});
+    actions.getUser({ uid });
   } catch (error) {
     console.error(error);
-    actions.setSettingsFail({ error });
+    actions.setUserSuccess({ error });
   }
 }
 
@@ -189,9 +172,8 @@ function uploadFile(payload: IPayload) {
 export default function* watchForActions() {
   yield takeLatest('LOGIN', login);
   yield takeLatest('LOGOUT', logout);
-  yield takeLatest('GET_SETTINGS', getSettings);
   yield takeLatest('GET_USER', getUser);
-  yield takeLatest('SET_SETTINGS', setSettings);
+  yield takeLatest('SET_USER', setUser);
   yield takeLatest('SEND_MESSAGE', sendMessage);
   yield takeLatest('GET_MESSAGES', getMessages);
   yield takeLatest('GET_MORE_MESSAGES', getMoreMessages);

@@ -3,7 +3,7 @@ import { Menu as AntdMenu } from 'antd';
 import { Link, withRouter, RouteComponentProps } from 'react-router-dom';
 import { connect } from 'react-redux';
 
-import routes, { IRoute } from '../../configs/routes';
+import menu, { IRoute } from '../../configs/routes';
 import { IState, IUser } from '../../reducers';
 
 interface IMenuProps extends RouteComponentProps {
@@ -22,7 +22,7 @@ function Menu(props: IMenuProps) {
       mode="inline"
       selectedKeys={[props.location.pathname]}
     >
-      {routes.map((value: IRoute) => (
+      {menu.map((value: IRoute) => (
         <AntdMenu.Item
           key={value.path}
           disabled={value.path === props.location.pathname}

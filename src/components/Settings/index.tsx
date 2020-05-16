@@ -5,65 +5,59 @@ import {
   Input,
   Button,
   Empty,
-  Spin,
 } from 'antd';
 import { RouteComponentProps } from 'react-router';
 
 import { ClearOutlined } from '@ant-design/icons';
 
+import './settings.scss';
 import actions from '../../actions';
 import { IState, IUser, defaultUser } from '../../reducers';
 import Avatar from '../Avatar';
+import Loader from "./Loader";
 
 interface ISettingsProps extends RouteComponentProps {
-  settings: IUser | false;
   loading: boolean;
   user: IUser | null;
   uid: string;
 }
 
-export class Settings extends React.Component<ISettingsProps, IUser> {
-  state = defaultUser;
-
+export class Settings extends React.Component<ISettingsProps> {
   componentDidMount = () => {
     const { user } = this.props;
     if (user) {
-      actions.getSettings({ uid: user.uid });
+      actions.getUser({ uid: user.uid });
     }
   };
 
-  onChange = (field: string) => (event: ChangeEvent<HTMLInputElement>) =>
-    // @ts-ignore
-    this.setState({ [field]: event.target.value });
+  onChange = (field: string) => (event: ChangeEvent<HTMLInputElement>) => {
+    // // @ts-ignore
+    // this.setState({ [field]: event.target.value });
+    const newSettings = {
+      ...this.props.user,
+      [field]: event.target.value,
+    };
 
-  getNewSettings = () => {
-    const { settings } = this.props;
-
-    const newSettings = {};
-    Object.entries(settings).forEach(([key, value]) => {
-      // @ts-ignore
-      newSettings[key] = this.state[key] || value;
-    });
-    return newSettings;
-  };
-
-  onSubmit = () => {
-    this.setSettings(this.getNewSettings());
+    this.setSettings(newSettings);
   };
 
   setSettings = (newSettings: {}) => {
     const { user } = this.props;
     if (user) {
-      actions.setSettings({
+      actions.setUser({
         uid: user.uid,
-        settings: newSettings,
+        user: newSettings,
       });
     }
   };
 
-  getField = (key: string, value: string) => {
-    const { loading, settings } = this.props;
-    const { avatar, nickname } = this.state;
+  clearAvatar = () => this.setSettings({
+    ...this.props.user,
+    avatar: '',
+  });
+
+  getField = (key: string, value: string, user: IUser) => {
+    const { nickname } = user;
 
     switch (key) {
       case 'avatar':
@@ -71,23 +65,19 @@ export class Settings extends React.Component<ISettingsProps, IUser> {
           <div>
             <div style={{ display: 'flex' }}>
               <Input
-                defaultValue={avatar || value}
+                value={value}
                 onChange={this.onChange(key)}
-                disabled={loading}
               />
               <Button
-                onClick={() => this.setSettings({
-                  ...this.getNewSettings(),
-                  avatar: '',
-                })}
-                disabled={!(avatar || value)}
+                onClick={this.clearAvatar}
+                disabled={!value}
               >
                 <ClearOutlined/>
               </Button>
             </div>
             <Avatar
-              avatar={avatar || value}
-              nickname={nickname || (settings && settings.nickname) || ''}
+              avatar={value}
+              nickname={nickname}
               size={128}
               style={{ margin: '8px auto', display: 'block' }}
             />
@@ -104,54 +94,50 @@ export class Settings extends React.Component<ISettingsProps, IUser> {
           <Input
             defaultValue={value}
             onChange={this.onChange(key)}
-            disabled={loading}
           />
         )
     }
   };
 
   render = () => {
-    const { settings, loading } = this.props;
+    const { user, loading } = this.props;
 
-    if (!settings) {
+    if (!user) {
       return (
         <Empty/>
       )
     }
 
     return (
-      <div>
-        <Spin spinning={loading}>
-          {Object
-            .entries(settings)
-            .map(([key, value]) => {
-              const field = this.getField(key, value);
-              return field && (
-                <Card
-                  key={key}
-                  title={key.toUpperCase()}
-                >
-                  {field}
-                </Card>
-              )
-            })
-          }
-        </Spin>
-
-        <Button
-          onClick={this.onSubmit}
-          disabled={loading}
-        >
-          Submit
-        </Button>
+      <div className="settings">
+        <Loader loading={loading}/>
+        {Object
+          .keys(defaultUser)
+          .map((key: string) => {
+            // @ts-ignore
+            const field = this.getField(key, `${user[key]}`, user);
+            return field && (
+              <Card
+                key={key}
+                title={key.toUpperCase()}
+              >
+                {field}
+              </Card>
+            )
+          })
+        }
       </div>
     )
   }
 }
 
 const mapStateToProps = (state: IState) => {
-  const { settings, loading, user } = state;
-  return { settings, loading, user };
+  const { loading, users } = state;
+  const uid = localStorage.getItem('uid') || '0';
+  return {
+    loading,
+    user: users[uid]
+  };
 };
 
 export default connect(mapStateToProps)(Settings);

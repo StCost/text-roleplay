@@ -28,6 +28,7 @@ export const colorFromString = (str: string) => {
 };
 
 export const isOnline = (time?: number) => {
+  if (!time) return false;
   const lastActivity = time || parseInt(localStorage.getItem('lastActivity') || '0');
   return (lastActivity + 180000) > new Date().getTime();
 };
