@@ -18,7 +18,7 @@ export const diceRegex = /([1-9]|10)[dд]([468]|10|12|20)/miu;
 export const diceRegexG = /([1-9]|10)[dд]([468]|10|12|20)/miug;
 
 export const rollDice = (amount: number, size: number) => {
-  return new Array(amount).fill(amount + size).map(() => getRandomInt(0, size));
+  return new Array(amount).fill(amount + size).map(() => getRandomInt(1, size));
 };
 
 export const exportRolls = (str: string) => {
