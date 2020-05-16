@@ -49,7 +49,7 @@ const Message = (props: IMessageProps) => {
 
   return (
     <Card
-      className={`chat-message ${grouped ? 'grouped' : ''} ${mentioned && user && (body.indexOf(`@${user.nickname}`) > -1) ? 'mentioned' : ''}`}
+      className={`chat-message ${grouped ? 'grouped' : ''} ${mentioned && user && (body.indexOf(`@${user.nickname} `) > -1) ? 'mentioned' : ''}`}
       title={title}
       key={time}
       extra={(
