@@ -1,5 +1,9 @@
+import randomInt from 'random-seed';
 import actions from '../actions';
-import { IMessage } from "../reducers";
+import { IMessage } from '../reducers';
+import { diceRegex, exportRolls } from './dice';
+// @ts-ignore
+window.randomInt = randomInt;
 
 export const camelize = (str: string) => {
   return str
@@ -86,7 +90,6 @@ export const processMessages = (messages: IMessage[]) => {
     .sort((a: IMessage, b: IMessage) => b.time - a.time)
     .map((m: IMessage, index: number, messages: IMessage[]) => {
       if (index < messages.length - 2) {
-        console.log(m.body, messages[index + 1].body, m.author === messages[index + 1].author);
         if (m.author === messages[index + 1].author) {
           return {
             ...m,
@@ -96,4 +99,22 @@ export const processMessages = (messages: IMessage[]) => {
       }
       return m;
     })
+};
+
+export const formatMessage = (message: IMessage) => {
+  const { body } = message;
+
+  if (diceRegex.test(body)) {
+    message.rolls = exportRolls(body);
+  }
+
+  if (/\*/.test(body)) {
+    message.isRP = true;
+  }
+
+  if (/(@[a-zа-яё]*)/mui.test(body)) {
+    message.mentioned = true;
+  }
+
+  return message;
 };

@@ -1,5 +1,6 @@
 import { User } from 'firebase';
 import { processMessages } from '../helpers/utils';
+import { IRoll } from "../helpers/dice";
 
 export interface IAction {
   type: string;
@@ -13,6 +14,11 @@ export interface IMessage {
   body: string;
   // Remove header and top margin of message, because author is the same
   grouped?: boolean;
+  isCommand?: boolean;
+  isRP?: boolean;
+  commandResult?: string;
+  mentioned?: boolean;
+  rolls?: IRoll[];
 }
 
 export interface IUsers {

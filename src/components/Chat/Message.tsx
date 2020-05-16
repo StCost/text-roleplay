@@ -21,8 +21,9 @@ const Message = (props: IMessageProps) => {
   const {
     message: {
       time,
-      body,
       grouped,
+      body,
+      mentioned,
     },
     user,
   } = props;
@@ -48,7 +49,7 @@ const Message = (props: IMessageProps) => {
 
   return (
     <Card
-      className={`chat-message ${grouped ? 'grouped' : ''}`}
+      className={`chat-message ${grouped ? 'grouped' : ''} ${mentioned && user && (body.indexOf(`@${user.nickname}`) > -1) ? 'mentioned' : ''}`}
       title={title}
       key={time}
       extra={(
@@ -57,7 +58,7 @@ const Message = (props: IMessageProps) => {
         </Tooltip>
       )}
     >
-      <MessageBody message={body}/>
+      <MessageBody message={props.message}/>
     </Card>
   );
 };

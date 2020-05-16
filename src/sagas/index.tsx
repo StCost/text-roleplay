@@ -3,6 +3,7 @@ import { AnyAction } from 'redux';
 
 import { auth, database } from '../helpers/firebase';
 import actions, { IPayload } from '../actions/index';
+import { formatMessage } from "../helpers/utils";
 
 function* login(action: AnyAction) {
   const { email, password } = action;
@@ -76,11 +77,11 @@ function* sendMessage(payload: IPayload) {
     yield database
       .ref('messages')
       .child(`${time}`)
-      .set({
+      .set(formatMessage({
         time,
         author: uid,
         body: message,
-      });
+      }));
     localStorage.setItem('message', '');
     actions.sendMessageSuccess({});
   } catch (error) {

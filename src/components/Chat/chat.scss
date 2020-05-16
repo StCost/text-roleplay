@@ -18,6 +18,10 @@
     .chat-message {
       margin: 6px 0;
 
+      &.mentioned .ant-card-body {
+        background: rgba(255, 215, 0, 0.4);
+      }
+
       &.grouped {
         margin-top: -8px;
         border-top: none;
@@ -67,6 +71,30 @@
         word-break: break-word;
         white-space: pre-line;
         padding: 12px;
+
+        .critMiss {
+          background: rgba(255, 0, 0, 0.075);
+        }
+
+        .critHit {
+          background: rgba(0, 255, 0, 0.075);
+        }
+
+        .command-message {
+          display: flex;
+          > b {
+            margin-left: 4px;
+            background: rgba(24, 144, 255, 0.025);
+          }
+        }
+
+        .rp-message {
+          margin: -12px;
+          padding: 12px;
+          width: auto;
+          display: block;
+          background: rgba(24, 144, 255, 0.075);
+        }
       }
     }
   }

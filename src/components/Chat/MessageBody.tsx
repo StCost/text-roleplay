@@ -1,25 +1,31 @@
 import React from 'react';
-import { isURL } from "../../helpers/utils";
+import { isURL } from '../../helpers/utils';
+import { IMessage } from '../../reducers';
+import { importRolls } from '../../helpers/dice';
 
 interface IMessageBodyProps {
-  message: string;
+  message: IMessage;
 }
 
 const MessageBody = (props: IMessageBodyProps) => {
-  const { message } = props;
+  const {
+    body,
+    isRP,
+    rolls,
+  } = props.message;
 
-  if (isURL(message)) {
-    if (/\.(gif|jpe?g|tiff|png|webp|bmp)$/i.test(message)) {
+  if (isURL(body)) {
+    if (/\.(gif|jpe?g|tiff|png|webp|bmp)$/i.test(body)) {
       return (
         <img
-          src={message}
+          src={body}
           alt=""
         />
       )
     }
 
-    if (/youtu/.test(message)) {
-      const videoId = new URL(message).searchParams.get('v') || '';
+    if (/youtu/.test(body)) {
+      const videoId = new URL(body).searchParams.get('v') || '';
 
       return (
         <iframe
@@ -35,16 +41,28 @@ const MessageBody = (props: IMessageBodyProps) => {
 
     return (
       <a
-        href={message}
+        href={body}
         target="_blank"
         rel="noopener noreferrer"
       >
-        {message}
+        {body}
       </a>
     )
   }
 
-  return <span>{message}</span>;
+  const _body = rolls
+    ? importRolls(body, rolls)
+    : body;
+
+  if (isRP) {
+    return (
+      <i className="rp-message">
+        {_body}
+      </i>
+    )
+  }
+
+  return <span>{_body}</span>;
 };
 
 export default MessageBody;
