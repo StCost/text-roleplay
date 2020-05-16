@@ -15,7 +15,8 @@ const MessageBody = (props: IMessageBodyProps) => {
   } = props.message;
 
   if (isURL(body)) {
-    if (/\.(gif|jpe?g|tiff|png|webp|bmp)$/i.test(body)) {
+    console.log(body);
+    if (/\.(gif|jpe?g|tiff|png|webp|bmp)/ig.test(body)) {
       return (
         <img
           src={body}
