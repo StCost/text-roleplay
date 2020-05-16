@@ -9,11 +9,10 @@ import { RouteComponentProps } from 'react-router';
 
 import { ClearOutlined } from '@ant-design/icons';
 
-import './settings.scss';
 import actions from '../../actions';
 import { IState, IUser, defaultUser } from '../../reducers';
 import Avatar from '../Avatar';
-import Loader from "./Loader";
+import Loader from '../Loader';
 
 interface ISettingsProps extends RouteComponentProps {
   loading: boolean;

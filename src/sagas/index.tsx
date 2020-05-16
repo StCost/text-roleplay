@@ -41,6 +41,7 @@ function* setUser(payload: IPayload) {
       .child(uid)
       .set({
         ...user,
+        lastOnline: new Date().getTime(),
         uid,
       });
 

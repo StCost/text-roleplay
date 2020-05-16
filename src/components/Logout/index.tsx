@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { Button, Avatar } from 'antd';
+import { Button, Avatar, Card } from 'antd';
 
 import actions from '../../actions';
 
@@ -8,7 +8,7 @@ const byeLink = 'https://cdn.lowgif.com/full/fc3d7d9abd06a92e-hi-bear-gifs-get-t
 
 const Logout = () => {
   return (
-    <div>
+    <Card>
       <Avatar
         src={byeLink}
         size={256}
@@ -24,7 +24,7 @@ const Logout = () => {
       >
         Logout
       </Button>
-    </div>
+    </Card>
   )
 };
 

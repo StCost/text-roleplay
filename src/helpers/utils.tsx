@@ -74,7 +74,7 @@ export const listenForActivity = () => {
 };
 
 export const isURL = (str: string) =>
-  /[-a-zA-Z0-9@:%._+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_+.~#?&\/\/=]*)/igm.test(str);
+  /[-a-zA-Z0-9@:%._+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_+.~#?&//=]*)/igm.test(str);
 
 export const processMessages = (messages: IMessage[]) => {
   return messages

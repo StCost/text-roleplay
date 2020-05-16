@@ -1,0 +1,15 @@
+.inventory {
+  max-width: initial;
+  width: 100%;
+  min-height: calc(100% - 64px);
+  margin: 32px;
+
+  .inventory-body {
+    display: flex;
+    flex-wrap: wrap;
+
+    .inventory-item {
+
+    }
+  }
+}
