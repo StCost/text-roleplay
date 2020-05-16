@@ -7,6 +7,7 @@ import { formatMessage } from "../helpers/utils";
 
 function* login(action: AnyAction) {
   const { email, password } = action;
+
   try {
     const user = yield auth.signInWithEmailAndPassword(email, password);
     actions.loginSuccess({ user });

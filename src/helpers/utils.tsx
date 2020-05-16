@@ -1,10 +1,8 @@
-import randomInt from 'random-seed';
+import { message as notify } from 'antd';
+
 import actions from '../actions';
 import { IMessage } from '../reducers';
 import { diceRegex, exportRolls, hasDice } from './dice';
-import { message as notify, message } from "antd";
-// @ts-ignore
-window.randomInt = randomInt;
 
 export const camelize = (str: string) => {
   return str
