@@ -4,7 +4,6 @@ import {
   Card,
   Input,
   Button,
-  Empty,
 } from 'antd';
 import { RouteComponentProps } from 'react-router';
 
@@ -102,12 +101,6 @@ export class Settings extends React.Component<ISettingsProps> {
   render = () => {
     const { user, loading } = this.props;
 
-    if (!user) {
-      return (
-        <Empty/>
-      )
-    }
-
     return (
       <div className="settings">
         <Loader loading={loading}/>
@@ -137,7 +130,10 @@ const mapStateToProps = (state: IState, props: ISettingsProps) => {
 
   return {
     loading,
-    user: users[uid]
+    user: users[uid] || {
+      ...defaultUser,
+      uid,
+    }
   };
 };
 
