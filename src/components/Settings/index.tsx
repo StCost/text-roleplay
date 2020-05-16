@@ -131,9 +131,10 @@ export class Settings extends React.Component<ISettingsProps> {
   }
 }
 
-const mapStateToProps = (state: IState) => {
+const mapStateToProps = (state: IState, props: ISettingsProps) => {
   const { loading, users } = state;
-  const uid = localStorage.getItem('uid') || '0';
+  const uid = new URLSearchParams(props.match.params).get('uid') || state.uid || '0';
+
   return {
     loading,
     user: users[uid]

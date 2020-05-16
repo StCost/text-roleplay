@@ -63,7 +63,7 @@ function* sendMessage(payload: IPayload) {
       .set(formatMessage({
         time,
         author: uid,
-        body: message,
+        body: `${message} `,
       }));
     localStorage.setItem('message', '');
     actions.sendMessageSuccess({});

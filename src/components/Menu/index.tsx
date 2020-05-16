@@ -3,12 +3,11 @@ import { Menu as AntdMenu } from 'antd';
 import { Link, withRouter, RouteComponentProps } from 'react-router-dom';
 import { connect } from 'react-redux';
 
-import menu, { IRoute } from '../../configs/routes';
-import { IState, IUser } from '../../reducers';
+import menu from '../../configs/menu.json';
+import { IState } from '../../reducers';
 
 interface IMenuProps extends RouteComponentProps {
   isLoggedIn: boolean;
-  user: IUser | null,
 }
 
 function Menu(props: IMenuProps) {
@@ -22,7 +21,7 @@ function Menu(props: IMenuProps) {
       mode="inline"
       selectedKeys={[props.location.pathname]}
     >
-      {menu.map((value: IRoute) => (
+      {menu.map((value) => (
         <AntdMenu.Item
           key={value.path}
           disabled={value.path === props.location.pathname}
@@ -36,7 +35,4 @@ function Menu(props: IMenuProps) {
   );
 }
 
-export default connect((state: IState) => ({
-  isLoggedIn: state.isLoggedIn,
-  user: state.user,
-}))(withRouter(Menu));
+export default connect((state: IState) => ({ isLoggedIn: state.isLoggedIn }))(withRouter(Menu));

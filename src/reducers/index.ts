@@ -25,24 +25,25 @@ export interface IUsers {
 }
 
 export interface IState {
-  user: IUser | null;
+  userData: IUser | null;
   isLoggedIn: boolean;
   settings: IUser | false;
   loading: boolean;
   messages: IMessage[];
   users: IUsers;
+  uid: string;
 }
 
 const user = JSON.parse(localStorage.getItem('user') || 'null');
-if (user)
-  localStorage.setItem('uid', user.uid);
+if (user) localStorage.setItem('uid', user.uid);
 export const initialState: IState = {
-  user,
+  userData: user,
   isLoggedIn: user !== null,
   settings: false,
   loading: false,
   messages: [],
   users: {},
+  uid: user ? user.uid : '',
 };
 
 export interface IUser {
@@ -87,13 +88,15 @@ const reducer = (state = initialState, action: IAction) => {
     case 'LOGIN_SUCCESS': {
       return {
         ...state,
+        uid: action.user.uid,
+        userData: action.user,
         isLoggedIn: action.user !== null,
       }
     }
     case 'LOGOUT': {
       return {
         ...state,
-        user: null,
+        userData: null,
         isLoggedIn: false,
       }
     }

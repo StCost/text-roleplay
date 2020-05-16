@@ -15,15 +15,15 @@ import {
 
 import './chat.scss';
 import actions from '../../actions';
-import { IMessage, IUser, IState, IUsers } from '../../reducers';
+import { IMessage, IState, IUser, IUsers } from '../../reducers';
 import Message from './Message';
 
 interface IChatProps {
   messages: IMessage[],
-  user: IUser | null,
-  settings: IUser | false,
+  uid: string,
   loading: boolean,
   users: IUsers;
+  user: IUser;
 }
 
 interface IChatState {
@@ -78,9 +78,9 @@ class Chat extends Component<IChatProps, IChatState> {
       this.onSendMessage();
     }
 
-    const { user } = this.props;
-    if (user && (event.key === 'Up' || event.key === 'ArrowUp')) {
-      const message = this.props.messages.find((m: IMessage) => m.author === user.uid);
+    const { uid } = this.props;
+    if (event.key === 'Up' || event.key === 'ArrowUp') {
+      const message = this.props.messages.find((m: IMessage) => m.author === uid);
       if (message) {
         const { currentTarget: { value, selectionStart } } = event;
         if (value.substr(0, selectionStart).split('\n').length === 1) {
@@ -94,18 +94,18 @@ class Chat extends Component<IChatProps, IChatState> {
 
   onSendMessage = () => {
     const { message } = this.state;
-    const { settings, user, loading } = this.props;
+    const { user, loading, uid } = this.props;
 
     if (loading) {
       return;
     }
 
-    if (!user || !settings) {
+    if (!user) {
       notify.error('Not logged in. How are you even here? Contact administration');
       return;
     }
 
-    if (!settings.nickname) {
+    if (!user.nickname) {
       notify.error('User name is not defined. Go to settings and set it');
       return;
     }
@@ -117,7 +117,7 @@ class Chat extends Component<IChatProps, IChatState> {
 
     this.setState({ sending: true });
     actions.sendMessage({
-      uid: user.uid,
+      uid,
       message,
     });
   };
@@ -133,10 +133,10 @@ class Chat extends Component<IChatProps, IChatState> {
   };
 
   uploadFile = (file: File, event: ClipboardEvent<HTMLTextAreaElement> | DragEvent<HTMLTextAreaElement>) => {
-    const { user } = this.props;
-    if (file && user) {
+    const { uid } = this.props;
+    if (file) {
       if (file.type.indexOf('image') > -1) {
-        actions.uploadFile({ uid: user.uid, file });
+        actions.uploadFile({ uid: uid, file });
       } else {
         notify.error('Only images can be uploaded');
       }
@@ -193,14 +193,14 @@ class Chat extends Component<IChatProps, IChatState> {
 }
 
 const mapStateToProps = (state: IState) => {
-  const { messages, user, settings, loading, users } = state;
+  const { messages, uid, loading, users } = state;
 
   return {
     messages,
-    user,
-    settings,
+    uid,
     loading,
     users,
+    user: users[uid]
   };
 };
 
