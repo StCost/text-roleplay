@@ -22,7 +22,7 @@ const Logout = () => {
         onClick={() => actions.logout({ })}
         style={{ width: '100%' }}
       >
-        Logout
+        Выйти
       </Button>
     </Card>
   )

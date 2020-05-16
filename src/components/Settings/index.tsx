@@ -29,8 +29,6 @@ export class Settings extends React.Component<ISettingsProps> {
   };
 
   onChange = (field: string) => (event: ChangeEvent<HTMLInputElement>) => {
-    // // @ts-ignore
-    // this.setState({ [field]: event.target.value });
     const newSettings = {
       ...this.props.user,
       [field]: event.target.value,

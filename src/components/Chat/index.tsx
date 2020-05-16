@@ -101,17 +101,17 @@ class Chat extends Component<IChatProps, IChatState> {
     }
 
     if (!user) {
-      notify.error('Not logged in. How are you even here? Contact administration');
+      notify.error('Данные о пользователе отсутствуют');
       return;
     }
 
     if (!user.nickname) {
-      notify.error('User name is not defined. Go to settings and set it');
+      notify.error('Никнейм не установлен. Пройдите в настройки и назовите себя');
       return;
     }
 
     if (!message) {
-      notify.error('Message is empty');
+      notify.error('Сообщение пустое');
       return;
     }
 
@@ -138,7 +138,7 @@ class Chat extends Component<IChatProps, IChatState> {
       if (file.type.indexOf('image') > -1) {
         actions.uploadFile({ uid: uid, file });
       } else {
-        notify.error('Only images can be uploaded');
+        notify.error('Только картинки могут быть загружены');
       }
       event.preventDefault();
     }
@@ -174,7 +174,7 @@ class Chat extends Component<IChatProps, IChatState> {
           </div>
           <div className="chat-controls">
             <Input.TextArea
-              placeholder="Enter message"
+              placeholder="Введите сообщение"
               autoSize={{ minRows: 1, maxRows: 10 }}
               onChange={this.onChangeMessage}
               onKeyDown={this.onKeyDown}

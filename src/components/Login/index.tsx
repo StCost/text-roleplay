@@ -16,20 +16,20 @@ const Login = () => {
       <Form.Item
         label="Email"
         name="email"
-        rules={[{ required: true, message: 'Please input your email!' }]}
+        rules={[{ required: true, message: 'Введите e-mail!' }]}
       >
         <Input/>
       </Form.Item>
       <Form.Item
         label="Password"
         name="password"
-        rules={[{ required: true, message: 'Please input your password!' }]}
+        rules={[{ required: true, message: 'Введите пароль!' }]}
       >
         <Input.Password/>
       </Form.Item>
       <Form.Item>
         <Button type="primary" htmlType="submit">
-          Login
+          Войти
         </Button>
       </Form.Item>
     </Form>

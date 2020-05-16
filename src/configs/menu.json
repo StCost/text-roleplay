@@ -1,14 +1,14 @@
 [
   {
-    "label": "Chat",
+    "label": "Чат",
     "path": "/text-roleplay/chat"
   },
   {
-    "label": "Settings",
+    "label": "Настройки",
     "path": "./settings"
   },
   {
-    "label": "Logout",
+    "label": "Выйти",
     "path": "/text-roleplay/logout"
   }
 ]
