@@ -16,12 +16,14 @@ const routes: IRoute[] = [
     component: Chat,
   },
   {
-    path: '/text-roleplay/settings/:uid',
+    path: '/text-roleplay/:uid/settings',
     component: Settings,
+    exact: true,
   },
   {
     path: '/text-roleplay/settings',
     component: Settings,
+    exact: true,
   },
   {
     path: '/text-roleplay/logout',

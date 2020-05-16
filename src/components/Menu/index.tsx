@@ -19,11 +19,11 @@ function Menu(props: IMenuProps) {
     <AntdMenu
       style={{ width: '124px' }}
       mode="inline"
-      selectedKeys={[props.location.pathname]}
+      selectedKeys={[props.location.pathname.split('/').pop() || '']}
     >
       {menu.map((value) => (
         <AntdMenu.Item
-          key={value.path}
+          key={value.path.split('/').pop()}
           disabled={value.path === props.location.pathname}
         >
           <Link to={value.path}>

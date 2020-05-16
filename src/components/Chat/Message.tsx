@@ -29,7 +29,7 @@ const Message = (props: IMessageProps) => {
   } = props;
 
   const title = user && (
-    <Link to={`./settings/${user.uid}`}>
+    <Link to={`./${user.uid}/settings`}>
       <Tooltip
         title={user.lastOnline && `Last activity: ${getFullTime(user.lastOnline)}`}
         placement="left"

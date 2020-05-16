@@ -5,7 +5,7 @@
   },
   {
     "label": "Settings",
-    "path": "/text-roleplay/settings"
+    "path": "./settings"
   },
   {
     "label": "Logout",
