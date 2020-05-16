@@ -1,0 +1,22 @@
+.ant-menu {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  position: sticky;
+  top: 0;
+  left: 0;
+
+  &.ant-menu-horizontal {
+    width: 100vw;
+    height: 48px;
+    position: fixed;
+    z-index: 2;
+    flex-direction: row;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+  }
+
+  &.ant-menu-inline {
+    height: 100vh;
+    width: 124px;
+  }
+}

@@ -1,0 +1,19 @@
+.settings {
+  position: relative;
+  max-width: 600px;
+  box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
+
+.loader {
+  position: absolute;
+  top: -16px;
+  right: -16px;
+  z-index: 1;
+  font-size: 32px;
+  line-height: 32px;
+
+  @media(max-width: 767px) {
+    top: 0;
+    right: 0;
+  }
+}

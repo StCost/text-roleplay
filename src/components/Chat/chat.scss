@@ -19,6 +19,11 @@
     .chat-message {
       margin: 6px 0;
 
+      @media(max-width: 767px) {
+        margin: -1px 0;
+        border-bottom: none;
+      }
+
       &.mentioned .ant-card-body {
         background: rgba(255, 215, 0, 0.4);
       }
@@ -32,27 +37,34 @@
         }
       }
 
-      .chat-message__title {
-        display: flex;
-        align-items: center;
-        color: black;
+      .ant-card-head-title > a {
+        height: auto;
+        display: block;
+        width: fit-content;
 
-        &.online {
-          .ant-avatar {
-            border-color: #1890ff;
+        .chat-message__title {
+          display: flex;
+          align-items: center;
+          color: black;
+          width: fit-content;
+
+          &.online {
+            .ant-avatar {
+              border-color: #1890ff;
+            }
           }
-        }
 
-        .ant-avatar {
-          background-color: transparent;
-          border: 2px solid lightgrey;
-          margin: -4px 0;
-          display: block;
-          box-sizing: content-box;
-        }
+          .ant-avatar {
+            background-color: transparent;
+            border: 2px solid lightgrey;
+            margin: -4px 0;
+            display: block;
+            box-sizing: content-box;
+          }
 
-        .chat-message__nickname {
-          margin-left: 12px;
+          .chat-message__nickname {
+            margin-left: 12px;
+          }
         }
       }
 
@@ -76,6 +88,7 @@
         > img {
           max-height: 256px;
           width: auto;
+          max-width: 100%;
           margin: 0 auto;
           display: block;
         }
@@ -117,6 +130,7 @@
     padding-top: 4px;
     padding-bottom: 32px;
     border-top: 1px solid lightgray;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
 
     > span {
       padding: 6px;

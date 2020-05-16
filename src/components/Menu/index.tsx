@@ -3,6 +3,7 @@ import { Menu as AntdMenu } from 'antd';
 import { Link, withRouter, RouteComponentProps } from 'react-router-dom';
 import { connect } from 'react-redux';
 
+import './menu.scss';
 import menu from '../../configs/menu.json';
 import { IState } from '../../reducers';
 
@@ -15,10 +16,13 @@ function Menu(props: IMenuProps) {
     return <React.Fragment/>;
   }
 
+  const mode = window.innerWidth < 767
+    ? 'horizontal'
+    : 'inline';
+
   return (
     <AntdMenu
-      style={{ width: '124px' }}
-      mode="inline"
+      mode={mode}
       selectedKeys={[props.location.pathname.split('/').pop() || '']}
     >
       {menu.map((value) => (

@@ -3,22 +3,18 @@
     justify-content: center;
     align-items: center;
 
-    min-width: 600px;
     width: 100%;
     margin: 0 auto;
 }
 
-.app > div {
-    width: 100%;
+@media(max-width: 767px) {
+    .app {
+        margin-top: 48px;
+    }
 }
 
-.ant-menu {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    position: sticky;
-    height: 100vh;
-    top: 0;
+.app > div {
+    width: 100%;
 }
 
 div.ant-card {
@@ -32,19 +28,5 @@ div.ant-card {
 
 .ant-card img {
     width: 100%;
-}
-
-.settings {
-    position: relative;
-    max-width: 600px;
-}
-
-.loader {
-    position: absolute;
-    top: -16px;
-    right: -16px;
-    z-index: 1;
-    font-size: 32px;
-    line-height: 32px;
 }
 
