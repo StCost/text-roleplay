@@ -16,7 +16,7 @@ import Loader from '../Loader';
 
 interface ISettingsProps extends RouteComponentProps {
   loading: boolean;
-  user: IUser | null;
+  user?: IUser | null;
   uid: string;
 }
 
@@ -29,8 +29,11 @@ export class Settings extends React.Component<ISettingsProps> {
   };
 
   onChange = (field: string) => (event: ChangeEvent<HTMLInputElement>) => {
+    const { user } = this.props;
+    if (!user) return;
+
     const newSettings = {
-      ...this.props.user,
+      ...user,
       [field]: event.target.value,
     };
 
@@ -95,13 +98,22 @@ export class Settings extends React.Component<ISettingsProps> {
     }
   };
 
+  labels: {[key: string]: string} = {
+    'avatar': 'Аватар',
+    'nickname': 'Никнейм',
+  };
+
   render = () => {
     const { user, loading } = this.props;
 
     return (
-      <div className="settings">
+      <Card
+        className="settings"
+        bordered={false}
+        loading={user === undefined}
+      >
         <Loader loading={loading}/>
-        {Object
+        {user && Object
           .keys(defaultUser)
           .map((key: string) => {
             // @ts-ignore
@@ -109,14 +121,15 @@ export class Settings extends React.Component<ISettingsProps> {
             return field && (
               <Card
                 key={key}
-                title={key.toUpperCase()}
+                title={this.labels[key]}
               >
                 {field}
               </Card>
             )
           })
+
         }
-      </div>
+      </Card>
     )
   }
 }
@@ -127,10 +140,7 @@ const mapStateToProps = (state: IState, props: ISettingsProps) => {
 
   return {
     loading,
-    user: users[uid] || {
-      ...defaultUser,
-      uid,
-    }
+    user: users[uid]
   };
 };
 
