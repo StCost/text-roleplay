@@ -17,6 +17,8 @@ import './chat.scss';
 import actions from '../../actions';
 import { IMessage, IState, IUser, IUsers } from '../../reducers';
 import Message from './Message';
+import { diceRegexG, hasDice } from "../../helpers/dice";
+import { validateMessage } from "../../helpers/utils";
 
 interface IChatProps {
   messages: IMessage[],
@@ -110,8 +112,7 @@ class Chat extends Component<IChatProps, IChatState> {
       return;
     }
 
-    if (!message) {
-      notify.error('Сообщение пустое');
+    if (!validateMessage(message)) {
       return;
     }
 

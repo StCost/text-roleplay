@@ -1,7 +1,8 @@
 import randomInt from 'random-seed';
 import actions from '../actions';
 import { IMessage } from '../reducers';
-import { diceRegex, exportRolls } from './dice';
+import { diceRegex, exportRolls, hasDice } from './dice';
+import { message as notify, message } from "antd";
 // @ts-ignore
 window.randomInt = randomInt;
 
@@ -111,4 +112,42 @@ export const formatMessage = (message: IMessage) => {
   }
 
   return message;
+};
+
+export const validateMessage = (message: string) => {
+
+  if (!message) {
+    notify.error('Сообщение пустое');
+    return false;
+  }
+
+  if (hasDice(message)) {
+    const rolls: string[] | null = message.match(/(( |^)[a-zа-я]+\d+[dд]\d+)|(\d+[dд]\d+[a-zа-я]+( |$))|(\d+[dд]\d+)/miug);
+    if (rolls) {
+      const wasError = rolls.some((roll: string) => {
+        console.log(roll);
+        if (/(([a-zа-яё])\d+[dд]\d+)|(\d+[dд]\d+([a-zа-яё]))/miug.test(roll)) {
+          notify.error(`Ошибка в дайсе ${roll}. Рядом не должно быть символов`);
+          return true;
+        }
+
+        const [amount, size] = roll.split(/[dд]/u);
+
+        console.log(amount, size, parseInt(amount) > 10, !/((10|12|20)|[468])/gu.test(size));
+        if (parseInt(amount) > 10) {
+          notify.error(`Ошибка в дайсе ${roll}. Нельзя бросать больше 10-ти дайсов`);
+          return true;
+        }
+
+        if ([2,4,6,8,10,12,20].indexOf(parseInt(size)) === -1) {
+          notify.error(`Ошибка в дайсе ${roll}. Можно бросать только дайсы размеров 4 6 8 10 12 20`);
+          return true;
+        }
+
+        return false;
+      });
+      if (wasError) return false;
+    }
+  }
+  return true;
 };

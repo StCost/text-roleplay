@@ -11,11 +11,14 @@ export interface IRoll {
   sum: number;
 }
 
+export const diceRegex = /([1-9]|10)[dд]((10|12|20)|[468])/miu;
+export const diceRegexG = /([1-9]|10)[dд]((10|12|20)|[468])/miug;
+
 export const getRandomInt = (min: number, max: number) =>
   Math.floor(Math.random() * ((max + 1) - min) + min);
 
-export const diceRegex = /([1-9]|10)[dд]([468]|10|12|20)/miu;
-export const diceRegexG = /([1-9]|10)[dд]([468]|10|12|20)/miug;
+export const hasDice = (str: string) =>
+  /\d+[dд]\d+/imu.test(str);
 
 export const rollDice = (amount: number, size: number) => {
   return new Array(amount).fill(amount + size).map(() => getRandomInt(1, size));
