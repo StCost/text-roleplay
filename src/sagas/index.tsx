@@ -111,7 +111,7 @@ function* getMoreMessages(payload: IPayload) {
     .ref('messages')
     .orderByKey()
     .endAt(`${firstMessage.time}`)
-    .limitToLast(5)
+    .limitToLast(30)
     .once('value');
 
   const messages = Object.values(rawMessages.val() || {});

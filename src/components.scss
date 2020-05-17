@@ -2,6 +2,32 @@
   position: relative;
   max-width: 600px;
   box-shadow: 0 0 10px rgba(0,0,0,0.1);
+
+  .ant-card-head {
+    padding: 0;
+    border-bottom: none;
+
+    .ant-card-head-title {
+      padding: 12px;
+    }
+  }
+
+  > .ant-card-body {
+    padding: 12px;
+
+    .ant-card-body {
+      padding: 0 12px 12px 12px;
+    }
+  }
+
+  @media(max-width: 767px) {
+    border: none;
+    box-shadow: none;
+
+    > .ant-card-body {
+      padding: 0;
+    }
+  }
 }
 
 .loader {

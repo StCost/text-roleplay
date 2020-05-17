@@ -6,7 +6,6 @@
   justify-content: flex-end;
   padding: 0;
   margin: 0;
-  position: relative;
 
   .chat-body {
     display: flex;
@@ -15,6 +14,7 @@
     height: 100%;
     overflow: auto;
     position: relative;
+    margin-bottom: 57px;
 
     .chat-message {
       margin: 6px 0;
@@ -124,13 +124,20 @@
     display: flex;
     align-items: center;
     width: inherit;
-    position: relative;
+    position: fixed;
     bottom: 0;
     background: white;
-    padding-top: 4px;
-    padding-bottom: 32px;
+    padding: 12px;
     border-top: 1px solid lightgray;
-    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    max-width: 654px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    transform: translateX(calc(-50% - 67px));
+    left: calc(50% + 124px);
+
+    @media (max-width: 767px) {
+      transform: translateX(-50%);
+      left: calc(50%);
+    }
 
     > span {
       padding: 6px;
@@ -139,6 +146,10 @@
 }
 
 @keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }
