@@ -63,3 +63,24 @@ div > img.chat-image {
     border-color: #1890ff;
   }
 }
+
+.image-modal {
+  .ant-modal-header {
+    position: sticky;
+    top: 0;
+
+    .ant-modal-title > div {
+      display: flex;
+      justify-content: space-between;
+      position: relative;
+
+      .anticon {
+        cursor: pointer;
+        padding: 19px;
+        position: absolute;
+        top: -16px;
+        right: -24px;
+      }
+    }
+  }
+}

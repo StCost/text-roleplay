@@ -1,10 +1,11 @@
 import React, { Component } from 'react';
 import { Modal } from 'antd';
+import { CloseOutlined } from '@ant-design/icons';
 
 class Image extends Component<{ src: string }, { visible: boolean }> {
   state = { visible: false };
 
-  showModal = () => {
+  toggleModal = () => {
     this.setState({
       visible: !this.state.visible,
     });
@@ -16,25 +17,29 @@ class Image extends Component<{ src: string }, { visible: boolean }> {
     return (
       <React.Fragment>
         <img
-          onClick={this.showModal}
+          onClick={this.toggleModal}
           src={src}
           alt=""
           className="chat-image"
         />
         <Modal
           title={
-            <a
-              href={src}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              {src}
-            </a>
+            <div>
+              <a
+                href={src}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                {src}
+              </a>
+              <CloseOutlined onClick={this.toggleModal}/>
+            </div>
           }
-          closable
+          className="image-modal"
+          closable={false}
           footer={null}
           visible={this.state.visible}
-          onCancel={this.showModal}
+          onCancel={this.toggleModal}
           width="fit-content"
         >
           <img
