@@ -54,10 +54,12 @@ export interface IUser {
 }
 
 export const defaultUser = {
+  lastOnline: 0,
+
   nickname: '',
   avatar: '',
+
   uid: '',
-  lastOnline: 0,
 };
 
 const reducer = (state = initialState, action: IAction) => {
@@ -116,7 +118,7 @@ const reducer = (state = initialState, action: IAction) => {
         ...state,
         users: {
           ...state.users,
-          [action.user.uid]: action.user,
+          [action.uid]: action.user,
         },
       }
     }

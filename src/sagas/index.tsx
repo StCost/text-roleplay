@@ -130,7 +130,7 @@ function getUser(payload: IPayload) {
     .child(uid)
     .on('value', (rawUser) => {
       const user = rawUser.val() || {};
-      actions.getUserSuccess({ user });
+      actions.getUserSuccess({ user, uid });
     });
 }
 

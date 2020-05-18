@@ -3,6 +3,10 @@
   max-width: 600px;
   box-shadow: 0 0 10px rgba(0,0,0,0.1);
 
+  .uid,.nickname {
+    margin-top: 24px;
+  }
+
   .ant-card-head {
     padding: 0;
     border-bottom: none;
@@ -41,5 +45,21 @@
   @media(max-width: 767px) {
     top: 0;
     right: 0;
+  }
+}
+
+div > img.chat-image {
+  max-height: 256px;
+  width: auto;
+  max-width: 100%;
+  margin: 0 auto;
+  display: block;
+  cursor: pointer;
+  border: 2px solid transparent;
+  transition-duration: 0.3s;
+  border-radius: 5px;
+
+  &:hover {
+    border-color: #1890ff;
   }
 }

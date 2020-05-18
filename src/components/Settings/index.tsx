@@ -4,6 +4,7 @@ import {
   Card,
   Input,
   Button,
+  Popconfirm,
 } from 'antd';
 import { RouteComponentProps } from 'react-router';
 
@@ -13,6 +14,7 @@ import actions from '../../actions';
 import { IState, IUser, defaultUser } from '../../reducers';
 import Avatar from '../Avatar';
 import Loader from '../Loader';
+import { getFullTime } from "../../helpers/utils";
 
 interface ISettingsProps extends RouteComponentProps {
   loading: boolean;
@@ -56,7 +58,7 @@ export class Settings extends React.Component<ISettingsProps> {
   });
 
   getField = (key: string, value: string, user: IUser) => {
-    const { nickname } = user;
+    const { nickname = '' } = user;
 
     switch (key) {
       case 'avatar':
@@ -67,12 +69,21 @@ export class Settings extends React.Component<ISettingsProps> {
                 value={value}
                 onChange={this.onChange(key)}
               />
-              <Button
-                onClick={this.clearAvatar}
+              <Popconfirm
+                title="Очистить аватар?"
+                onConfirm={this.clearAvatar}
+                okText="Да"
+                cancelText="Нет"
+                icon={<ClearOutlined style={{ color: '#ff4d4f'}}/>}
                 disabled={!value}
               >
-                <ClearOutlined/>
-              </Button>
+                <Button
+                  disabled={!value}
+                  danger
+                >
+                  <ClearOutlined/>
+                </Button>
+              </Popconfirm>
             </div>
             <Avatar
               avatar={value}
@@ -83,10 +94,15 @@ export class Settings extends React.Component<ISettingsProps> {
           </div>
         );
 
-      // Don't display UID and lastOnline editor
       case 'uid':
+        return (
+          <Input value={value} readOnly/>
+        );
+
       case 'lastOnline':
-        return false;
+        return (
+          <Input value={getFullTime(parseInt(value))} readOnly/>
+        );
 
       default:
         return (
@@ -101,11 +117,14 @@ export class Settings extends React.Component<ISettingsProps> {
   labels: {[key: string]: string} = {
     'avatar': 'Аватар',
     'nickname': 'Никнейм',
+    'lastOnline': 'Последняя активность',
+    'uid': 'UID',
   };
 
   render = () => {
     const { user, loading } = this.props;
 
+    console.log('user', user);
     return (
       <Card
         className="settings"
@@ -117,9 +136,10 @@ export class Settings extends React.Component<ISettingsProps> {
           .keys(defaultUser)
           .map((key: string) => {
             // @ts-ignore
-            const field = this.getField(key, `${user[key]}`, user);
+            const field = this.getField(key, `${user[key] || ''}`, user);
             return field && (
               <Card
+                className={key}
                 key={key}
                 title={this.labels[key]}
               >
@@ -137,10 +157,14 @@ export class Settings extends React.Component<ISettingsProps> {
 const mapStateToProps = (state: IState, props: ISettingsProps) => {
   const { loading, users } = state;
   const uid = new URLSearchParams(props.match.params).get('uid') || state.uid || '0';
+  const user = users[uid];
+  if (user && !user.uid && uid) {
+    user.uid = uid;
+  }
 
   return {
     loading,
-    user: users[uid]
+    user
   };
 };
 

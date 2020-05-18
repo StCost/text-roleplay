@@ -40,7 +40,7 @@ const Message = (props: IMessageProps) => {
             nickname={user.nickname}
           />
           <div className="chat-message__nickname">
-            {user.nickname}
+            {user.nickname || user.uid}
           </div>
         </div>
       </Tooltip>

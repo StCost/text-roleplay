@@ -2,6 +2,7 @@ import React from 'react';
 import { isURL } from '../../helpers/utils';
 import { IMessage } from '../../reducers';
 import { importRolls } from '../../helpers/dice';
+import Image from "../Image";
 
 interface IMessageBodyProps {
   message: IMessage;
@@ -17,10 +18,7 @@ const MessageBody = (props: IMessageBodyProps) => {
   if (isURL(body)) {
     if (/\.(gif|jpe?g|tiff|png|webp|bmp)/ig.test(body)) {
       return (
-        <img
-          src={body}
-          alt=""
-        />
+        <Image src={body}/>
       )
     }
 

@@ -8,7 +8,7 @@ const Loader = (props: { loading: boolean }) => {
     <div className="loader">
       {loading
         ? (
-          <SyncOutlined spin style={{color: "#eb2f96"}} />
+          <SyncOutlined spin style={{color: "#ff4d4f"}} />
         ) : (
           <CheckCircleTwoTone twoToneColor="#52c41a"/>
         )
