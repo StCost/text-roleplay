@@ -18,15 +18,16 @@ import { getFullTime } from "../../helpers/utils";
 
 interface ISettingsProps extends RouteComponentProps {
   loading: boolean;
-  user?: IUser | null;
+  user: IUser | null;
+  hasRight: boolean;
   uid: string;
 }
 
 export class Settings extends React.Component<ISettingsProps> {
   componentDidMount = () => {
-    const { user } = this.props;
-    if (user) {
-      actions.getUser({ uid: user.uid });
+    const { user, uid } = this.props;
+    if (!user) {
+      actions.getUser({ uid });
     }
   };
 
@@ -59,6 +60,8 @@ export class Settings extends React.Component<ISettingsProps> {
 
   getField = (key: string, value: string, user: IUser) => {
     const { nickname = '' } = user;
+    const { hasRight } = this.props;
+    const disabled = !hasRight;
 
     switch (key) {
       case 'avatar':
@@ -68,6 +71,7 @@ export class Settings extends React.Component<ISettingsProps> {
               <Input
                 value={value}
                 onChange={this.onChange(key)}
+                readOnly={disabled}
               />
               <Popconfirm
                 title="Очистить аватар?"
@@ -78,7 +82,7 @@ export class Settings extends React.Component<ISettingsProps> {
                 disabled={!value}
               >
                 <Button
-                  disabled={!value}
+                  disabled={disabled || !value}
                   danger
                 >
                   <ClearOutlined/>
@@ -96,12 +100,18 @@ export class Settings extends React.Component<ISettingsProps> {
 
       case 'uid':
         return (
-          <Input value={value} readOnly/>
+          <Input
+            value={value}
+            readOnly
+          />
         );
 
       case 'lastOnline':
         return (
-          <Input value={getFullTime(parseInt(value))} readOnly/>
+          <Input
+            value={getFullTime(parseInt(value))}
+            readOnly
+          />
         );
 
       default:
@@ -109,6 +119,7 @@ export class Settings extends React.Component<ISettingsProps> {
           <Input
             defaultValue={value}
             onChange={this.onChange(key)}
+            readOnly={disabled}
           />
         )
     }
@@ -124,7 +135,6 @@ export class Settings extends React.Component<ISettingsProps> {
   render = () => {
     const { user, loading } = this.props;
 
-    console.log('user', user);
     return (
       <Card
         className="settings"
@@ -155,7 +165,8 @@ export class Settings extends React.Component<ISettingsProps> {
 }
 
 const mapStateToProps = (state: IState, props: ISettingsProps) => {
-  const { loading, users } = state;
+  const { loading, users, currentUser } = state;
+
   const uid = new URLSearchParams(props.match.params).get('uid') || state.uid || '0';
   const user = users[uid];
   if (user && !user.uid && uid) {
@@ -164,7 +175,9 @@ const mapStateToProps = (state: IState, props: ISettingsProps) => {
 
   return {
     loading,
-    user
+    user,
+    uid,
+    hasRight: (!!user && !!currentUser) && (currentUser.uid === user.uid || !!currentUser.isAdmin),
   };
 };
 

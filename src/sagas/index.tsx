@@ -121,7 +121,7 @@ function* getMoreMessages(payload: IPayload) {
 const requestedUsers: { [key: string]: true } = {};
 
 function getUser(payload: IPayload) {
-  const { uid } = payload;
+  const { uid, currentUser } = payload;
 
   if (requestedUsers[uid]) return;
   requestedUsers[uid] = true;
@@ -130,7 +130,7 @@ function getUser(payload: IPayload) {
     .child(uid)
     .on('value', (rawUser) => {
       const user = rawUser.val() || {};
-      actions.getUserSuccess({ user, uid });
+      actions.getUserSuccess({ user, uid, currentUser });
     });
 }
 

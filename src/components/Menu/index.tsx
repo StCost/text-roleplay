@@ -20,7 +20,6 @@ function Menu(props: IMenuProps) {
     ? 'horizontal'
     : 'inline';
 
-  console.log([props.location.pathname.split('/').pop() || ''], menu.map(({ path }) => path.split('/').pop() || ''));
   return (
     <AntdMenu
       mode={mode}

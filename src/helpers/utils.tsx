@@ -125,7 +125,6 @@ export const validateMessage = (message: string) => {
     const rolls: string[] | null = message.match(/(( |^)[a-zа-я]+\d+[dд]\d+)|(\d+[dд]\d+[a-zа-я]+( |$))|(\d+[dд]\d+)/miug);
     if (rolls) {
       const wasError = rolls.some((roll: string) => {
-        console.log(roll);
         if (/(([a-zа-яё])\d+[dд]\d+)|(\d+[dд]\d+([a-zа-яё]))/miug.test(roll)) {
           notify.error(`Ошибка в дайсе ${roll}. Рядом не должно быть символов`);
           return true;
@@ -133,7 +132,6 @@ export const validateMessage = (message: string) => {
 
         const [amount, size] = roll.split(/[dд]/u);
 
-        console.log(amount, size, parseInt(amount) > 10, !/((10|12|20)|[468])/gu.test(size));
         if (parseInt(amount) > 10) {
           notify.error(`Ошибка в дайсе ${roll}. Нельзя бросать больше 10-ти дайсов`);
           return true;

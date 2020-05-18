@@ -32,6 +32,7 @@ export interface IState {
   messages: IMessage[];
   users: IUsers;
   uid: string;
+  currentUser: IUser | null;
 }
 
 const user = JSON.parse(localStorage.getItem('user') || 'null');
@@ -44,6 +45,7 @@ export const initialState: IState = {
   messages: [],
   users: {},
   uid: user ? user.uid : '',
+  currentUser: null,
 };
 
 export interface IUser {
@@ -51,6 +53,7 @@ export interface IUser {
   avatar: string;
   uid: string,
   lastOnline: number;
+  isAdmin?: boolean;
 }
 
 export const defaultUser = {
@@ -116,6 +119,9 @@ const reducer = (state = initialState, action: IAction) => {
     case 'GET_USER_SUCCESS': {
       return {
         ...state,
+        currentUser: action.currentUser
+          ? action.user
+          : state.currentUser,
         users: {
           ...state.users,
           [action.uid]: action.user,

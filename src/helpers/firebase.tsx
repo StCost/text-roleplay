@@ -14,7 +14,7 @@ const database = fbDatabase();
 auth.onAuthStateChanged((user) => {
   if (user) {
     actions.loginSuccess({ user });
-    actions.getUser({ uid: user.uid });
+    actions.getUser({ uid: user.uid, currentUser: true });
   } else {
     actions.logout({});
   }
