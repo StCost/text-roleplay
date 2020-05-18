@@ -5,7 +5,7 @@ import {
 } from 'antd';
 import { RouteComponentProps } from 'react-router';
 
-import './inventory.scss';
+import '../../styles/inventory.scss';
 import actions from '../../actions';
 import { IState, IUser, defaultUser } from '../../reducers';
 import Loader from "../Loader";

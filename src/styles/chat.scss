@@ -1,3 +1,5 @@
+@import "colors";
+
 .chat-wrapper {
   display: flex;
   flex-direction: column;
@@ -18,6 +20,7 @@
 
     .chat-message {
       margin: 6px 0;
+      position: relative;
 
       @media(max-width: 767px) {
         margin: -1px 0;
@@ -25,12 +28,16 @@
       }
 
       &.mentioned .ant-card-body {
-        background: rgba(255, 215, 0, 0.4);
+        background: #e8b339;
+        * {
+          color: $background-color-light;
+        }
       }
 
       &.grouped {
-        margin-top: -8px;
-        border-top: none;
+        margin-top: -6px;
+        border-top-color: $border-color;
+        z-index: 1;
 
         .ant-card-head {
           display: none;
@@ -50,13 +57,13 @@
 
           &.online {
             .ant-avatar {
-              border-color: #1890ff;
+              border-color: $background-color-selected;
             }
           }
 
           .ant-avatar {
             background-color: transparent;
-            border: 2px solid lightgrey;
+            border: 2px solid $background-color;
             margin: -4px 0;
             display: block;
             box-sizing: content-box;
@@ -118,9 +125,9 @@
     width: inherit;
     position: fixed;
     bottom: 0;
-    background: white;
+    background: $background-color-light;
     padding: 12px;
-    border-top: 1px solid lightgray;
+    border-top: 1px solid $border-color;
     max-width: 654px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     transform: translateX(calc(-50% - 67px));

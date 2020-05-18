@@ -1,6 +1,5 @@
-import React, { Component, MouseEvent } from 'react';
+import React, { Component } from 'react';
 import { Modal } from 'antd';
-
 
 class Image extends Component<{ src: string }, { visible: boolean }> {
   state = { visible: false };

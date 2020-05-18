@@ -1,0 +1,117 @@
+@import "colors";
+
+.app {
+  background-color: $background-color;
+}
+
+.ant-card {
+  background-color: $background-color-light;
+  border-color: $background-color;
+
+  * {
+    border-color: $border-color;
+    color: $text-color;
+  }
+
+  &.grouped {
+    border-top-color: $border-color;
+  }
+
+  .ant-card-body {
+    .ant-card {
+      background-color: $background-color-lighter;
+      border-color: $border-color;
+    }
+  }
+}
+
+.ant-popover {
+  .ant-popover-content, .ant-popover-inner {
+    background-color: $background-color-light;
+    border-color: $background-color;
+
+    * {
+      border-color: $border-color;
+      color: $text-color;
+    }
+  }
+}
+
+.ant-popover-placement-top > .ant-popover-content > .ant-popover-arrow, .ant-popover-placement-topLeft > .ant-popover-content > .ant-popover-arrow, .ant-popover-placement-topRight > .ant-popover-content > .ant-popover-arrow {
+  border-color: $background-color-light;
+}
+
+.ant-menu {
+  background-color: $background-color-light;
+  border-color: $background-color;
+
+  .ant-menu-item > a {
+    color: $text-color !important;
+  }
+
+  .ant-menu-item-selected {
+    background-color: $background-color-selected !important;
+    color: $text-color !important;
+
+    &:after {
+      border-color: #111d2c;
+    }
+  }
+
+  .ant-menu-item-disabled > a, .ant-menu-submenu-disabled > a {
+    color: $text-color-selected !important;
+  }
+}
+
+.ant-input {
+  background-color: $background-color-interactive;
+  border-color: $border-color-interactive;
+  color: $text-color;
+
+  &:read-only {
+    background-color: $background-color;
+    border-color: $border-color;
+  }
+
+  &:disabled {
+    background-color: $background-color;
+    border-color: $border-color;
+    color: $background-color-lighter;
+  }
+}
+
+.ant-btn {
+  background-color: $background-color-interactive;
+  border-color: $border-color-interactive;
+
+  &:hover {
+    background-color: $border-color-interactive;
+  }
+
+  &:focus {
+    background-color: $background-color-interactive-lighter;
+  }
+}
+
+.ant-btn-dangerous-disabled, .ant-btn-dangerous.disabled, .ant-btn-dangerous[disabled], .ant-btn-dangerous-disabled:hover, .ant-btn-dangerous.disabled:hover, .ant-btn-dangerous[disabled]:hover, .ant-btn-dangerous-disabled:focus, .ant-btn-dangerous.disabled:focus, .ant-btn-dangerous[disabled]:focus, .ant-btn-dangerous-disabled:active, .ant-btn-dangerous.disabled:active, .ant-btn-dangerous[disabled]:active, .ant-btn-dangerous-disabled.active, .ant-btn-dangerous.disabled.active, .ant-btn-dangerous[disabled].active {
+  background-color: $background-color;
+  color: $background-color-light;
+  border-color: $border-color;
+
+  .anticon svg {
+    fill: $border-color;
+  }
+}
+
+.anticon svg {
+  fill: #b7e3fa;
+}
+
+.ant-spin-nested-loading > div > .ant-spin {
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+}
+.ant-spin-blur::after {
+  opacity: 0;
+}

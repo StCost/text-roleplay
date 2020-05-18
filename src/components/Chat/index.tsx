@@ -13,7 +13,7 @@ import {
   Spin,
 } from 'antd';
 
-import './chat.scss';
+import '../../styles/chat.scss';
 import actions from '../../actions';
 import { IMessage, IState, IUser, IUsers } from '../../reducers';
 import Message from './Message';

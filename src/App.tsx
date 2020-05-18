@@ -5,8 +5,9 @@ import 'antd/dist/antd.css';
 import Menu from './components/Menu';
 import Router from './components/Router';
 
-import './components.scss';
 import './App.css';
+import './styles/antd-dark.scss';
+import './styles/components.scss';
 import { listenForActivity } from './helpers/utils';
 
 function App() {
