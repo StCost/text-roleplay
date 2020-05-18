@@ -8,6 +8,11 @@
     "path": "./settings"
   },
   {
+    "label": "Помощь",
+    "path": "https://github.com/StCost/text-roleplay/blob/master/README.md",
+    "link": true
+  },
+  {
     "label": "Выйти",
     "path": "/text-roleplay/logout"
   }

@@ -30,9 +30,23 @@ function Menu(props: IMenuProps) {
           key={value.path.split('/').pop()}
           disabled={value.path === props.location.pathname}
         >
-          <Link to={value.path}>
-            {value.label}
-          </Link>
+          {
+            value.link
+              ? (
+
+                <a
+                  href={value.path}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  Помощь
+                </a>
+              ) : (
+                <Link to={value.path}>
+                  {value.label}
+                </Link>
+              )
+          }
         </AntdMenu.Item>
       ))}
     </AntdMenu>
