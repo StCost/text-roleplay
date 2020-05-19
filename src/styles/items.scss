@@ -7,6 +7,14 @@
   margin: 32px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 
+  .items-controls {
+    display: flex;
+
+    > .ant-btn {
+      width: fit-content;
+    }
+  }
+
   .items-body {
     display: flex;
     flex-wrap: wrap;

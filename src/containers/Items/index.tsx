@@ -1,10 +1,12 @@
-import React from 'react';
+import React, { ChangeEvent } from 'react';
 import { connect } from 'react-redux';
 import {
   Button,
   Card,
+  Input,
 } from 'antd';
 import { RouteComponentProps } from 'react-router';
+import { FilterOutlined } from '@ant-design/icons';
 
 import '../../styles/items.scss';
 import actions from '../../actions';
@@ -22,16 +24,32 @@ interface IItemsProps extends RouteComponentProps {
 }
 
 interface IItemsState {
-  searchValue: string;
   creatingItem: boolean;
   editingItem: IItem | null;
+  searchString: string;
 }
 
 export class Items extends React.Component<IItemsProps, IItemsState> {
   state = {
-    searchValue: '',
     creatingItem: false,
     editingItem: null,
+    searchString: '',
+  };
+
+  get items() {
+    const searchString = this.state.searchString.toLowerCase();
+    return this.props.items.filter((item: IItem) => {
+      const { name, description, effect } = item;
+      return (
+        (name && name.toLowerCase().indexOf(searchString) > -1)
+        || (description && description.toLowerCase().indexOf(searchString) > -1)
+        || (effect && effect.toLowerCase().indexOf(searchString) > -1)
+      )
+    });
+  }
+
+  componentDidMount = () => {
+    actions.getItems({});
   };
 
   toggleCreatingItem = (creatingItem: boolean = !this.state.creatingItem) =>
@@ -40,46 +58,60 @@ export class Items extends React.Component<IItemsProps, IItemsState> {
   toggleEditingItem = (item?: IItem | null) =>
     this.setState({ editingItem: item || null });
 
-  componentDidMount = () => {
-    actions.getItems({});
-  };
-
   onCreateItem = (item: IItem) => {
     actions.setItem({ item });
     this.toggleCreatingItem(false);
     this.toggleEditingItem(null);
   };
 
-  render = () => {
-    const { loading, items, currentUser, uid } = this.props;
+  getCreators = () => {
     const { creatingItem, editingItem } = this.state;
+
+    return (
+      <>
+        <ItemCreator
+          visible={creatingItem}
+          onClose={() => this.toggleCreatingItem(false)}
+          onSubmit={this.onCreateItem}
+        />
+        <ItemCreator
+          visible={!!editingItem}
+          onClose={() => this.toggleEditingItem(null)}
+          onSubmit={this.onCreateItem}
+          item={editingItem || undefined}
+        />
+      </>
+    )
+  };
+
+  getControls = () => {
+    return (
+      <div className="items-controls">
+        <Button onClick={() => this.toggleCreatingItem(true)}>
+          Создать предмет
+        </Button>
+        <Input
+          placeholder="Поиск предмета"
+          onChange={(e: ChangeEvent<HTMLInputElement>) => this.setState({ searchString: e.currentTarget.value })}
+          allowClear
+        />
+        <Button>
+          <FilterOutlined />
+        </Button>
+      </div>
+    )
+  };
+
+  render = () => {
+    const { loading, currentUser, uid } = this.props;
 
     return (
       <Card className="items">
         <Loader loading={loading}/>
-        <div className="items-header">
-          <div className="items-controls">
-            <Button onClick={() => this.toggleCreatingItem(true)}>
-              Новый предмет
-            </Button>
-            {/*<Input*/}
-            {/*placeholder="Поиск предмета"*/}
-            {/*/>*/}
-          </div>
-          <ItemCreator
-            visible={creatingItem}
-            onClose={() => this.toggleCreatingItem(false)}
-            onSubmit={this.onCreateItem}
-          />
-          <ItemCreator
-            visible={!!editingItem}
-            onClose={() => this.toggleEditingItem(null)}
-            onSubmit={this.onCreateItem}
-            item={editingItem || undefined}
-          />
-        </div>
+        {this.getCreators()}
+        {this.getControls()}
         <ItemsList
-          items={items}
+          items={this.items}
           uid={uid}
           currentUser={currentUser}
           toggleEditingItem={this.toggleEditingItem}

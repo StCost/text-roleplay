@@ -4,6 +4,7 @@ import {
   Menu,
   Button,
   Modal,
+  Empty,
 } from 'antd';
 import { InsertRowBelowOutlined } from '@ant-design/icons';
 
@@ -19,60 +20,69 @@ interface IItemsListProps {
 }
 
 class ItemsList extends Component<IItemsListProps> {
-  render = () => {
-    const { uid, currentUser, toggleEditingItem } = this.props;
-    const canControl = (item: IItem) =>
-      uid === item.author || (currentUser && currentUser.isAdmin);
-
-    const deleteModal = (item: IItem) => () => Modal.confirm({
-      title: 'Вы уверены, что хотите удалить предмет? Это действие необратимо',
-      maskClosable: true,
-      okText: 'Удалить',
-      cancelText: 'Отмена',
-      onOk: (close) => {
-        actions.deleteItem({ id: item.id });
-        close();
-      }
-    });
-
-    const controls = (item: IItem) => (
-      <Menu>
-        <Menu.Item>
-          <Button>
-            Взять
-          </Button>
-        </Menu.Item>
-        <Menu.Item>
-          <Button onClick={() => toggleEditingItem(item)}>
-            Редактировать
-          </Button>
-        </Menu.Item>
-        <Menu.Item>
-          <Button onClick={deleteModal(item)}>
-            Удалить
-          </Button>
-        </Menu.Item>
-      </Menu>
-    );
-
-    const getFooter = (item: IItem) => (
-      <Dropdown
-        overlay={controls(item)}
-        trigger={['click']}
-      >
+  getControls = (item: IItem) => (
+    <Menu>
+      <Menu.Item>
         <Button>
-          <InsertRowBelowOutlined/>
+          Взять
         </Button>
-      </Dropdown>
-    );
+      </Menu.Item>
+      <Menu.Item>
+        <Button onClick={() => this.props.toggleEditingItem(item)}>
+          Редактировать
+        </Button>
+      </Menu.Item>
+      <Menu.Item>
+        <Button onClick={this.deleteModal(item)}>
+          Удалить
+        </Button>
+      </Menu.Item>
+    </Menu>
+  );
+
+  getFooter = (item: IItem) => (
+    <Dropdown
+      overlay={this.getControls(item)}
+      trigger={['click']}
+    >
+      <Button>
+        <InsertRowBelowOutlined/>
+      </Button>
+    </Dropdown>
+  );
+
+  deleteModal = (item: IItem) => () => Modal.confirm({
+    title: 'Вы уверены, что хотите удалить предмет? Это действие необратимо',
+    maskClosable: true,
+    okText: 'Удалить',
+    cancelText: 'Отмена',
+    onOk: (close) => {
+      actions.deleteItem({ id: item.id });
+      close();
+    }
+  });
+
+  canControl = (item: IItem) => {
+    const { uid, currentUser } = this.props;
+    return uid === item.author || (currentUser && currentUser.isAdmin);
+  };
+
+  render = () => {
+    const { items } = this.props;
+
+    if (!items || items.length === 0) {
+      return (
+        <Empty description="Нет предметов"/>
+      )
+    }
 
     return (
       <div className="items-body">
-        {this.props.items.map((item: IItem) => (
+        {items.map((item: IItem) => (
           <Item
             key={item.id + item.time}
             item={item}
-            footer={canControl(item) ? getFooter(item) : undefined}
+            footer={this.canControl(item) ? this.getFooter(item) : undefined}
           />
         ))}
       </div>
