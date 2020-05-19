@@ -1,11 +1,13 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import {
-  Card,
   Button,
-  Input,
+  Card,
+  Dropdown,
+  Menu,
 } from 'antd';
 import { RouteComponentProps } from 'react-router';
+import { InsertRowBelowOutlined } from '@ant-design/icons';
 
 import '../../styles/items.scss';
 import actions from '../../actions';
@@ -52,15 +54,39 @@ export class Items extends React.Component<IItemsProps, IItemsState> {
   };
 
   items = () => {
+    const { uid, currentUser } = this.props;
+    const canControl = (item: IItem) =>
+      uid === item.author || (currentUser && currentUser.isAdmin);
+
     const controls = (item: IItem) => (
-      <div>
+      <Menu>
+        <Menu.Item>
+          <Button>
+            Взять
+          </Button>
+        </Menu.Item>
+        <Menu.Item>
+          <Button onClick={() => this.toggleEditingItem(item)}>
+            Редактировать
+          </Button>
+        </Menu.Item>
+        <Menu.Item>
+          <Button>
+            Удалить
+          </Button>
+        </Menu.Item>
+      </Menu>
+    );
+
+    const getFooter = (item: IItem) => (
+      <Dropdown
+        overlay={controls(item)}
+        trigger={['click']}
+      >
         <Button>
-          Удалить
+          <InsertRowBelowOutlined/>
         </Button>
-        <Button onClick={() => this.toggleEditingItem(item)}>
-          Редактировать
-        </Button>
-      </div>
+      </Dropdown>
     );
 
     return (
@@ -69,7 +95,7 @@ export class Items extends React.Component<IItemsProps, IItemsState> {
           <Item
             key={item.id + item.time}
             item={item}
-            footer={controls}
+            footer={canControl(item) ? getFooter(item) : undefined}
           />
         ))}
       </div>
@@ -89,7 +115,7 @@ export class Items extends React.Component<IItemsProps, IItemsState> {
               Новый предмет
             </Button>
             {/*<Input*/}
-              {/*placeholder="Поиск предмета"*/}
+            {/*placeholder="Поиск предмета"*/}
             {/*/>*/}
           </div>
           <ItemCreator

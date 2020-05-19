@@ -207,6 +207,7 @@ class ItemCreator extends Component<IItemCreatorProps, IItem> {
     }
 
     onSubmit(newItem);
+    this.setState(defaultItem);
   };
 
   content = () => {

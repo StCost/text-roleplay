@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import { Card } from 'antd';
-import { InsertRowBelowOutlined } from '@ant-design/icons';
 
 import '../styles/item.scss';
 import { IItem } from '../reducers/interfaces';
@@ -9,15 +8,10 @@ import Avatar from "./Avatar";
 interface IItemProps {
   item: IItem,
   showTechInfo?: boolean,
-  footer?: (item: IItem) => JSX.Element,
+  footer?: JSX.Element,
 }
 
-class Item extends Component<IItemProps, { showFooter: boolean }> {
-  state = { showFooter: false };
-
-  toggleFooter = () =>
-    this.setState({ showFooter: !this.state.showFooter });
-
+class Item extends Component<IItemProps> {
   getStats = () => {
     const { type, armor, amount, capacity } = this.props.item;
 
@@ -53,7 +47,6 @@ class Item extends Component<IItemProps, { showFooter: boolean }> {
       type,
     } = this.props.item;
     const { footer } = this.props;
-    const { showFooter } = this.state;
 
     const stats = this.getStats();
     return (
@@ -90,9 +83,8 @@ class Item extends Component<IItemProps, { showFooter: boolean }> {
           </div>
         )}
         {footer && (
-          <div className={`item-footer ${showFooter ? 'expanded' : ''}`}>
-            {showFooter && footer(this.props.item)}
-            <InsertRowBelowOutlined onClick={this.toggleFooter}/>
+          <div className="item-footer">
+          {footer}
           </div>
         )}
       </Card>
