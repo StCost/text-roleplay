@@ -4,7 +4,10 @@ import {
   Button,
   Card,
   Input,
+  Radio,
+  Dropdown,
 } from 'antd';
+import { RadioChangeEvent } from 'antd/lib/radio';
 import { RouteComponentProps } from 'react-router';
 import { FilterOutlined } from '@ant-design/icons';
 
@@ -13,7 +16,7 @@ import actions from '../../actions';
 import { IItem, IState, IUser } from '../../reducers/interfaces';
 import Loader from '../../components/Loader';
 import ItemCreator from './ItemCreator';
-import ItemsList from "./ItemsList";
+import ItemsList from './ItemsList';
 
 interface IItemsProps extends RouteComponentProps {
   loading: boolean;
@@ -27,6 +30,7 @@ interface IItemsState {
   creatingItem: boolean;
   editingItem: IItem | null;
   searchString: string;
+  filter: 'weapon' | 'consumable' | 'wearable' | 'junk' | 'ammo' | 'note' | 'key' | 'misc' | undefined;
 }
 
 export class Items extends React.Component<IItemsProps, IItemsState> {
@@ -34,18 +38,27 @@ export class Items extends React.Component<IItemsProps, IItemsState> {
     creatingItem: false,
     editingItem: null,
     searchString: '',
+    filter: undefined,
   };
 
   get items() {
-    const searchString = this.state.searchString.toLowerCase();
-    return this.props.items.filter((item: IItem) => {
-      const { name, description, effect } = item;
-      return (
-        (name && name.toLowerCase().indexOf(searchString) > -1)
-        || (description && description.toLowerCase().indexOf(searchString) > -1)
-        || (effect && effect.toLowerCase().indexOf(searchString) > -1)
-      )
-    });
+    const { searchString, filter } = this.state;
+
+    const _searchString = searchString.toLowerCase();
+    return this
+      .props
+      .items
+      .filter((item: IItem) => {
+        const { name, description, effect } = item;
+        return (
+          (name && name.toLowerCase().indexOf(_searchString) > -1)
+          || (description && description.toLowerCase().indexOf(_searchString) > -1)
+          || (effect && effect.toLowerCase().indexOf(_searchString) > -1)
+        )
+      })
+      .filter((item: IItem) =>
+        !filter || !item.type || item.type === filter
+      );
   }
 
   componentDidMount = () => {
@@ -84,6 +97,29 @@ export class Items extends React.Component<IItemsProps, IItemsState> {
     )
   };
 
+  onFilterChange = (e: RadioChangeEvent) =>
+    this.setState({ filter: e.target.value });
+
+  // filter: 'weapon' | 'consumable' | 'wearable' | 'junk' | 'ammo' | 'note' | 'key' | 'misc' | undefined;
+  getFilters = () => {
+    return (
+      <Radio.Group
+        onChange={this.onFilterChange}
+        defaultValue={undefined}
+        style={{ display: 'flex', flexDirection: 'column' }}
+      >
+        <Radio.Button>Всё</Radio.Button>
+        <Radio.Button value="weapon">Оружие</Radio.Button>
+        <Radio.Button value="consumable">Употребляемое</Radio.Button>
+        <Radio.Button value="wearable">Одежда/Броня</Radio.Button>
+        <Radio.Button value="junk">Мусор</Radio.Button>
+        <Radio.Button value="note">Записки</Radio.Button>
+        <Radio.Button value="key">Ключи</Radio.Button>
+        <Radio.Button value="misc">Прочее</Radio.Button>
+      </Radio.Group>
+    )
+  };
+
   getControls = () => {
     return (
       <div className="items-controls">
@@ -95,9 +131,14 @@ export class Items extends React.Component<IItemsProps, IItemsState> {
           onChange={(e: ChangeEvent<HTMLInputElement>) => this.setState({ searchString: e.currentTarget.value })}
           allowClear
         />
-        <Button>
-          <FilterOutlined />
-        </Button>
+        <Dropdown
+          overlay={this.getFilters()}
+          trigger={['click']}
+        >
+          <Button>
+            <FilterOutlined/>
+          </Button>
+        </Dropdown>
       </div>
     )
   };
