@@ -8,6 +8,10 @@
     "path": "./settings"
   },
   {
+    "label": "Предметы",
+    "path": "/text-roleplay/items"
+  },
+  {
     "label": "Помощь",
     "path": "/text-roleplay/help"
   },

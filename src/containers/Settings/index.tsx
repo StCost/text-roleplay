@@ -79,7 +79,7 @@ export class Settings extends React.Component<ISettingsProps> {
                 onConfirm={this.clearAvatar}
                 okText="Да"
                 cancelText="Нет"
-                icon={<ClearOutlined style={{ color: '#ff4d4f'}}/>}
+                icon={<ClearOutlined style={{ color: '#ff4d4f' }}/>}
                 disabled={!value}
               >
                 <Button
@@ -126,7 +126,7 @@ export class Settings extends React.Component<ISettingsProps> {
     }
   };
 
-  labels: {[key: string]: string} = {
+  labels: { [key: string]: string } = {
     'avatar': 'Аватар',
     'nickname': 'Никнейм',
     'lastOnline': 'Последняя активность',
@@ -145,20 +145,18 @@ export class Settings extends React.Component<ISettingsProps> {
         <Loader loading={loading}/>
         {user && Object
           .keys(defaultUser)
-          .map((key: string) => {
-            // @ts-ignore
-            const field = this.getField(key, `${user[key] || ''}`, user);
-            return field && (
-              <Card
-                className={key}
-                key={key}
-                title={this.labels[key]}
-              >
-                {field}
-              </Card>
-            )
-          })
-
+          .map((key: string) => (
+            <Card
+              className={key}
+              key={key}
+              title={this.labels[key]}
+            >
+              {
+                // @ts-ignore
+                this.getField(key, `${user[key] || ''}`, user)
+              }
+            </Card>
+          ))
         }
       </Card>
     )

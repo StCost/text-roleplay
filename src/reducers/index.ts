@@ -1,5 +1,5 @@
 import { processMessages } from '../helpers/utils';
-import { IAction, IState } from "./interfaces";
+import { IAction, IItem, IState } from "./interfaces";
 
 const user = JSON.parse(localStorage.getItem('user') || 'null');
 if (user) localStorage.setItem('uid', user.uid);
@@ -12,6 +12,7 @@ export const initialState: IState = {
   users: {},
   uid: user ? user.uid : '',
   currentUser: null,
+  items: [],
 };
 
 export const defaultUser = {
@@ -30,6 +31,10 @@ const reducer = (state = initialState, action: IAction) => {
     case 'GET_MORE_MESSAGES':
     case 'SEND_MESSAGE':
     case 'SET_USER':
+    case 'GET_ITEMS':
+    case 'GET_MORE_ITEMS':
+    case 'GET_ITEMS_BY_ID':
+    case 'CREATE_ITEM':
     case 'UPLOAD_FILE': {
       return {
         ...state,
@@ -42,6 +47,7 @@ const reducer = (state = initialState, action: IAction) => {
     case 'GET_MESSAGES_FAIL':
     case 'GET_MORE_MESSAGES_SUCCESS':
     case 'GET_MORE_MESSAGES_FAIL':
+    case 'CREATE_ITEM_SUCCESS':
     case 'SEND_MESSAGE_FAIL': {
       return {
         ...state,
@@ -84,6 +90,15 @@ const reducer = (state = initialState, action: IAction) => {
           ...state.users,
           [action.uid]: action.user,
         },
+      }
+    }
+    case 'GET_ITEMS_SUCCESS': {
+      return {
+        ...state,
+        items: [...state.items, ...action.items]
+          .filter((item: IItem, pos: number, self: IItem[]) =>
+            self.findIndex((_i: IItem) => _i.id === item.id) === pos
+          )
       }
     }
     default:

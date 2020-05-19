@@ -4,7 +4,7 @@ import { Provider } from 'react-redux';
 
 import './index.css';
 import App from './App';
-import saga from './sagas';
+import saga from './sagas/index';
 import store, { sagaMiddleware } from './helpers/store';
 import * as serviceWorker from './serviceWorker';
 

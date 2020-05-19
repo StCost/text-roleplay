@@ -6,22 +6,17 @@ import actions, { IPayload } from '../actions/index';
 function* setUser(payload: IPayload) {
   const { uid, user } = payload;
 
-  try {
-    yield database
-      .ref('users')
-      .child(uid)
-      .set({
-        ...user,
-        lastOnline: new Date().getTime(),
-        uid,
-      });
+  yield database
+    .ref('users')
+    .child(uid)
+    .set({
+      ...user,
+      lastOnline: new Date().getTime(),
+      uid,
+    });
 
-    actions.setUserSuccess({});
-    actions.getUser({ uid });
-  } catch (error) {
-    console.error(error);
-    actions.setUserSuccess({ error });
-  }
+  actions.setUserSuccess({});
+  actions.getUser({ uid });
 }
 
 const requestedUsers: { [key: string]: true } = {};

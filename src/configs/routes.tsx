@@ -3,7 +3,7 @@ import { ConnectedComponent } from 'react-redux';
 import Chat from '../containers/Chat/index';
 import Settings from '../containers/Settings';
 import Logout from '../components/Logout';
-import Inventory from '../containers/Inventory';
+import Items from '../containers/Items';
 import Help from '../components/Help';
 
 export interface IRoute {
@@ -28,19 +28,12 @@ const routes: IRoute[] = [
     exact: true,
   },
   {
-    path: '/text-roleplay/:uid/inventory',
-    component: Inventory,
-    exact: true,
-  },
-  {
-    path: '/text-roleplay/inventory',
-    component: Inventory,
-    exact: true,
+    path: '/text-roleplay/items',
+    component: Items,
   },
   {
     path: '/text-roleplay/help',
     component: Help,
-    exact: true,
   },
   {
     path: '/text-roleplay/logout',

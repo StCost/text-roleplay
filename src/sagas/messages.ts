@@ -9,21 +9,16 @@ function* sendMessage(payload: IPayload) {
   const { uid, message } = payload;
   const time = new Date().getTime();
 
-  try {
-    yield database
-      .ref('messages')
-      .child(`${time}`)
-      .set(formatMessage({
-        time,
-        author: uid,
-        body: `${message} `,
-      }));
-    localStorage.setItem('message', '');
-    actions.sendMessageSuccess({});
-  } catch (error) {
-    console.error(error);
-    actions.sendMessageFail({ error });
-  }
+  yield database
+    .ref('messages')
+    .child(`${time}`)
+    .set(formatMessage({
+      time,
+      author: uid,
+      body: `${message} `,
+    }));
+  localStorage.setItem('message', '');
+  actions.sendMessageSuccess({});
 }
 
 function subscribe() {

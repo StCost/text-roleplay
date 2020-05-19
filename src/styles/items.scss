@@ -1,0 +1,58 @@
+@import './colors';
+
+.app > div.items {
+  max-width: initial;
+  width: 100%;
+  min-height: calc(100% - 64px);
+  margin: 32px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+
+  .items-body {
+    display: flex;
+    flex-wrap: wrap;
+    max-height: calc(100% - 64px);
+  }
+}
+
+.item-creator-modal {
+  .ant-modal-content {
+    padding-bottom: 68px;
+    .ant-modal-header {
+      position: sticky;
+      top: 0;
+      z-index: 1;
+      padding: 12px;
+
+      .ant-modal-title {
+        display: flex;
+        justify-content: flex-end;
+      }
+    }
+
+    .ant-modal-body {
+      padding: 12px;
+    }
+  }
+}
+
+.item-creator {
+
+  .item-creator__body {
+
+  }
+
+  .item-creator__controls {
+    margin-top: 12px;
+    float: right;
+    height: 56px;
+    width: 100%;
+    padding: 12px 12px 12px 50%;
+    line-height: 65px;
+    position: sticky;
+    bottom: 0;
+    display: flex;
+    justify-content: space-between;
+    background: $background-color-light;
+    border: 1px solid $border-color;
+  }
+}

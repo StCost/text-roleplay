@@ -28,6 +28,7 @@ export interface IState {
   users: IUsers;
   uid: string;
   currentUser: IUser | null;
+  items: IItem[];
 }
 
 export interface IUser {
@@ -40,4 +41,16 @@ export interface IUser {
 
 export interface IUsers {
   [key: string]: IUser;
+}
+
+export interface IItem {
+  id: string;
+  name: string;
+  weight: number;
+  effect?: string;
+  image?: string;
+  description?: string;
+  isWeapon?: boolean;
+  hasAmmo?: boolean;
+  capacity?: number;
 }
