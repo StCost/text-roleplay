@@ -59,11 +59,23 @@ function* getMoreItems(payload: IPayload) {
   actions.getItemsSuccess({ items, concat: true });
 }
 
+function* deleteItem(payload: IPayload) {
+  const { id } = payload;
+
+  yield database
+    .ref('items')
+    .child(id)
+    .remove();
+
+  actions.deleteItemSuccess({ id });
+}
+
 export default function* watchForActions() {
   yield all([
     takeLatest('SET_ITEM', setItem),
     takeLatest('GET_ITEMS', getItems),
     takeLatest('GET_MORE_ITEMS', getMoreItems),
     takeLatest('GET_ITEMS_BY_ID', getItemsById),
+    takeLatest('DELETE_ITEM', deleteItem),
   ]);
 }

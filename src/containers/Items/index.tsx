@@ -3,18 +3,15 @@ import { connect } from 'react-redux';
 import {
   Button,
   Card,
-  Dropdown,
-  Menu,
 } from 'antd';
 import { RouteComponentProps } from 'react-router';
-import { InsertRowBelowOutlined } from '@ant-design/icons';
 
 import '../../styles/items.scss';
 import actions from '../../actions';
 import { IItem, IState, IUser } from '../../reducers/interfaces';
 import Loader from '../../components/Loader';
 import ItemCreator from './ItemCreator';
-import Item from "../../components/Item";
+import ItemsList from "./ItemsList";
 
 interface IItemsProps extends RouteComponentProps {
   loading: boolean;
@@ -53,57 +50,8 @@ export class Items extends React.Component<IItemsProps, IItemsState> {
     this.toggleEditingItem(null);
   };
 
-  items = () => {
-    const { uid, currentUser } = this.props;
-    const canControl = (item: IItem) =>
-      uid === item.author || (currentUser && currentUser.isAdmin);
-
-    const controls = (item: IItem) => (
-      <Menu>
-        <Menu.Item>
-          <Button>
-            Взять
-          </Button>
-        </Menu.Item>
-        <Menu.Item>
-          <Button onClick={() => this.toggleEditingItem(item)}>
-            Редактировать
-          </Button>
-        </Menu.Item>
-        <Menu.Item>
-          <Button>
-            Удалить
-          </Button>
-        </Menu.Item>
-      </Menu>
-    );
-
-    const getFooter = (item: IItem) => (
-      <Dropdown
-        overlay={controls(item)}
-        trigger={['click']}
-      >
-        <Button>
-          <InsertRowBelowOutlined/>
-        </Button>
-      </Dropdown>
-    );
-
-    return (
-      <div className="items-body">
-        {this.props.items.map((item: IItem) => (
-          <Item
-            key={item.id + item.time}
-            item={item}
-            footer={canControl(item) ? getFooter(item) : undefined}
-          />
-        ))}
-      </div>
-    )
-  };
-
   render = () => {
-    const { loading } = this.props;
+    const { loading, items, currentUser, uid } = this.props;
     const { creatingItem, editingItem } = this.state;
 
     return (
@@ -130,7 +78,12 @@ export class Items extends React.Component<IItemsProps, IItemsState> {
             item={editingItem || undefined}
           />
         </div>
-        {this.items()}
+        <ItemsList
+          items={items}
+          uid={uid}
+          currentUser={currentUser}
+          toggleEditingItem={this.toggleEditingItem}
+        />
       </Card>
     )
   }

@@ -35,6 +35,7 @@ const reducer = (state = initialState, action: IAction) => {
     case 'GET_MORE_ITEMS':
     case 'GET_ITEMS_BY_ID':
     case 'CREATE_ITEM':
+    case 'DELETE_ITEM':
     case 'UPLOAD_FILE': {
       return {
         ...state,
@@ -99,6 +100,13 @@ const reducer = (state = initialState, action: IAction) => {
           .filter((item: IItem, pos: number, self: IItem[]) =>
             self.findIndex((_i: IItem) => _i.id === item.id) === pos
           )
+      }
+    }
+    case 'DELETE_ITEM_SUCCESS': {
+      return {
+        ...state,
+        loading: false,
+        items: state.items.filter((item: IItem) => item.id !== action.id),
       }
     }
     default:
