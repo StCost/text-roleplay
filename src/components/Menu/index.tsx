@@ -11,6 +11,12 @@ interface IMenuProps extends RouteComponentProps {
   isLoggedIn: boolean;
 }
 
+interface IMenuConfig {
+  label: string;
+  path: string;
+  link?: boolean;
+}
+
 function Menu(props: IMenuProps) {
   if (!props.isLoggedIn) {
     return <React.Fragment/>;
@@ -25,7 +31,7 @@ function Menu(props: IMenuProps) {
       mode={mode}
       selectedKeys={[props.location.pathname.split('/').pop() || '']}
     >
-      {menu.map((value) => (
+      {menu.map((value: IMenuConfig) => (
         <AntdMenu.Item
           key={value.path.split('/').pop()}
           disabled={value.path === props.location.pathname}
