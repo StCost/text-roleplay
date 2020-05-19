@@ -3,7 +3,6 @@ import { Card } from 'antd';
 
 export default () => (
   <Card>
-    <br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>
     Чат для текстовой ролевой игры. Инвентарь, управление чатом, настройки персонажа, профиля.
     <br/><br/>
     <h1>Возможности</h1>

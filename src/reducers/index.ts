@@ -47,7 +47,6 @@ const reducer = (state = initialState, action: IAction) => {
     case 'GET_MESSAGES_FAIL':
     case 'GET_MORE_MESSAGES_SUCCESS':
     case 'GET_MORE_MESSAGES_FAIL':
-    case 'CREATE_ITEM_SUCCESS':
     case 'SEND_MESSAGE_FAIL': {
       return {
         ...state,
@@ -96,7 +95,7 @@ const reducer = (state = initialState, action: IAction) => {
       return {
         ...state,
         loading: false,
-        items: [...state.items, ...action.items]
+        items: [...action.items, ...state.items]
           .filter((item: IItem, pos: number, self: IItem[]) =>
             self.findIndex((_i: IItem) => _i.id === item.id) === pos
           )

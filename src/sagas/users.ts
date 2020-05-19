@@ -24,7 +24,7 @@ const requestedUsers: { [key: string]: true } = {};
 function getUser(payload: IPayload) {
   const { uid, currentUser } = payload;
 
-  if (requestedUsers[uid]) return;
+  if (requestedUsers[uid] && !currentUser) return;
   requestedUsers[uid] = true;
   database
     .ref('users')

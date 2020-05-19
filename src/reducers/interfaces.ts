@@ -47,11 +47,31 @@ export interface IItem {
   id: string;
   name: string;
   weight: number;
-  effect?: string;
-  image?: string;
-  description?: string;
+  time: number;
+  effect: string;
+  image: string;
+  description: string;
   price: number;
-  isWeapon?: boolean;
-  hasAmmo?: boolean;
-  capacity?: number;
+  capacity: number;
+  armor: number;
+  amount: number;
+  approved: boolean;
+  author?: string;
+  type: 'weapon' | 'consumable' | 'wearable' | 'junk' | 'ammo' | 'note' | 'key' | 'misc',
 }
+
+export const defaultItem: IItem = {
+  id: '',
+  type: 'junk',
+  name: '',
+  effect: '',
+  image: '',
+  weight: 0,
+  price: 0,
+  description: '',
+  capacity: 0,
+  approved: false,
+  armor: 0,
+  time: 0,
+  amount: 0,
+};

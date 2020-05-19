@@ -1,7 +1,6 @@
 .app {
     display: flex;
     justify-content: center;
-    align-items: center;
 
     width: 100%;
     margin: 0 auto;
@@ -9,7 +8,7 @@
     overflow: auto;
 }
 
-@media(max-width: 767px) {
+@media (max-width: 767px) {
     .app {
         margin-top: 48px;
     }
@@ -17,6 +16,11 @@
 
 .app > div {
     width: 100%;
+}
+
+.app > .ant-card {
+    height: fit-content;
+    margin: auto 0;
 }
 
 div.ant-card {

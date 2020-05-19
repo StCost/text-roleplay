@@ -35,16 +35,20 @@
 }
 
 .loader {
-  position: absolute;
-  top: -16px;
-  right: -16px;
   z-index: 1;
   font-size: 32px;
   line-height: 32px;
+  position: sticky;
+  height: 0;
+  top: 16px;
+  right: 0;
+  margin: -40px -8px 40px auto;
+  width: 0;
 
   @media(max-width: 767px) {
     top: 0;
     right: 0;
+    margin: -40px 32px 40px auto;
   }
 }
 

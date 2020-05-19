@@ -19,60 +19,92 @@ interface IItemsProps extends RouteComponentProps {
   user: IUser | null;
   uid: string;
   items: IItem[];
+  currentUser: IUser | null;
 }
 
 interface IItemsState {
   searchValue: string;
   creatingItem: boolean;
+  editingItem: IItem | null;
 }
 
 export class Items extends React.Component<IItemsProps, IItemsState> {
   state = {
     searchValue: '',
     creatingItem: false,
+    editingItem: null,
   };
 
-  toggleCreatingItem = () =>
-    this.setState({ creatingItem: !this.state.creatingItem });
+  toggleCreatingItem = (creatingItem: boolean = !this.state.creatingItem) =>
+    this.setState({ creatingItem });
+
+  toggleEditingItem = (item?: IItem | null) =>
+    this.setState({ editingItem: item || null });
 
   componentDidMount = () => {
     actions.getItems({});
   };
 
   onCreateItem = (item: IItem) => {
-    actions.createItem({ item });
-    this.toggleCreatingItem();
+    actions.setItem({ item });
+    this.toggleCreatingItem(false);
+    this.toggleEditingItem(null);
+  };
+
+  items = () => {
+    const controls = (item: IItem) => (
+      <div>
+        <Button>
+          Удалить
+        </Button>
+        <Button onClick={() => this.toggleEditingItem(item)}>
+          Редактировать
+        </Button>
+      </div>
+    );
+
+    return (
+      <div className="items-body">
+        {this.props.items.map((item: IItem) => (
+          <Item
+            key={item.id + item.time}
+            item={item}
+            footer={controls}
+          />
+        ))}
+      </div>
+    )
   };
 
   render = () => {
-    const { loading, items } = this.props;
-    const { creatingItem } = this.state;
+    const { loading } = this.props;
+    const { creatingItem, editingItem } = this.state;
 
     return (
       <Card className="items">
         <Loader loading={loading}/>
         <div className="items-header">
           <div className="items-controls">
-            <Button
-              onClick={this.toggleCreatingItem}
-            >
+            <Button onClick={() => this.toggleCreatingItem(true)}>
               Новый предмет
             </Button>
-            <Input
-              placeholder="Поиск предмета"
-            />
+            {/*<Input*/}
+              {/*placeholder="Поиск предмета"*/}
+            {/*/>*/}
           </div>
           <ItemCreator
             visible={creatingItem}
-            onClose={this.toggleCreatingItem}
-            onCreate={this.onCreateItem}
+            onClose={() => this.toggleCreatingItem(false)}
+            onSubmit={this.onCreateItem}
+          />
+          <ItemCreator
+            visible={!!editingItem}
+            onClose={() => this.toggleEditingItem(null)}
+            onSubmit={this.onCreateItem}
+            item={editingItem || undefined}
           />
         </div>
-        <div className="items-body">
-          {items.map((item: IItem) => (
-            <Item item={item}/>
-          ))}
-        </div>
+        {this.items()}
       </Card>
     )
   }

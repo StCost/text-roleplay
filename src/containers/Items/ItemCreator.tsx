@@ -2,36 +2,23 @@ import React, { ChangeEvent, Component } from 'react';
 import {
   Card,
   Input,
-  Checkbox,
   InputNumber,
   Button,
   Popconfirm,
   message as notify,
   Modal,
+  Select,
 } from 'antd';
 import { ClearOutlined, CloseOutlined } from '@ant-design/icons';
 
-import { IItem } from '../../reducers/interfaces';
+import { defaultItem, IItem } from '../../reducers/interfaces';
 import Avatar from '../../components/Avatar';
-import { CheckboxChangeEvent } from "antd/lib/checkbox";
-
-const defaultItem: IItem = {
-  id: '',
-  name: 'New item',
-  weight: 0,
-  effect: '',
-  image: '',
-  description: '',
-  price: 0,
-  isWeapon: false,
-  hasAmmo: false,
-  capacity: 0,
-};
 
 interface IItemCreatorProps {
-  onCreate: (item: IItem) => void;
+  onSubmit: (item: IItem) => void;
   onClose: () => void;
   visible: boolean;
+  item?: IItem;
 }
 
 class ItemCreator extends Component<IItemCreatorProps, IItem> {
@@ -39,16 +26,52 @@ class ItemCreator extends Component<IItemCreatorProps, IItem> {
 
   labels = {
     id: 'ID',
+    type: 'Тип*',
     name: 'Название*',
     weight: 'Вес',
     effect: 'Эффект',
     image: 'Картинка',
     description: 'Описание',
     price: 'Цена',
-    isWeapon: 'Оружие',
-    hasAmmo: 'Имеет патроны',
     capacity: 'Размер магазина',
+    armor: 'Защита',
+    amount: 'Количество',
   };
+
+  types = [
+    {
+      key: 'weapon',
+      value: 'Оружие',
+    },
+    {
+      key: 'wearable',
+      value: 'Одежда/Броня',
+    },
+    {
+      key: 'consumable',
+      value: 'Употребляемое',
+    },
+    {
+      key: 'ammo',
+      value: 'Патроны',
+    },
+    {
+      key: 'misc',
+      value: 'Прочее',
+    },
+    {
+      key: 'note',
+      value: 'Записка',
+    },
+    {
+      key: 'key',
+      value: 'Ключ',
+    },
+    {
+      key: 'junk',
+      value: 'Мусор',
+    },
+  ];
 
   onChange = (key: string, value: string | boolean | number) =>
     // @ts-ignore
@@ -59,6 +82,18 @@ class ItemCreator extends Component<IItemCreatorProps, IItem> {
 
   fields = {
     id: () => false,
+    type: (value: string, key: string) => (
+      <Select
+        value={value}
+        onChange={(value: string) => this.onChange(key, value)}
+      >
+        {this.types.map(({ key, value }) => (
+          <Select.Option value={key} key={key}>
+            {value}
+          </Select.Option>
+        ))}
+      </Select>
+    ),
     name: (value: string, key: string) => (
       <Input
         value={value}
@@ -103,6 +138,7 @@ class ItemCreator extends Component<IItemCreatorProps, IItem> {
           </Popconfirm>
         </div>
         <Avatar
+          shape="square"
           avatar={value}
           nickname={value}
           size={128}
@@ -124,24 +160,26 @@ class ItemCreator extends Component<IItemCreatorProps, IItem> {
         onChange={(value?: number) => this.onChange(key, value || 0)}
       />
     ),
-    isWeapon: (value: boolean, key: string) => (
-      <Checkbox
-        checked={value}
-        onChange={(e: CheckboxChangeEvent) => this.onChange(key, e.target.checked)}
-      />
-    ),
-    hasAmmo: (value: boolean, key: string, item: IItem) => (
-      <Checkbox
-        checked={value}
-        disabled={!item.isWeapon}
-        onChange={(e: CheckboxChangeEvent) => this.onChange(key, e.target.checked)}
-      />
-    ),
     capacity: (value: number, key: string, item: IItem) => (
-      <InputNumber
+      item.type === 'weapon' && <InputNumber
         value={value}
         min={1}
-        disabled={!item.isWeapon || !item.hasAmmo}
+        step={1}
+        onChange={(value?: number) => this.onChange(key, value || 1)}
+      />
+    ),
+    armor: (value: number, key: string, item: IItem) => (
+      item.type === 'wearable' && <InputNumber
+        value={value}
+        min={0}
+        step={1}
+        onChange={(value?: number) => this.onChange(key, value || 0)}
+      />
+    ),
+    amount: (value: number, key: string, item: IItem) => (
+      item.type === 'ammo' && <InputNumber
+        value={value}
+        min={0}
         step={1}
         onChange={(value?: number) => this.onChange(key, value || 0)}
       />
@@ -150,22 +188,83 @@ class ItemCreator extends Component<IItemCreatorProps, IItem> {
 
   getField = (key: string, value: string | number | boolean, item: IItem) => {
     // @ts-ignore
-    return this.fields[key](value, key, item);
+    const field = this.fields[key];
+    return field && field(value, key, item);
   };
 
-  onCreate = () => {
+  onSubmit = () => {
     const { state } = this;
-    const { onCreate } = this.props;
+    const { onSubmit, item = {} } = this.props;
 
-    if (!state.name) {
+    const newItem: IItem = {...state};
+    Object.keys(state).forEach((key: string) =>
+      // @ts-ignore
+      newItem[key] = newItem[key] === defaultItem[key] && item[key] || (newItem[key])
+    );
+
+    if (!newItem.name) {
       notify.error('Имя не может быть пустым')
     }
 
-    onCreate(state);
+    onSubmit(newItem);
+  };
+
+  content = () => {
+    const { state } = this;
+    const { item = {} } = this.props;
+
+    return (
+      <div className="item-creator">
+        <div className="item-creator__body">
+          {Object
+            .keys(defaultItem)
+            .map((key: string) => {
+                // @ts-ignore
+                const value = state[key] === defaultItem[key] && item[key] || (state[key]);
+                const field = this.getField(key, value, state);
+                return field && (
+                  <Card
+                    className={key}
+                    key={key}
+                    // @ts-ignore
+                    title={this.labels[key]}
+                  >
+                    {field}
+                  </Card>
+                )
+              }
+            )
+          }
+        </div>
+        <div className="item-creator__controls">
+          <Popconfirm
+            title="Все данные будут обнулены"
+            onConfirm={() => this.setState(defaultItem)}
+            okText="Очистить"
+            cancelText="Отмена"
+            icon={<ClearOutlined style={{ color: '#ff4d4f' }}/>}
+          >
+            <Button>
+              Очистить
+            </Button>
+          </Popconfirm>
+          <Popconfirm
+            title="Подтвердить изменения?"
+            onConfirm={this.onSubmit}
+            okText="Готово"
+            cancelText="Отмена"
+            icon={<ClearOutlined style={{ color: '#15395b' }}/>}
+          >
+            <Button>
+              Готово
+            </Button>
+          </Popconfirm>
+        </div>
+      </div>
+    )
   };
 
   render = () => {
-    const { state } = this;
     const { onClose, visible } = this.props;
 
     return (
@@ -180,52 +279,7 @@ class ItemCreator extends Component<IItemCreatorProps, IItem> {
           <CloseOutlined onClick={onClose}/>
         }
       >
-        <div className="item-creator">
-          <div className="item-creator__body">
-            {Object
-              .keys(defaultItem)
-              .map((key: string) => {
-                  // @ts-ignore
-                  const field = this.getField(key, state[key], state);
-                  return field && (
-                    <Card
-                      className={key}
-                      key={key}
-                      // @ts-ignore
-                      title={this.labels[key]}
-                    >
-                      {field}
-                    </Card>
-                  )
-                }
-              )
-            }
-          </div>
-          <div className="item-creator__controls">
-            <Popconfirm
-              title="Все данные будут обнулены"
-              onConfirm={() => this.setState(defaultItem)}
-              okText="Очистить"
-              cancelText="Отмена"
-              icon={<ClearOutlined style={{ color: '#ff4d4f' }}/>}
-            >
-              <Button>
-                Очистить
-              </Button>
-            </Popconfirm>
-            <Popconfirm
-              title="Уверены в создании? Его нельзя будет больше редактировать"
-              onConfirm={this.onCreate}
-              okText="Создать"
-              cancelText="Отмена"
-              icon={<ClearOutlined style={{ color: '#15395b' }}/>}
-            >
-              <Button>
-                Создать
-              </Button>
-            </Popconfirm>
-          </div>
-        </div>
+        {this.content()}
       </Modal>
     )
   }

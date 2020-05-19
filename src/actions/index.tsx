@@ -35,7 +35,7 @@ const actions: IActions = {
   ...createAsyncAction('SUBSCRIBE'),
   ...createAsyncAction('UNSUBSCRIBE'),
   ...createAsyncAction('UPLOAD_FILE'),
-  ...createAsyncAction('CREATE_ITEM'),
+  ...createAsyncAction('SET_ITEM'),
   ...createAsyncAction('GET_ITEMS'),
   ...createAsyncAction('GET_ITEMS_BY_ID'),
   ...createAsyncAction('GET_MORE_ITEMS'),

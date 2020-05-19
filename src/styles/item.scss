@@ -36,6 +36,7 @@ div.item.ant-card {
     }
 
     .item-body {
+      white-space: pre-line;
 
       .item-description {
         width: 100%;
@@ -59,7 +60,7 @@ div.item.ant-card {
       }
     }
 
-    .item-footer {
+    .item-prefooter {
       display: flex;
       justify-content: space-between;
       margin: 12px -12px 0 -12px;
@@ -75,6 +76,13 @@ div.item.ant-card {
         width: fit-content;
         font-size: 14px;
       }
+    }
+
+    .item-footer {
+      margin: 12px -12px 0 -12px;
+      padding: 12px 12px 0 12px;
+      border-top: 1px solid $border-color;
+      transition-duration: 0.3s;
     }
   }
 }

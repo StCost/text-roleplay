@@ -5,10 +5,10 @@ import actions from '../actions';
 import { database } from '../helpers/firebase';
 import { generateID } from '../helpers/utils';
 
-function* createItem(payload: IPayload) {
+function* setItem(payload: IPayload) {
   const { item } = payload;
   const time = new Date().getTime();
-  const id = generateID();
+  const id = item.id || generateID();
   const author = localStorage.getItem('uid');
 
   const itemData = {
@@ -23,7 +23,7 @@ function* createItem(payload: IPayload) {
       .child(`${id}`)
       .set(itemData);
 
-    actions.createItemSuccess({ itemData });
+    actions.setItemSuccess({ itemData });
     actions.getItemsById({ items: [id] });
 }
 
@@ -61,7 +61,7 @@ function* getMoreItems(payload: IPayload) {
 
 export default function* watchForActions() {
   yield all([
-    takeLatest('CREATE_ITEM', createItem),
+    takeLatest('SET_ITEM', setItem),
     takeLatest('GET_ITEMS', getItems),
     takeLatest('GET_MORE_ITEMS', getMoreItems),
     takeLatest('GET_ITEMS_BY_ID', getItemsById),
