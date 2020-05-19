@@ -50,6 +50,7 @@ export interface IItem {
   effect?: string;
   image?: string;
   description?: string;
+  price: number;
   isWeapon?: boolean;
   hasAmmo?: boolean;
   capacity?: number;

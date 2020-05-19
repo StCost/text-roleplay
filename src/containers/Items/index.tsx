@@ -12,11 +12,13 @@ import actions from '../../actions';
 import { IItem, IState, IUser } from '../../reducers/interfaces';
 import Loader from '../../components/Loader';
 import ItemCreator from './ItemCreator';
+import Item from "../../components/Item";
 
 interface IItemsProps extends RouteComponentProps {
   loading: boolean;
   user: IUser | null;
   uid: string;
+  items: IItem[];
 }
 
 interface IItemsState {
@@ -34,14 +36,16 @@ export class Items extends React.Component<IItemsProps, IItemsState> {
     this.setState({ creatingItem: !this.state.creatingItem });
 
   componentDidMount = () => {
-    const { user, uid } = this.props;
-    if (!user) {
-      actions.getUser({ uid });
-    }
+    actions.getItems({});
+  };
+
+  onCreateItem = (item: IItem) => {
+    actions.createItem({ item });
+    this.toggleCreatingItem();
   };
 
   render = () => {
-    const { loading } = this.props;
+    const { loading, items } = this.props;
     const { creatingItem } = this.state;
 
     return (
@@ -61,33 +65,27 @@ export class Items extends React.Component<IItemsProps, IItemsState> {
           <ItemCreator
             visible={creatingItem}
             onClose={this.toggleCreatingItem}
-            onCreate={(item: IItem) => {
-              actions.createItem({ item });
-              this.toggleCreatingItem();
-            }}
+            onCreate={this.onCreateItem}
           />
         </div>
         <div className="items-body">
+          {items.map((item: IItem) => (
+            <Item item={item}/>
+          ))}
         </div>
       </Card>
     )
   }
 }
 
-const mapStateToProps = (state: IState, props: IItemsProps) => {
-  const { loading, users, currentUser } = state;
-
-  const uid = new URLSearchParams(props.match.params).get('uid') || state.uid || '0';
-  const user = users[uid];
-  if (user && !user.uid && uid) {
-    user.uid = uid;
-  }
+const mapStateToProps = (state: IState) => {
+  const { loading, currentUser, uid, items } = state;
 
   return {
     loading,
-    user,
+    currentUser,
     uid,
-    hasRight: (!!user && !!currentUser) && (currentUser.uid === user.uid || !!currentUser.isAdmin),
+    items,
   };
 };
 

@@ -1,0 +1,80 @@
+@import './colors';
+
+div.item.ant-card {
+  width: 350px;
+  margin: 6px;
+  height: fit-content;
+
+  .ant-card-body {
+    display: flex;
+    flex-direction: column;
+    padding: 12px;
+
+    .item-info {
+      display: flex;
+      flex-direction: column;
+      margin: -6px -12px 12px -12px;
+      padding: 0 12px 12px 12px;
+      border-bottom: 1px solid $border-color;
+
+      .item-name {
+        font-weight: bolder;
+        font-size: 36px;
+      }
+
+      .item-subinfo {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        width: 100%;
+
+        .item-price,.item-weight {
+          font-size: 10px;
+          font-style: italic;
+        }
+      }
+    }
+
+    .item-body {
+
+      .item-description {
+        width: 100%;
+        height: auto;
+      }
+
+      .item-image {
+        width: 128px;
+        height: 128px;
+        float: right;
+        border: 1px solid $border-color;
+        margin: -12px -12px 12px 12px;
+        border-radius: 0 0 0 4px;
+        border-top: none;
+        border-right: none;
+
+        > * {
+          width: 128px;
+          height: 128px;
+        }
+      }
+    }
+
+    .item-footer {
+      display: flex;
+      justify-content: space-between;
+      margin: 12px -12px 0 -12px;
+      padding: 12px 12px 0 12px;
+      border-top: 1px solid $border-color;
+
+      .item-ammo {
+        width: fit-content;
+        font-size: 14px;
+      }
+
+      .item-effect {
+        width: fit-content;
+        font-size: 14px;
+      }
+    }
+  }
+}

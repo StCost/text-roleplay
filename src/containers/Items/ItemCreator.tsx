@@ -22,6 +22,7 @@ const defaultItem: IItem = {
   effect: '',
   image: '',
   description: '',
+  price: 0,
   isWeapon: false,
   hasAmmo: false,
   capacity: 0,
@@ -43,6 +44,7 @@ class ItemCreator extends Component<IItemCreatorProps, IItem> {
     effect: 'Эффект',
     image: 'Картинка',
     description: 'Описание',
+    price: 'Цена',
     isWeapon: 'Оружие',
     hasAmmo: 'Имеет патроны',
     capacity: 'Размер магазина',
@@ -112,6 +114,14 @@ class ItemCreator extends Component<IItemCreatorProps, IItem> {
       <Input.TextArea
         value={value}
         onChange={(e: ChangeEvent<HTMLTextAreaElement>) => this.onChange(key, e.currentTarget.value)}
+      />
+    ),
+    price: (value: number, key: string) => (
+      <InputNumber
+        value={value}
+        min={0}
+        step={1}
+        onChange={(value?: number) => this.onChange(key, value || 0)}
       />
     ),
     isWeapon: (value: boolean, key: string) => (

@@ -22,7 +22,9 @@ function* createItem(payload: IPayload) {
       .ref('items')
       .child(`${id}`)
       .set(itemData);
+
     actions.createItemSuccess({ itemData });
+    actions.getItemsById({ items: [id] });
 }
 
 function* getItems() {
