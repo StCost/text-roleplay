@@ -7,8 +7,9 @@ import {
   Button,
   Popconfirm,
   message as notify,
+  Modal,
 } from 'antd';
-import { ClearOutlined } from '@ant-design/icons';
+import { ClearOutlined, CloseOutlined } from '@ant-design/icons';
 
 import { IItem } from '../../reducers/interfaces';
 import Avatar from '../../components/Avatar';
@@ -26,7 +27,13 @@ const defaultItem: IItem = {
   capacity: 0,
 };
 
-class ItemCreator extends Component<{ onCreate: (item: IItem) => void }, IItem> {
+interface IItemCreatorProps {
+  onCreate: (item: IItem) => void;
+  onClose: () => void;
+  visible: boolean;
+}
+
+class ItemCreator extends Component<IItemCreatorProps, IItem> {
   state = defaultItem;
 
   labels = {
@@ -149,54 +156,67 @@ class ItemCreator extends Component<{ onCreate: (item: IItem) => void }, IItem> 
 
   render = () => {
     const { state } = this;
+    const { onClose, visible } = this.props;
 
     return (
-      <div className="item-creator">
-        <div className="item-creator__body">
-        {Object
-          .keys(defaultItem)
-          .map((key: string) => {
-              // @ts-ignore
-              const field = this.getField(key, state[key], state);
-              return field && (
-                <Card
-                  className={key}
-                  key={key}
+      <Modal
+        className="item-creator-modal"
+        centered
+        closable={false}
+        onCancel={onClose}
+        footer={null}
+        visible={visible}
+        title={
+          <CloseOutlined onClick={onClose}/>
+        }
+      >
+        <div className="item-creator">
+          <div className="item-creator__body">
+            {Object
+              .keys(defaultItem)
+              .map((key: string) => {
                   // @ts-ignore
-                  title={this.labels[key]}
-                >
-                  {field}
-                </Card>
+                  const field = this.getField(key, state[key], state);
+                  return field && (
+                    <Card
+                      className={key}
+                      key={key}
+                      // @ts-ignore
+                      title={this.labels[key]}
+                    >
+                      {field}
+                    </Card>
+                  )
+                }
               )
             }
-          )
-        }
+          </div>
+          <div className="item-creator__controls">
+            <Popconfirm
+              title="Все данные будут обнулены"
+              onConfirm={() => this.setState(defaultItem)}
+              okText="Очистить"
+              cancelText="Отмена"
+              icon={<ClearOutlined style={{ color: '#ff4d4f' }}/>}
+            >
+              <Button>
+                Очистить
+              </Button>
+            </Popconfirm>
+            <Popconfirm
+              title="Уверены в создании? Его нельзя будет больше редактировать"
+              onConfirm={this.onCreate}
+              okText="Создать"
+              cancelText="Отмена"
+              icon={<ClearOutlined style={{ color: '#15395b' }}/>}
+            >
+              <Button>
+                Создать
+              </Button>
+            </Popconfirm>
+          </div>
         </div>
-        <div className="item-creator__controls">
-          <Popconfirm
-            title="Все данные будут обнулены"
-            onConfirm={() => this.setState(defaultItem)}
-            okText="Очистить"
-            cancelText="Отмена"
-            icon={<ClearOutlined style={{ color: '#ff4d4f' }}/>}
-          >
-            <Button>
-              Очистить
-            </Button>
-          </Popconfirm>
-          <Popconfirm
-            title="Уверены в создании? Его нельзя будет больше редактировать"
-            onConfirm={this.onCreate}
-            okText="Создать"
-            cancelText="Отмена"
-            icon={<ClearOutlined style={{ color: '#15395b' }}/>}
-          >
-            <Button>
-              Создать
-            </Button>
-          </Popconfirm>
-        </div>
-      </div>
+      </Modal>
     )
   }
 }

@@ -4,16 +4,14 @@ import {
   Card,
   Button,
   Input,
-  Modal,
 } from 'antd';
 import { RouteComponentProps } from 'react-router';
-import { CloseOutlined } from '@ant-design/icons';
 
 import '../../styles/items.scss';
 import actions from '../../actions';
 import { IItem, IState, IUser } from '../../reducers/interfaces';
 import Loader from '../../components/Loader';
-import ItemCreator from "./ItemCreator";
+import ItemCreator from './ItemCreator';
 
 interface IItemsProps extends RouteComponentProps {
   loading: boolean;
@@ -29,7 +27,7 @@ interface IItemsState {
 export class Items extends React.Component<IItemsProps, IItemsState> {
   state = {
     searchValue: '',
-    creatingItem: true,
+    creatingItem: false,
   };
 
   toggleCreatingItem = () =>
@@ -40,29 +38,6 @@ export class Items extends React.Component<IItemsProps, IItemsState> {
     if (!user) {
       actions.getUser({ uid });
     }
-  };
-
-  creatingItemBlock = () => {
-    return (
-      <Modal
-        className="item-creator-modal"
-        centered
-        visible
-        closable={false}
-        onCancel={this.toggleCreatingItem}
-        footer={null}
-        title={
-          <CloseOutlined onClick={this.toggleCreatingItem}/>
-        }
-      >
-        <ItemCreator
-          onCreate={(item: IItem) => {
-            actions.createItem({ item });
-            this.toggleCreatingItem();
-          }}
-        />
-      </Modal>
-    )
   };
 
   render = () => {
@@ -83,7 +58,14 @@ export class Items extends React.Component<IItemsProps, IItemsState> {
               placeholder="Поиск предмета"
             />
           </div>
-          {creatingItem && this.creatingItemBlock()}
+          <ItemCreator
+            visible={creatingItem}
+            onClose={this.toggleCreatingItem}
+            onCreate={(item: IItem) => {
+              actions.createItem({ item });
+              this.toggleCreatingItem();
+            }}
+          />
         </div>
         <div className="items-body">
         </div>
