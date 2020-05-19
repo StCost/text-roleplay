@@ -1,5 +1,4 @@
 import React from 'react';
-import { connect } from 'react-redux';
 import { Button, Avatar, Card } from 'antd';
 
 import actions from '../actions/index';
@@ -28,4 +27,4 @@ const Logout = () => {
   )
 };
 
-export default connect()(Logout);
+export default Logout;

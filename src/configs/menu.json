@@ -9,8 +9,7 @@
   },
   {
     "label": "Помощь",
-    "path": "https://github.com/StCost/text-roleplay/blob/master/README.md",
-    "link": true
+    "path": "/text-roleplay/help"
   },
   {
     "label": "Выйти",
