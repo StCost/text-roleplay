@@ -52,7 +52,8 @@ class ItemsList extends Component<IItemsListProps> {
   );
 
   deleteModal = (item: IItem) => () => Modal.confirm({
-    title: 'Вы уверены, что хотите удалить предмет? Это действие необратимо',
+    title: 'Удалить',
+    content: 'Это действие невозможно отменить. Вы уверены?',
     maskClosable: true,
     okText: 'Удалить',
     cancelText: 'Отмена',

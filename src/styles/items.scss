@@ -9,9 +9,21 @@
 
   .items-controls {
     display: flex;
+    margin-bottom: 6px;
+    margin: -24px -24px 12px -24px;
+    padding: 24px 24px 12px 24px;
+    position: sticky;
+    top: 0;
+    z-index: 1;
+    background-color: $background-color-light;
+    border-radius: 2px 2px 0 0;
 
     > .ant-btn {
       width: fit-content;
+    }
+
+    .ant-input-affix-wrapper {
+      margin: 0 6px;
     }
   }
 

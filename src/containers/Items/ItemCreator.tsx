@@ -196,9 +196,10 @@ class ItemCreator extends Component<IItemCreatorProps, IItem> {
     const { state } = this;
     const { onSubmit, item = {} } = this.props;
 
-    const newItem: IItem = {...state};
+    const newItem: IItem = { ...state };
     Object.keys(state).forEach((key: string) =>
       // @ts-ignore
+      // eslint-disable-next-line
       newItem[key] = newItem[key] === defaultItem[key] && item[key] || (newItem[key])
     );
 
@@ -221,6 +222,7 @@ class ItemCreator extends Component<IItemCreatorProps, IItem> {
             .keys(defaultItem)
             .map((key: string) => {
                 // @ts-ignore
+                // eslint-disable-next-line
                 const value = state[key] === defaultItem[key] && item[key] || (state[key]);
                 const field = this.getField(key, value, state);
                 return field && (
