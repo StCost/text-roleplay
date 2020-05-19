@@ -1,7 +1,7 @@
 import { message as notify } from 'antd';
 
 import actions from '../actions';
-import { IMessage } from '../reducers';
+import { IMessage } from '../reducers/interfaces';
 import { diceRegex, exportRolls, hasDice } from './dice';
 
 export const camelize = (str: string) => {

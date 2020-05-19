@@ -6,7 +6,7 @@ import {
   Button,
 } from 'antd';
 
-import actions from '../../actions';
+import actions from '../actions/index';
 
 const Login = () => {
   return (

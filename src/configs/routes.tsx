@@ -1,9 +1,9 @@
 import { ConnectedComponent } from 'react-redux';
 
-import Chat from '../components/Chat/index';
-import Settings from '../components/Settings';
+import Chat from '../containers/Chat/index';
+import Settings from '../containers/Settings';
 import Logout from '../components/Logout';
-import Inventory from "../components/Inventory";
+import Inventory from "../containers/Inventory";
 
 export interface IRoute {
   path: string;

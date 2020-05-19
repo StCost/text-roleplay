@@ -10,10 +10,11 @@ import { RouteComponentProps } from 'react-router';
 
 import { ClearOutlined } from '@ant-design/icons';
 
-import actions from '../../actions';
-import { IState, IUser, defaultUser } from '../../reducers';
-import Avatar from '../Avatar';
-import Loader from '../Loader';
+import actions from '../../actions/index';
+import { defaultUser } from '../../reducers/index';
+import { IState, IUser } from '../../reducers/interfaces';
+import Avatar from '../../components/Avatar';
+import Loader from '../../components/Loader/index';
 import { getFullTime } from "../../helpers/utils";
 
 interface ISettingsProps extends RouteComponentProps {

@@ -1,8 +1,8 @@
 import React from 'react';
 import { isURL } from '../../helpers/utils';
-import { IMessage } from '../../reducers';
+import { IMessage } from '../../reducers/interfaces';
 import { importRolls } from '../../helpers/dice';
-import Image from "../Image";
+import Image from "../../components/Image";
 
 interface IMessageBodyProps {
   message: IMessage;

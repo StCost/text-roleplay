@@ -2,8 +2,8 @@ import React from 'react';
 import { Card, Tooltip } from 'antd';
 import { Link } from 'react-router-dom';
 
-import { IMessage, IUser } from '../../reducers';
-import Avatar from '../Avatar';
+import { IMessage, IUser } from '../../reducers/interfaces';
+import Avatar from '../../components/Avatar';
 import MessageBody from './MessageBody';
 import {
   getDate,

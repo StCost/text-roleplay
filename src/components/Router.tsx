@@ -6,9 +6,9 @@ import {
 } from 'react-router-dom';
 import { connect } from 'react-redux';
 
-import routes, { IRoute } from '../../configs/routes';
-import Login from '../Login';
-import { IState } from "../../reducers";
+import routes, { IRoute } from '../configs/routes';
+import Login from './Login';
+import { IState } from '../reducers/interfaces';
 
 interface IRouterProps {
   isLoggedIn: boolean;

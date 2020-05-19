@@ -7,8 +7,9 @@ import { RouteComponentProps } from 'react-router';
 
 import '../../styles/inventory.scss';
 import actions from '../../actions';
-import { IState, IUser, defaultUser } from '../../reducers';
-import Loader from "../Loader";
+import { defaultUser } from '../../reducers';
+import { IState, IUser } from '../../reducers/interfaces';
+import Loader from '../../components/Loader';
 
 interface IInventoryProps extends RouteComponentProps {
   loading: boolean;

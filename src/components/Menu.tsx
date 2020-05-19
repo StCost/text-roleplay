@@ -3,9 +3,9 @@ import { Menu as AntdMenu } from 'antd';
 import { Link, withRouter, RouteComponentProps } from 'react-router-dom';
 import { connect } from 'react-redux';
 
-import '../../styles/menu.scss';
-import menu from '../../configs/menu.json';
-import { IState } from '../../reducers';
+import '../styles/menu.scss';
+import menu from '../configs/menu.json';
+import { IState } from '../reducers/interfaces';
 
 interface IMenuProps extends RouteComponentProps {
   isLoggedIn: boolean;
