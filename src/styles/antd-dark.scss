@@ -101,6 +101,16 @@
   &:focus {
     background-color: $background-color-interactive-lighter;
   }
+
+  &:disabled {
+    background-color: $background-color;
+    border-color: $border-color;
+    color: $background-color-lighter;
+    pointer-events: none;
+    * {
+      color: $background-color-lighter;
+    }
+  }
 }
 
 .ant-btn-dangerous-disabled, .ant-btn-dangerous.disabled, .ant-btn-dangerous[disabled], .ant-btn-dangerous-disabled:hover, .ant-btn-dangerous.disabled:hover, .ant-btn-dangerous[disabled]:hover, .ant-btn-dangerous-disabled:focus, .ant-btn-dangerous.disabled:focus, .ant-btn-dangerous[disabled]:focus, .ant-btn-dangerous-disabled:active, .ant-btn-dangerous.disabled:active, .ant-btn-dangerous[disabled]:active, .ant-btn-dangerous-disabled.active, .ant-btn-dangerous.disabled.active, .ant-btn-dangerous[disabled].active {
@@ -146,7 +156,7 @@
 
   &.ant-radio-button-wrapper-checked {
     background-color: $background-color-selected;
-    color: $background-color-light;
+    color: $text-color-selected;
   }
 }
 
@@ -219,5 +229,21 @@
     background-color: $background-color-interactive;
     border-color: $border-color-interactive;
     cursor: initial;
+  }
+}
+
+.ant-form-item-label label {
+  color: $text-color;
+}
+
+.ant-alert {
+  border-color: $border-color;
+
+  &.ant-alert-error {
+    background-color: #ff00002e;
+  }
+
+  * {
+    color: $text-color;
   }
 }

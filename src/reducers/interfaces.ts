@@ -29,6 +29,7 @@ export interface IState {
   uid: string;
   currentUser: IUser | null;
   items: IItem[];
+  error: Error | false;
 }
 
 export interface IUser {

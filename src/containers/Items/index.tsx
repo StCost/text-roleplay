@@ -121,9 +121,14 @@ export class Items extends React.Component<IItemsProps, IItemsState> {
   };
 
   getControls = () => {
+    const { currentUser } = this.props;
+
     return (
       <div className="items-controls">
-        <Button onClick={() => this.toggleCreatingItem(true)}>
+        <Button
+          onClick={() => this.toggleCreatingItem(true)}
+          disabled={!currentUser || !currentUser.isAdmin}
+        >
           Создать предмет
         </Button>
         <Input

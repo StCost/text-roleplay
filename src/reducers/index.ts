@@ -13,6 +13,7 @@ export const initialState: IState = {
   uid: user ? user.uid : '',
   currentUser: null,
   items: [],
+  error: false,
 };
 
 export const defaultUser = {
@@ -42,7 +43,6 @@ const reducer = (state = initialState, action: IAction) => {
         loading: true,
       }
     }
-    case 'LOGIN_FAIL':
     case 'SET_USER_SUCCESS':
     case 'SET_USER_FAIL':
     case 'GET_MESSAGES_FAIL':
@@ -60,6 +60,13 @@ const reducer = (state = initialState, action: IAction) => {
         uid: action.user.uid,
         userData: action.user,
         isLoggedIn: action.user !== null,
+      }
+    }
+    case 'LOGIN_FAIL': {
+      return {
+        ...state,
+        loading: false,
+        error: action.error,
       }
     }
     case 'LOGOUT': {
