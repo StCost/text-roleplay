@@ -8,8 +8,10 @@ import {
   message as notify,
   Modal,
   Select,
+  Checkbox,
 } from 'antd';
 import { ClearOutlined, CloseOutlined } from '@ant-design/icons';
+import { CheckboxChangeEvent } from 'antd/lib/checkbox';
 
 import { defaultItem, IItem } from '../../reducers/interfaces';
 import Avatar from '../../components/Avatar';
@@ -19,6 +21,7 @@ interface IItemCreatorProps {
   onClose: () => void;
   visible: boolean;
   item?: IItem;
+  isAdmin?: boolean;
 }
 
 class ItemCreator extends Component<IItemCreatorProps, IItem> {
@@ -36,6 +39,7 @@ class ItemCreator extends Component<IItemCreatorProps, IItem> {
     capacity: 'Размер магазина',
     armor: 'Защита',
     amount: 'Количество',
+    approved: 'Подтверждён',
   };
 
   types = [
@@ -184,6 +188,13 @@ class ItemCreator extends Component<IItemCreatorProps, IItem> {
         onChange={(value?: number) => this.onChange(key, value || 0)}
       />
     ),
+    approved: (value: boolean, key: string) => (
+      this.props.isAdmin && <Checkbox
+        checked={value}
+        disabled={!this.props.isAdmin}
+        onChange={(e: CheckboxChangeEvent) => this.onChange(key, e.target.checked)}
+      />
+    ),
   };
 
   getField = (key: string, value: string | number | boolean, item: IItem) => {
@@ -207,6 +218,9 @@ class ItemCreator extends Component<IItemCreatorProps, IItem> {
       notify.error('Имя не может быть пустым')
     }
 
+    if (this.props.isAdmin && !this.props.item) {
+      newItem.approved = true;
+    }
     onSubmit(newItem);
     this.setState(defaultItem);
   };

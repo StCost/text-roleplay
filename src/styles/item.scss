@@ -4,6 +4,15 @@ div.item.ant-card {
   width: 350px;
   margin: 6px;
 
+  &.not-approved {
+    opacity: 0.4;
+    transition-duration: 0.3s;
+
+    &:hover {
+      opacity: 1;
+    }
+  }
+
   .ant-card-body {
     display: flex;
     flex-direction: column;

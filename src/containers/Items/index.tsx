@@ -7,7 +7,7 @@ import {
   Radio,
   Dropdown,
   InputNumber,
-  Tooltip,
+  Tooltip, Checkbox,
 } from 'antd';
 import { RadioChangeEvent } from 'antd/lib/radio';
 import { RouteComponentProps } from 'react-router';
@@ -15,7 +15,7 @@ import { FilterOutlined } from '@ant-design/icons';
 
 import '../../styles/items.scss';
 import actions from '../../actions';
-import { IItem, IState, IUser } from '../../reducers/interfaces';
+import { IItem, IState, ItemType, IUser } from '../../reducers/interfaces';
 import Loader from '../../components/Loader';
 import ItemCreator from './ItemCreator';
 import ItemsList from './ItemsList';
@@ -32,8 +32,10 @@ interface IItemsState {
   creatingItem: boolean;
   editingItem: IItem | null;
   searchString: string;
-  filter: 'weapon' | 'consumable' | 'wearable' | 'junk' | 'ammo' | 'note' | 'key' | 'misc' | undefined;
+  filters: { [key: string]: boolean };
   itemsToLoad: number;
+  showApproved: boolean;
+  showNotApproved: boolean;
 }
 
 export class Items extends React.Component<IItemsProps, IItemsState> {
@@ -41,28 +43,42 @@ export class Items extends React.Component<IItemsProps, IItemsState> {
     creatingItem: false,
     editingItem: null,
     searchString: '',
-    filter: undefined,
-    itemsToLoad: 30,
+    itemsToLoad: 99,
+    showApproved: true,
+    showNotApproved: false,
+    filters: {
+      'weapon': true,
+      'consumable': true,
+      'wearable': true,
+      'junk': true,
+      'ammo': true,
+      'note': true,
+      'key': true,
+      'misc': true,
+    },
   };
 
   get items() {
-    const { searchString, filter } = this.state;
+    const { searchString, filters, showApproved, showNotApproved } = this.state;
 
     const _searchString = searchString.toLowerCase();
     return this
       .props
       .items
       .filter((item: IItem) => {
-        const { name, description, effect } = item;
+        const { name, description, effect, type, approved } = item;
         return (
           (name && name.toLowerCase().indexOf(_searchString) > -1)
           || (description && description.toLowerCase().indexOf(_searchString) > -1)
           || (effect && effect.toLowerCase().indexOf(_searchString) > -1)
+        ) && (
+          // @ts-ignore
+          filters[type]
+        ) && (
+          (showApproved && approved === true)
+          || (showNotApproved && approved === false)
         )
       })
-      .filter((item: IItem) =>
-        !filter || !item.type || item.type === filter
-      );
   }
 
   componentDidMount = () => {
@@ -83,6 +99,8 @@ export class Items extends React.Component<IItemsProps, IItemsState> {
 
   getCreators = () => {
     const { creatingItem, editingItem } = this.state;
+    const { currentUser } = this.props;
+    const isAdmin = !!(currentUser && currentUser.isAdmin);
 
     return (
       <>
@@ -90,22 +108,42 @@ export class Items extends React.Component<IItemsProps, IItemsState> {
           visible={creatingItem}
           onClose={() => this.toggleCreatingItem(false)}
           onSubmit={this.onCreateItem}
+          isAdmin={isAdmin}
         />
         <ItemCreator
           visible={!!editingItem}
           onClose={() => this.toggleEditingItem(null)}
           onSubmit={this.onCreateItem}
           item={editingItem || undefined}
+          isAdmin={isAdmin}
         />
       </>
     )
   };
 
   onFilterChange = (e: RadioChangeEvent) =>
-    this.setState({ filter: e.target.value });
+    this.setState({ filters: this.state.filters });
 
-  // filter: 'weapon' | 'consumable' | 'wearable' | 'junk' | 'ammo' | 'note' | 'key' | 'misc' | undefined;
   getFilters = () => {
+    const { showNotApproved, showApproved, filters } = this.state;
+
+    const getButton = (name: ItemType, label: string) => (
+      <Button
+        className="items-approved-button"
+        name={name}
+        // @ts-ignore
+        onClick={() => this.setState({ filters: { ...filters, [name]: !filters[name] } })}
+      >
+        <Checkbox
+          checked={
+            // @ts-ignore
+            filters[name]
+          }>
+          {label}
+        </Checkbox>
+      </Button>
+    );
+
     return (
       <Radio.Group
         onChange={this.onFilterChange}
@@ -113,26 +151,28 @@ export class Items extends React.Component<IItemsProps, IItemsState> {
         style={{ display: 'flex', flexDirection: 'column' }}
       >
         <Radio.Button>Всё</Radio.Button>
-        <Radio.Button value="weapon">Оружие</Radio.Button>
-        <Radio.Button value="consumable">Употребляемое</Radio.Button>
-        <Radio.Button value="wearable">Одежда/Броня</Radio.Button>
-        <Radio.Button value="junk">Мусор</Radio.Button>
-        <Radio.Button value="note">Записки</Radio.Button>
-        <Radio.Button value="key">Ключи</Radio.Button>
-        <Radio.Button value="misc">Прочее</Radio.Button>
+        {getButton('weapon', 'Оружие')}
+        {getButton('consumable', 'Употребляемое')}
+        {getButton('wearable', 'Одежда/Броня')}
+        {getButton('ammo', 'Патроны')}
+        {getButton('junk', 'Мусор')}
+        {getButton('note', 'Записки')}
+        {getButton('key', 'Ключи')}
+        {getButton('misc', 'Прочее')}
+        <Button className="items-approved-button" onClick={() => this.setState({ showApproved: !showApproved })}>
+          <Checkbox checked={showApproved}>Подтвержденные</Checkbox>
+        </Button>
+        <Button className="items-approved-button" onClick={() => this.setState({ showNotApproved: !showNotApproved })}>
+          <Checkbox checked={showNotApproved}>Не Подтвержденные</Checkbox>
+        </Button>
       </Radio.Group>
     )
   };
 
   getControls = () => {
-    const { currentUser } = this.props;
-
     return (
       <div className="items-controls">
-        <Button
-          onClick={() => this.toggleCreatingItem(true)}
-          disabled={!currentUser || !currentUser.isAdmin}
-        >
+        <Button onClick={() => this.toggleCreatingItem(true)}>
           Создать предмет
         </Button>
         <Input
@@ -152,6 +192,7 @@ export class Items extends React.Component<IItemsProps, IItemsState> {
           <InputNumber
             value={this.state.itemsToLoad}
             min={1}
+            max={99}
             onChange={(itemsToLoad?: number) => this.setState({ itemsToLoad: itemsToLoad || 1 })}
           />
         </Tooltip>
@@ -161,7 +202,7 @@ export class Items extends React.Component<IItemsProps, IItemsState> {
 
   render = () => {
     const { loading, currentUser, uid } = this.props;
-    const { itemsToLoad} = this.state;
+    const { itemsToLoad } = this.state;
     const items = this.items;
 
     return (
@@ -177,7 +218,7 @@ export class Items extends React.Component<IItemsProps, IItemsState> {
         />
         <Button
           className="items-load-button"
-          onClick={() => actions.getMoreItems({ amount: itemsToLoad, lastItem: items[items.length - 1]})}
+          onClick={() => actions.getMoreItems({ amount: itemsToLoad, lastItem: items[items.length - 1] })}
         >
           Загрузить {itemsToLoad}шт
         </Button>

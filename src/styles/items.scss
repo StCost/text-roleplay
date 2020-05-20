@@ -62,6 +62,16 @@
   }
 }
 
+.items-approved-button {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+
+  label {
+    pointer-events: none;
+  }
+}
+
 .item-creator {
 
   .item-creator__body {

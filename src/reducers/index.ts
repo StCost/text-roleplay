@@ -100,13 +100,14 @@ const reducer = (state = initialState, action: IAction) => {
       }
     }
     case 'GET_ITEMS_SUCCESS': {
+      const items: {[key: string]: IItem} = {};
+      [...state.items, ...action.items]
+        .forEach((item: IItem) => items[item.id] = item);
+
       return {
         ...state,
         loading: false,
-        items: [...state.items, ...action.items]
-          .filter((item: IItem, pos: number, self: IItem[]) =>
-            self.findIndex((_i: IItem) => _i.id === item.id) === pos
-          )
+        items: Object.values(items),
       }
     }
     case 'DELETE_ITEM_SUCCESS': {

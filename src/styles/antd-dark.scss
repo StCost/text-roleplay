@@ -94,6 +94,10 @@
   border-color: $border-color-interactive;
   color: $text-color;
 
+  * {
+    color: $text-color;
+  }
+
   &:hover {
     background-color: $border-color-interactive;
   }
@@ -245,5 +249,17 @@
 
   * {
     color: $text-color;
+  }
+}
+
+.ant-checkbox {
+  &.ant-checkbox-checked .ant-checkbox-inner {
+    background-color: $background-color-selected;
+    border-color: $background-color-selected;
+  }
+
+  .ant-checkbox-inner {
+    background-color: $background-color-interactive;
+    border-color: $border-color-interactive;
   }
 }

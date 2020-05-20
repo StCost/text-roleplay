@@ -44,6 +44,7 @@ export interface IUsers {
   [key: string]: IUser;
 }
 
+export type ItemType = 'weapon' | 'consumable' | 'wearable' | 'junk' | 'ammo' | 'note' | 'key' | 'misc';
 export interface IItem {
   id: string;
   name: string;
@@ -58,7 +59,7 @@ export interface IItem {
   amount: number;
   approved: boolean;
   author?: string;
-  type: 'weapon' | 'consumable' | 'wearable' | 'junk' | 'ammo' | 'note' | 'key' | 'misc',
+  type: ItemType,
 }
 
 export const defaultItem: IItem = {

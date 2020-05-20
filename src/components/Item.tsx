@@ -45,12 +45,13 @@ class Item extends Component<IItemProps> {
       effect,
       weight = 0,
       type,
+      approved,
     } = this.props.item;
     const { footer } = this.props;
 
     const stats = this.getStats();
     return (
-      <Card className="item">
+      <Card className={`item ${approved ? '' : 'not-approved'}`}>
         <div className="item-info">
           <div className="item-name">{name}</div>
           <div className="item-subinfo">
