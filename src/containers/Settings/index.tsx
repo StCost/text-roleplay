@@ -108,12 +108,15 @@ export class Settings extends React.Component<ISettingsProps> {
         );
 
       case 'lastOnline':
-        return (
-          <Input
-            value={getFullTime(parseInt(value))}
-            readOnly
-          />
-        );
+        return value
+          ? (
+            <Input
+              value={getFullTime(parseInt(value))}
+              readOnly
+            />
+          ) : (
+            'Пользователь ещё не был активен'
+          );
 
       default:
         return (
