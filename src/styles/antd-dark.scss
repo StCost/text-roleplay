@@ -263,3 +263,11 @@
     border-color: $border-color-interactive;
   }
 }
+
+.ant-message-notice-content {
+  background-color: $background-color-lighter;
+  border-color: $border-color-light;
+  * {
+    color: $text-color;
+  }
+}

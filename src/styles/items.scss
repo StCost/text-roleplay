@@ -67,15 +67,27 @@
   justify-content: flex-start;
   align-items: center;
 
-  label {
-    pointer-events: none;
+  button {
+    margin-right: 6px;
   }
 }
 
 .item-creator {
 
   .item-creator__body {
+    .ant-card-head {
+      padding: 0 12px;
+      border-bottom: none;
 
+      .ant-card-head-title {
+        padding: 12px 0;
+      }
+    }
+
+    .ant-card-body {
+      padding: 0 12px 12px 12px;
+      border-top: none;
+    }
   }
 
   .item-creator__controls {

@@ -8,10 +8,9 @@ import {
   message as notify,
   Modal,
   Select,
-  Checkbox,
+  Switch,
 } from 'antd';
 import { ClearOutlined, CloseOutlined } from '@ant-design/icons';
-import { CheckboxChangeEvent } from 'antd/lib/checkbox';
 
 import { defaultItem, IItem } from '../../reducers/interfaces';
 import Avatar from '../../components/Avatar';
@@ -189,10 +188,10 @@ class ItemCreator extends Component<IItemCreatorProps, IItem> {
       />
     ),
     approved: (value: boolean, key: string) => (
-      this.props.isAdmin && <Checkbox
+      this.props.isAdmin && <Switch
         checked={value}
         disabled={!this.props.isAdmin}
-        onChange={(e: CheckboxChangeEvent) => this.onChange(key, e.target.checked)}
+        onChange={(checked: boolean) => this.onChange(key, checked)}
       />
     ),
   };
@@ -215,7 +214,8 @@ class ItemCreator extends Component<IItemCreatorProps, IItem> {
     );
 
     if (!newItem.name) {
-      notify.error('Имя не может быть пустым')
+      notify.error('Имя не может быть пустым');
+      return;
     }
 
     if (this.props.isAdmin && !this.props.item) {

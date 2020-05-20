@@ -7,7 +7,8 @@ import {
   Radio,
   Dropdown,
   InputNumber,
-  Tooltip, Checkbox,
+  Tooltip,
+  Switch,
 } from 'antd';
 import { RadioChangeEvent } from 'antd/lib/radio';
 import { RouteComponentProps } from 'react-router';
@@ -134,13 +135,12 @@ export class Items extends React.Component<IItemsProps, IItemsState> {
         // @ts-ignore
         onClick={() => this.setState({ filters: { ...filters, [name]: !filters[name] } })}
       >
-        <Checkbox
+        <Switch
           checked={
             // @ts-ignore
             filters[name]
-          }>
-          {label}
-        </Checkbox>
+          }/>
+        {label}
       </Button>
     );
 
@@ -150,7 +150,6 @@ export class Items extends React.Component<IItemsProps, IItemsState> {
         defaultValue={undefined}
         style={{ display: 'flex', flexDirection: 'column' }}
       >
-        <Radio.Button>Всё</Radio.Button>
         {getButton('weapon', 'Оружие')}
         {getButton('consumable', 'Употребляемое')}
         {getButton('wearable', 'Одежда/Броня')}
@@ -160,10 +159,10 @@ export class Items extends React.Component<IItemsProps, IItemsState> {
         {getButton('key', 'Ключи')}
         {getButton('misc', 'Прочее')}
         <Button className="items-approved-button" onClick={() => this.setState({ showApproved: !showApproved })}>
-          <Checkbox checked={showApproved}>Подтвержденные</Checkbox>
+          <Switch checked={showApproved}/>Подтвержденные
         </Button>
         <Button className="items-approved-button" onClick={() => this.setState({ showNotApproved: !showNotApproved })}>
-          <Checkbox checked={showNotApproved}>Не Подтвержденные</Checkbox>
+          <Switch checked={showNotApproved}/>Не Подтвержденные
         </Button>
       </Radio.Group>
     )
