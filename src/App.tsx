@@ -10,16 +10,22 @@ import './styles/antd-dark.scss';
 import './styles/components.scss';
 import { listenForActivity } from './helpers/utils';
 
+// @ts-ignore
+const buildDate = (<div className="build-date">build date {window.buildDate.replace('_', ' ')}</div>);
+
 function App() {
   listenForActivity();
 
   return (
-    <BrowserRouter>
-      <Menu/>
-      <div className="app">
-        <Router/>
-      </div>
-    </BrowserRouter>
+    <>
+      {buildDate}
+      <BrowserRouter>
+        <Menu/>
+        <div className="app">
+          <Router/>
+        </div>
+      </BrowserRouter>
+    </>
   );
 }
 
