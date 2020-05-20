@@ -129,9 +129,9 @@ export class Items extends React.Component<IItemsProps, IItemsState> {
     const { showNotApproved, showApproved, filters } = this.state;
 
     const getButton = (name: ItemType, label: string) => (
-      <Button
+      <div
+        tabIndex={0}
         className="items-approved-button"
-        name={name}
         // @ts-ignore
         onClick={() => this.setState({ filters: { ...filters, [name]: !filters[name] } })}
       >
@@ -141,7 +141,7 @@ export class Items extends React.Component<IItemsProps, IItemsState> {
             filters[name]
           }/>
         {label}
-      </Button>
+      </div>
     );
 
     return (
@@ -158,12 +158,12 @@ export class Items extends React.Component<IItemsProps, IItemsState> {
         {getButton('note', 'Записки')}
         {getButton('key', 'Ключи')}
         {getButton('misc', 'Прочее')}
-        <Button className="items-approved-button" onClick={() => this.setState({ showApproved: !showApproved })}>
+        <div tabIndex={0} className="items-approved-button" onClick={() => this.setState({ showApproved: !showApproved })}>
           <Switch checked={showApproved}/>Подтвержденные
-        </Button>
-        <Button className="items-approved-button" onClick={() => this.setState({ showNotApproved: !showNotApproved })}>
+        </div>
+        <div  tabIndex={0} className="items-approved-button" onClick={() => this.setState({ showNotApproved: !showNotApproved })}>
           <Switch checked={showNotApproved}/>Не Подтвержденные
-        </Button>
+        </div>
       </Radio.Group>
     )
   };

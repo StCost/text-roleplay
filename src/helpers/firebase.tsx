@@ -1,15 +1,13 @@
-import {
-  initializeApp,
-  auth as fbAuth,
-  database as fbDatabase
-} from 'firebase';
+import _firebase from 'firebase/app';
+import 'firebase/auth';
+import 'firebase/database';
 
 import firebaseConfig from '../configs/firebase.json';
 import actions from '../actions';
 
-const firebase = initializeApp(firebaseConfig);
-const auth = fbAuth();
-const database = fbDatabase();
+const firebase = _firebase.initializeApp(firebaseConfig);
+const auth = firebase.auth();
+const database = firebase.database();
 
 auth.onAuthStateChanged((user) => {
   if (user) {

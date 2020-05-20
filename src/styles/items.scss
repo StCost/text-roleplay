@@ -66,6 +66,23 @@
   display: flex;
   justify-content: flex-start;
   align-items: center;
+  border: 1px solid $border-color-interactive;
+  background: $background-color-interactive;
+  color: $text-color;
+  padding: 4px 15px;
+  cursor: pointer;
+
+  &:hover {
+    background-color: $border-color-interactive;
+    border-color: #40a9ff;
+  }
+
+  &:focus {
+    background-color: $background-color-interactive-lighter;
+    border-color: #40a9ff;
+    color: #40a9ff !important;
+    outline: none;
+  }
 
   button {
     margin-right: 6px;
