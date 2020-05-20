@@ -9,9 +9,17 @@ div,span,pre,ul,li,h1 {
   color: $text-color;
 }
 
-.ant-card, .ant-modal-content, .ant-modal-header {
+.ant-card,.ant-modal-content {
   background-color: $background-color-light;
   border-color: $background-color;
+
+  .ant-card,.ant-modal-header {
+    background-color: $background-color-light;
+    border-color: $border-color;
+  }
+  .ant-card-head {
+    border-color: $border-color;
+  }
 
   .ant-modal-confirm-body * {
     color: $text-color;
