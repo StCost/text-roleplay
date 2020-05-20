@@ -28,7 +28,7 @@ export const exportRolls = (str: string) => {
   const rolls = str.match(diceRegexG);
   if (rolls) {
     return rolls.map((roll: string): IRoll => {
-      const [_amount,_size] = roll.split(/[dд]/);
+      const [_amount, _size] = roll.split(/[dд]/);
       const amount = parseInt(_amount);
       const size = parseInt(_size);
       const results = rollDice(amount, size);
@@ -42,7 +42,7 @@ export const exportRolls = (str: string) => {
         amount,
         size,
       })
-    });
+    }).splice(0, 10);
   }
   return [];
 };
@@ -59,8 +59,12 @@ export const importRolls = (body: string, _rolls: IRoll[]) => {
         sum
       } = rolls.splice(rollIndex, 1)[0];
 
-      const summing = `${sum} = ${results.join(' + ')}`;
+      const summing = results.length > 1
+        ? `${sum} = ${results.join(' + ')}`
+        : `${results.join(' + ')}`;
+
       const className = (sum === maxResult && 'critHit') || (sum === minResult && 'critMiss') || '';
+
       return (
         <React.Fragment key={word + index}>
           {' '}

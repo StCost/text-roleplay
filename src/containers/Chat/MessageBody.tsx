@@ -25,16 +25,18 @@ const MessageBody = (props: IMessageBodyProps) => {
     if (/youtu/.test(body)) {
       const videoId = new URL(body).searchParams.get('v') || '';
 
-      return (
-        <iframe
-          title={videoId}
-          id="ytplayer"
-          width="100%"
-          height="360"
-          src={`http://www.youtube.com/embed/${videoId}`}
-          frameBorder="0"
-        />
-      )
+      if (videoId) {
+        return (
+          <iframe
+            title={videoId}
+            id="ytplayer"
+            width="100%"
+            height="360"
+            src={`http://www.youtube.com/embed/${videoId}`}
+            frameBorder="0"
+          />
+        )
+      }
     }
 
     return (
