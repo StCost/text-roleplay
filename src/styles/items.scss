@@ -22,8 +22,10 @@
       width: fit-content;
     }
 
-    .ant-input-affix-wrapper {
-      margin: 0 6px;
+    > * {
+      &:not(&:last-child) {
+        margin-right: 6px;
+      }
     }
   }
 
@@ -31,6 +33,11 @@
     display: flex;
     flex-wrap: wrap;
     min-height: calc(100% - 64px);
+  }
+
+  .items-load-button {
+    margin-top: 6px;
+    width: 100%;
   }
 }
 

@@ -6,6 +6,8 @@ import {
   Input,
   Radio,
   Dropdown,
+  InputNumber,
+  Tooltip,
 } from 'antd';
 import { RadioChangeEvent } from 'antd/lib/radio';
 import { RouteComponentProps } from 'react-router';
@@ -31,6 +33,7 @@ interface IItemsState {
   editingItem: IItem | null;
   searchString: string;
   filter: 'weapon' | 'consumable' | 'wearable' | 'junk' | 'ammo' | 'note' | 'key' | 'misc' | undefined;
+  itemsToLoad: number;
 }
 
 export class Items extends React.Component<IItemsProps, IItemsState> {
@@ -39,6 +42,7 @@ export class Items extends React.Component<IItemsProps, IItemsState> {
     editingItem: null,
     searchString: '',
     filter: undefined,
+    itemsToLoad: 30,
   };
 
   get items() {
@@ -144,12 +148,21 @@ export class Items extends React.Component<IItemsProps, IItemsState> {
             <FilterOutlined/>
           </Button>
         </Dropdown>
+        <Tooltip title="Кол-во загружаемых предметов за раз">
+          <InputNumber
+            value={this.state.itemsToLoad}
+            min={1}
+            onChange={(itemsToLoad?: number) => this.setState({ itemsToLoad: itemsToLoad || 1 })}
+          />
+        </Tooltip>
       </div>
     )
   };
 
   render = () => {
     const { loading, currentUser, uid } = this.props;
+    const { itemsToLoad} = this.state;
+    const items = this.items;
 
     return (
       <Card className="items">
@@ -157,11 +170,17 @@ export class Items extends React.Component<IItemsProps, IItemsState> {
         {this.getCreators()}
         {this.getControls()}
         <ItemsList
-          items={this.items}
+          items={items}
           uid={uid}
           currentUser={currentUser}
           toggleEditingItem={this.toggleEditingItem}
         />
+        <Button
+          className="items-load-button"
+          onClick={() => actions.getMoreItems({ amount: itemsToLoad, lastItem: items[items.length - 1]})}
+        >
+          Загрузить {itemsToLoad}шт
+        </Button>
       </Card>
     )
   }

@@ -31,7 +31,7 @@ function* getItems() {
   const rawItems = yield database
     .ref('items')
     .orderByKey()
-    .limitToLast(30)
+    .limitToFirst(30)
     .once('value');
 
   const items = Object.values(rawItems.val() || {});
@@ -46,17 +46,19 @@ function* getItemsById(payload: IPayload) {
 }
 
 function* getMoreItems(payload: IPayload) {
-  const { firstItem } = payload;
+  const { amount = 1, lastItem } = payload;
 
   const rawItems = yield database
     .ref('items')
     .orderByKey()
-    .endAt(`${firstItem.id}`)
-    .limitToLast(30)
+    .startAt(`${lastItem.id}`)
+    .limitToFirst(amount + 1)
     .once('value');
 
-  const items = Object.values(rawItems.val() || {});
-  actions.getItemsSuccess({ items, concat: true });
+  const a = rawItems.val();
+  console.log(a);
+  const items = Object.values(a || {}).splice(1);
+  actions.getItemsSuccess({ items });
 }
 
 function* deleteItem(payload: IPayload) {
