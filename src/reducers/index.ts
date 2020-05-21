@@ -37,6 +37,9 @@ const reducer = (state = initialState, action: IAction) => {
     case 'GET_ITEMS_BY_ID':
     case 'CREATE_ITEM':
     case 'DELETE_ITEM':
+    case 'GIVE_ITEM':
+    case 'REMOVE_ITEM':
+    case 'PASS_ITEM':
     case 'UPLOAD_FILE': {
       return {
         ...state,
@@ -48,6 +51,11 @@ const reducer = (state = initialState, action: IAction) => {
     case 'GET_MESSAGES_FAIL':
     case 'GET_MORE_MESSAGES_SUCCESS':
     case 'GET_MORE_MESSAGES_FAIL':
+    case 'GIVE_ITEM_SUCCESS':
+    case 'REMOVE_ITEM_SUCCESS':
+    case 'REMOVE_ITEM_FAIL':
+    case 'PASS_ITEM_SUCCESS':
+    case 'PASS_ITEM_FAIL':
     case 'SEND_MESSAGE_FAIL': {
       return {
         ...state,

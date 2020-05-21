@@ -38,8 +38,11 @@ const actions: IActions = {
   ...createAsyncAction('SET_ITEM'),
   ...createAsyncAction('DELETE_ITEM'),
   ...createAsyncAction('GET_ITEMS'),
-  ...createAsyncAction('GET_ITEMS_BY_ID'),
+  ...createAsyncAction('GET_ITEM_BY_ID'),
   ...createAsyncAction('GET_MORE_ITEMS'),
+  ...createAsyncAction('GIVE_ITEM'),
+  ...createAsyncAction('REMOVE_ITEM'),
+  ...createAsyncAction('PASS_ITEM'),
   updateLastOnline: createAction('UPDATE_LAST_ONLINE'),
   logout: createAction('LOGOUT'),
 };

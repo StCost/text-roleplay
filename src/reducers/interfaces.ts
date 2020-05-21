@@ -32,12 +32,20 @@ export interface IState {
   error: Error | false;
 }
 
+export interface IInventory {
+  [key: string]: {
+    id: string;
+    time: number;
+  }
+}
+
 export interface IUser {
   nickname: string;
   avatar: string;
   uid: string,
   lastOnline: number;
   isAdmin?: boolean;
+  inventory: IInventory,
 }
 
 export interface IUsers {
@@ -45,6 +53,7 @@ export interface IUsers {
 }
 
 export type ItemType = 'weapon' | 'consumable' | 'wearable' | 'junk' | 'ammo' | 'note' | 'key' | 'misc';
+
 export interface IItem {
   id: string;
   name: string;

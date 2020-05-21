@@ -21,7 +21,7 @@ import Loader from '../../components/Loader';
 import ItemCreator from './ItemCreator';
 import ItemsList from './ItemsList';
 
-interface IItemsProps extends RouteComponentProps {
+export interface IItemsProps extends RouteComponentProps {
   loading: boolean;
   user: IUser | null;
   uid: string;
@@ -29,7 +29,7 @@ interface IItemsProps extends RouteComponentProps {
   currentUser: IUser | null;
 }
 
-interface IItemsState {
+export interface IItemsState {
   creatingItem: boolean;
   editingItem: IItem | null;
   searchString: string;
@@ -39,7 +39,7 @@ interface IItemsState {
   showNotApproved: boolean;
 }
 
-export class Items extends React.Component<IItemsProps, IItemsState> {
+export class Items<T extends IItemsProps> extends React.Component<T, IItemsState> {
   state = {
     creatingItem: false,
     editingItem: null,
@@ -199,8 +199,20 @@ export class Items extends React.Component<IItemsProps, IItemsState> {
     )
   };
 
+  getItemsList = (items: IItem[]) => {
+    const { currentUser, uid } = this.props;
+    return (
+      <ItemsList
+        items={items}
+        uid={uid}
+        currentUser={currentUser}
+        toggleEditingItem={this.toggleEditingItem}
+      />
+    )
+  };
+
   render = () => {
-    const { loading, currentUser, uid } = this.props;
+    const { loading } = this.props;
     const { itemsToLoad } = this.state;
     const items = this.items;
 
@@ -209,12 +221,7 @@ export class Items extends React.Component<IItemsProps, IItemsState> {
         <Loader loading={loading}/>
         {this.getCreators()}
         {this.getControls()}
-        <ItemsList
-          items={items}
-          uid={uid}
-          currentUser={currentUser}
-          toggleEditingItem={this.toggleEditingItem}
-        />
+        {this.getItemsList(items)}
         <Button
           className="items-load-button"
           onClick={() => actions.getMoreItems({ amount: itemsToLoad, lastItem: items[items.length - 1] })}

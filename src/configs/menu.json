@@ -4,12 +4,16 @@
     "path": "/text-roleplay/chat"
   },
   {
-    "label": "Настройки",
-    "path": "./settings"
+    "label": "Инвентарь",
+    "path": "./inventory"
   },
   {
     "label": "Предметы",
     "path": "/text-roleplay/items"
+  },
+  {
+    "label": "Настройки",
+    "path": "./settings"
   },
   {
     "label": "Помощь",

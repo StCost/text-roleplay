@@ -1,4 +1,4 @@
-import { all, takeLatest } from 'redux-saga/effects';
+import { all, takeLatest, takeEvery } from 'redux-saga/effects';
 
 import { IPayload } from '../actions';
 import actions from '../actions';
@@ -38,11 +38,16 @@ function* getItems() {
   actions.getItemsSuccess({ items });
 }
 
-function* getItemsById(payload: IPayload) {
-  const itemsRef = database.ref('items');
-  const rawItems = yield all(payload.items.map((item: string) => itemsRef.child(item).once('value')));
-  const items = rawItems.map((item: any) => item.val());
-  actions.getItemsSuccess({ items });
+function* getItemById(payload: IPayload) {
+  const { id } = payload;
+
+  const rawItems = yield database
+    .ref('items')
+    .child(id)
+    .once('value');
+
+  const items = rawItems.val();
+  actions.getItemsSuccess({ items: [items] });
 }
 
 function* getMoreItems(payload: IPayload) {
@@ -72,12 +77,66 @@ function* deleteItem(payload: IPayload) {
   actions.deleteItemSuccess({ id });
 }
 
+function* passItem(payload: IPayload) {
+  const { id, uid, passTo, demonstrate, use } = payload;
+
+  if ([passTo, demonstrate, use].some(v => v)) {
+    console.error();
+  }
+
+  if (passTo) {
+    const removed = yield removeItem({ id, uid });
+    if (!removed) {
+      actions.passItemFail({ id, uid, passTo });
+      console.error(`Pass item error`);
+      return false;
+    }
+  }
+}
+
+function* removeItem(payload: IPayload) {
+  const { id, uid } = payload;
+
+  const rawItem = yield database
+    .ref(`users/${uid}`)
+    // @ts-ignore
+    .where('inventory', 'in', id)
+    .child(id)
+    .once('value');
+
+  if (rawItem.val()) {
+    actions.removeItemSuccess({ id, uid });
+    return true;
+  } else {
+    console.error(`Remove item error: User '${uid}' doesn't have item '${id}'`);
+    actions.removeItemFail({ id, uid, error: 'has-no-item' });
+    return false;
+  }
+}
+
+function* giveItem(payload: IPayload) {
+  const { id, uid } = payload;
+
+  const time = new Date().getTime();
+  yield database
+    .ref('users')
+    .child(uid)
+    .child('inventory')
+    .child(`${id}|${time}`)
+    .set({ id, time });
+  actions.giveItemSuccess({ id, uid });
+  return true;
+}
+
 export default function* watchForActions() {
   yield all([
     takeLatest('SET_ITEM', setItem),
     takeLatest('GET_ITEMS', getItems),
     takeLatest('GET_MORE_ITEMS', getMoreItems),
-    takeLatest('GET_ITEMS_BY_ID', getItemsById),
+    takeEvery('GET_ITEM_BY_ID', getItemById),
     takeLatest('DELETE_ITEM', deleteItem),
+    takeLatest('GIVE_ITEM', giveItem),
+    takeLatest('REMOVE_ITEM', removeItem),
+    takeLatest('PASS_ITEM', passItem),
   ]);
 }
