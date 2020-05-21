@@ -158,10 +158,12 @@ export class Items<T extends IItemsProps> extends React.Component<T, IItemsState
         {getButton('note', 'Записки')}
         {getButton('key', 'Ключи')}
         {getButton('misc', 'Прочее')}
-        <div tabIndex={0} className="items-approved-button" onClick={() => this.setState({ showApproved: !showApproved })}>
+        <div tabIndex={0} className="items-approved-button"
+             onClick={() => this.setState({ showApproved: !showApproved })}>
           <Switch checked={showApproved}/>Подтвержденные
         </div>
-        <div  tabIndex={0} className="items-approved-button" onClick={() => this.setState({ showNotApproved: !showNotApproved })}>
+        <div tabIndex={0} className="items-approved-button"
+             onClick={() => this.setState({ showNotApproved: !showNotApproved })}>
           <Switch checked={showNotApproved}/>Не Подтвержденные
         </div>
       </Radio.Group>
@@ -244,14 +246,18 @@ export class Items<T extends IItemsProps> extends React.Component<T, IItemsState
 
   getFooter = (items: IItem[]): JSX.Element | void => {
     const { itemsToLoad } = this.state;
-    return (
-      <Button
-        className="items-load-button"
-        onClick={() => actions.getMoreItems({ amount: itemsToLoad, lastItem: items[items.length - 1] })}
-      >
-        Загрузить {itemsToLoad}шт
-      </Button>
-    )
+    const { loading } = this.props;
+    return loading
+      ? (
+        <React.Fragment/>
+      ) : (
+        <Button
+          className="items-load-button"
+          onClick={() => actions.getMoreItems({ amount: itemsToLoad, lastItem: items[items.length - 1] })}
+        >
+          Загрузить {itemsToLoad}шт
+        </Button>
+      )
   };
 
   render = () => {

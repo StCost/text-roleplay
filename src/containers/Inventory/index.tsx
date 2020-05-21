@@ -4,6 +4,8 @@ import {
   Input,
   Dropdown,
   Button,
+  Modal,
+  message as notify,
 } from 'antd';
 import { FilterOutlined } from '@ant-design/icons';
 
@@ -106,7 +108,7 @@ class Inventory extends Items<IInventoryProps> {
       onClick: (item: IItem) => actions.passItem({
         id: item.id,
         uid: this.props.uid,
-        user: true,
+        use: true,
       }),
     },
     {
@@ -123,7 +125,30 @@ class Inventory extends Items<IInventoryProps> {
     },
     {
       label: 'Удалить',
-      onClick: (item: IItem) => this.deleteModal(item),
+      onClick: (item: IItem) => Modal.confirm({
+        title: 'Удалить',
+        maskClosable: true,
+        okText: 'Удалить все',
+        cancelText: 'Отмена',
+        autoFocusButton: 'cancel',
+        content: (
+          <div>
+            <span>Это действие невозможно отменить. Вы уверены?</span>
+            <br/> <br/> <br/>
+            <Button
+              style={{ width: '-webkit-fill-available' }}
+              onClick={() => {
+                actions.removeItem({ id: item.id, uid: this.props.uid });
+                notify.success('Удалено');
+              }}
+            >Удалить один</Button>
+          </div>
+        ),
+        onOk: (close) => {
+          actions.removeItem({ id: item.id, uid: this.props.uid, all: true });
+          close();
+        },
+      }),
       condition: () => Boolean(this.props.currentUser && this.props.currentUser.isAdmin)
     },
   ];

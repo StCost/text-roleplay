@@ -79,7 +79,7 @@ function* deleteItem(payload: IPayload) {
 }
 
 function* passItem(payload: IPayload) {
-  const { id, uid, passTo, demonstrate } = payload;
+  const { id, uid, demonstrate, use } = payload;
 
   if (id && uid) {
     if (demonstrate) {
@@ -90,37 +90,67 @@ function* passItem(payload: IPayload) {
       });
       actions.passItemSuccess({});
       return;
+    } else if (use) {
+
     }
   }
 
-  if (passTo) {
-    const removed = yield removeItem({ id, uid });
-    if (!removed) {
-      actions.passItemFail({ id, uid, passTo });
-      console.error(`Pass item error`);
-      return false;
-    }
-  }
+  // if (passTo) {
+  //   const removed = yield removeItem({ id, uid });
+  //   if (!removed) {
+  //     actions.passItemFail({ id, uid, passTo });
+  //     console.error(`Pass item error`);
+  //     return false;
+  //   }
+  // }
 }
 
 function* removeItem(payload: IPayload) {
-  const { id, uid } = payload;
+  const { id, uid, all } = payload;
+  const ref = database
+    .ref(`users`)
+    .child(uid)
+    .child('inventory')
 
-  const rawItem = yield database
-    .ref(`users/${uid}`)
-    // @ts-ignore
-    .where('inventory', 'in', id)
-    .child(id)
-    .once('value');
+  const sameItem = yield getInventoryItem({ id, uid });
+  if (sameItem) {
+    if (!all && sameItem.amount >= 2) {
+      const item = {
+        ...sameItem,
+        amount: sameItem.amount - 1,
+      };
 
-  if (rawItem.val()) {
+      yield ref.child(`${id}|${sameItem.time}`).set(item);
+      actions.removeItemSuccess({ id, uid });
+      return true;
+    }
+
+    yield ref.child(`${id}|${sameItem.time}`).set({});
     actions.removeItemSuccess({ id, uid });
     return true;
-  } else {
-    console.error(`Remove item error: User '${uid}' doesn't have item '${id}'`);
-    actions.removeItemFail({ id, uid, error: 'has-no-item' });
-    return false;
   }
+
+  console.error(`Remove item error: User '${uid}' doesn't have item '${id}'`);
+  actions.removeItemFail({ id, uid, error: 'has-no-item' });
+  return false;
+}
+
+function* getInventoryItem(payload: IPayload) {
+  const { id, uid } = payload;
+
+  const rawItems = yield database
+    .ref('users')
+    .child(uid)
+    .child('inventory')
+    .once('value');
+  const items: IInventoryItem[] = Object.values(rawItems.val() || {});
+  if (items.length) {
+    // @ts-ignore
+    const item: IItem = items.find(item => item.id === id);
+    if (item)
+      return item;
+  }
+  return;
 }
 
 function* giveItem(payload: IPayload) {
@@ -135,19 +165,10 @@ function* giveItem(payload: IPayload) {
   const item: IInventoryItem = { id, time, type: itemType, amount: 1 };
 
   if (itemType !== 'weapon' && itemType !== 'wearable') {
-    const rawItems = yield database
-      .ref('users')
-      .child(uid)
-      .child('inventory')
-      .once('value');
-    const items: IInventoryItem[] = Object.values(rawItems.val() || {});
-    if (items.length) {
-      // @ts-ignore
-      const sameItem: IItem = items.find(item => item.id === id);
-      if (sameItem) {
-        item.amount = (sameItem.amount || 1) + 1;
-        item.time = sameItem.time;
-      }
+    const sameItem = yield getInventoryItem({ id, uid });
+    if (sameItem) {
+      item.amount = (sameItem.amount || 1) + 1;
+      item.time = sameItem.time;
     }
   }
 
