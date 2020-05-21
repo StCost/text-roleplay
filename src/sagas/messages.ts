@@ -6,7 +6,7 @@ import { database } from '../helpers/firebase';
 import { formatMessage } from '../helpers/utils';
 
 function* sendMessage(payload: IPayload) {
-  const { uid, message } = payload;
+  const { uid, message, data} = payload;
   const time = new Date().getTime();
 
   yield database
@@ -16,6 +16,7 @@ function* sendMessage(payload: IPayload) {
       time,
       author: uid,
       body: `${message} `,
+      data,
     }));
   localStorage.setItem('message', '');
   actions.sendMessageSuccess({});

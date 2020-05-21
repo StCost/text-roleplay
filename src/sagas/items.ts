@@ -42,13 +42,13 @@ function* getItems() {
 function* getItemById(payload: IPayload) {
   const { id } = payload;
 
-  const rawItems = yield database
+  const rawItem = yield database
     .ref('items')
     .child(id)
     .once('value');
 
-  const items = rawItems.val();
-  actions.getItemsSuccess({ items: [items] });
+  const item = rawItem.val();
+  actions.getItemsSuccess({ items: [item] });
 }
 
 function* getMoreItems(payload: IPayload) {
@@ -79,10 +79,18 @@ function* deleteItem(payload: IPayload) {
 }
 
 function* passItem(payload: IPayload) {
-  const { id, uid, passTo, demonstrate, use } = payload;
+  const { id, uid, passTo, demonstrate } = payload;
 
-  if ([passTo, demonstrate, use].some(v => v)) {
-    console.error();
+  if (id && uid) {
+    if (demonstrate) {
+      actions.sendMessage({
+        uid,
+        message: '*показывает предмет',
+        data: { itemId: id },
+      });
+      actions.passItemSuccess({});
+      return;
+    }
   }
 
   if (passTo) {

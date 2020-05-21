@@ -10,13 +10,11 @@ export interface IMessage {
   author: string;
   time: number;
   body: string;
-  // Remove header and top margin of message, because author is the same
-  grouped?: boolean;
-  isCommand?: boolean;
+  grouped?: boolean; // Remove header and top margin of message, because author is the same
   isRP?: boolean;
-  commandResult?: string;
   mentioned?: boolean;
   rolls?: IRoll[];
+  data?: { [key: string]: any }; // Extra data for special purposes
 }
 
 export interface IState {
@@ -72,7 +70,7 @@ export interface IItem {
   amount?: number;
   approved: boolean;
   author?: string;
-  type: ItemType,
+  type: ItemType;
 }
 
 export const defaultItem: IItem = {

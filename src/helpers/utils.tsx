@@ -103,7 +103,7 @@ export const formatMessage = (message: IMessage) => {
     message.rolls = exportRolls(body);
   }
 
-  if (/\*/.test(body)) {
+  if (body.indexOf('*') > -1) {
     message.isRP = true;
   }
 

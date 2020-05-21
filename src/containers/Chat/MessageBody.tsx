@@ -1,8 +1,10 @@
 import React from 'react';
+
 import { isURL } from '../../helpers/utils';
 import { IMessage } from '../../reducers/interfaces';
 import { importRolls } from '../../helpers/dice';
-import Image from "../../components/Image";
+import Image from '../../components/Image';
+import ItemById from '../../components/ItemById';
 
 interface IMessageBodyProps {
   message: IMessage;
@@ -13,7 +15,23 @@ const MessageBody = (props: IMessageBodyProps) => {
       body,
       isRP,
       rolls,
+      data,
     } = props.message;
+
+    if (data) {
+      const { itemId } = data;
+
+      if (itemId) {
+        return (
+          <>
+            {body && <i className="rp-message">
+              {body}
+              <ItemById id={itemId.trim()}/>
+            </i>}
+          </>
+        )
+      }
+    }
 
     if (isURL(body)) {
       if (/\.(gif|jpe?g|tiff|png|webp|bmp)/ig.test(body)) {
