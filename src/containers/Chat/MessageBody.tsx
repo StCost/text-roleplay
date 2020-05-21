@@ -1,10 +1,12 @@
 import React from 'react';
+import { Button} from 'antd';
 
 import { isURL } from '../../helpers/utils';
 import { IMessage } from '../../reducers/interfaces';
 import { importRolls } from '../../helpers/dice';
 import Image from '../../components/Image';
 import ItemById from '../../components/ItemById';
+import actions from "../../actions";
 
 interface IMessageBodyProps {
   message: IMessage;
@@ -19,15 +21,20 @@ const MessageBody = (props: IMessageBodyProps) => {
     } = props.message;
 
     if (data) {
-      const { itemId } = data;
+      const { itemId, item } = data;
 
       if (itemId) {
         return (
           <>
-            {body && <i className="rp-message">
+            <i className="rp-message">
               {body}
               <ItemById id={itemId.trim()}/>
-            </i>}
+              {item && (
+                <Button className="take-button">
+                  Забрать предмет
+                </Button>
+              )}
+            </i>
           </>
         )
       }

@@ -79,7 +79,7 @@ function* deleteItem(payload: IPayload) {
 }
 
 function* passItem(payload: IPayload) {
-  const { id, uid, demonstrate, use } = payload;
+  const { id, uid, demonstrate, use, item } = payload;
 
   if (id && uid) {
     if (demonstrate) {
@@ -89,28 +89,40 @@ function* passItem(payload: IPayload) {
         data: { itemId: id },
       });
       actions.passItemSuccess({});
-      return;
-    } else if (use) {
-      const removed = yield removeItem({ id, uid });
-      if (removed) {
-        actions.sendMessage({
-          uid,
-          message: '*использовал предмет',
-          data: { itemId: id },
-        });
-        actions.passItemSuccess({});
-      }
+      return true;
+    }
+
+    const removed = yield removeItem({ id, uid });
+    if (!removed) {
+      actions.passItemFail({ id, uid });
+      console.error(`Pass item error`, payload);
+      return false;
+    }
+
+    if (use) {
+      actions.sendMessage({
+        uid,
+        message: '*использовал предмет',
+        data: { itemId: id },
+      });
+      actions.passItemSuccess({});
+      return true;
+    }
+
+    if (removed && item) {
+      actions.sendMessage({
+        uid,
+        message: '*выбросил предмет',
+        data: { itemId: id, item },
+      });
+      actions.passItemSuccess({});
+      return true;
     }
   }
 
-  // if (passTo) {
-  //   const removed = yield removeItem({ id, uid });
-  //   if (!removed) {
-  //     actions.passItemFail({ id, uid, passTo });
-  //     console.error(`Pass item error`);
-  //     return false;
-  //   }
-  // }
+  actions.passItemFail({ id, uid });
+  console.error(`Pass item error. id and uid are not defined`, payload);
+  return false;
 }
 
 function* removeItem(payload: IPayload) {
@@ -118,7 +130,7 @@ function* removeItem(payload: IPayload) {
   const ref = database
     .ref(`users`)
     .child(uid)
-    .child('inventory')
+    .child('inventory');
 
   const sameItem = yield getInventoryItem({ id, uid });
   if (sameItem) {
@@ -192,6 +204,15 @@ function* giveItem(payload: IPayload) {
   return true;
 }
 
+function* takeItem(payload: IPayload) {
+  const { itemId, ownerId, uid } = payload;
+  const took = yield removeItem({ id: itemId, uid: ownerId });
+  if (took) {
+    giveItem({ id: itemId, uid });
+    actions.sendMessage({ uid, message: '*подобрал предмет' });
+  }
+}
+
 export default function* watchForActions() {
   yield all([
     takeLatest('SET_ITEM', setItem),
@@ -202,5 +223,6 @@ export default function* watchForActions() {
     takeLatest('GIVE_ITEM', giveItem),
     takeLatest('REMOVE_ITEM', removeItem),
     takeLatest('PASS_ITEM', passItem),
+    takeLatest('TAKE_ITEM', takeItem),
   ]);
 }
