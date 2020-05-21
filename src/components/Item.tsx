@@ -19,20 +19,16 @@ class Item extends Component<IItemProps> {
       case 'wearable':
         return armor;
 
-      case 'ammo':
-        return amount;
-
       case 'weapon':
         return capacity;
 
       default:
-        return false;
+        return `${amount}шт`;
     }
   };
 
   labels = {
     wearable: 'Защита',
-    ammo: 'Кол-во',
     weapon: 'Магазин',
   };
 
@@ -77,7 +73,7 @@ class Item extends Component<IItemProps> {
             <div className="item-ammo">
               {
                 // @ts-ignore
-                stats ? `${this.labels[type]}: ${stats}` : ''
+                stats ? `${this.labels[type] || 'Кол-во'}: ${stats}` : ''
               }
             </div>
             <div className="item-effect">{effect}</div>

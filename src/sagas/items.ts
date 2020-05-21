@@ -4,6 +4,7 @@ import { IPayload } from '../actions';
 import actions from '../actions';
 import { database } from '../helpers/firebase';
 import { generateID } from '../helpers/utils';
+import { IInventory, IInventoryItem, IItem } from "../reducers/interfaces";
 
 function* setItem(payload: IPayload) {
   const { item } = payload;
@@ -18,13 +19,13 @@ function* setItem(payload: IPayload) {
     author,
   };
 
-    yield database
-      .ref('items')
-      .child(`${id}`)
-      .set(itemData);
+  yield database
+    .ref('items')
+    .child(`${id}`)
+    .set(itemData);
 
-    actions.setItemSuccess({ itemData });
-    actions.getItemById({ id });
+  actions.setItemSuccess({ itemData });
+  actions.getItemById({ id });
 }
 
 function* getItems() {
@@ -115,15 +116,41 @@ function* removeItem(payload: IPayload) {
 }
 
 function* giveItem(payload: IPayload) {
-  const { id, uid } = payload;
+  const { id, uid, itemType } = payload;
+  if (!id || !uid || !itemType) {
+    console.error('Cant give item. One of properties are not defined', id, uid, itemType);
+    actions.giveItemFail({});
+    return;
+  }
 
   const time = new Date().getTime();
+  const item: IInventoryItem = { id, time, type: itemType, amount: 1 };
+
+  if (itemType !== 'weapon' && itemType !== 'wearable') {
+    const rawItems = yield database
+      .ref('users')
+      .child(uid)
+      .child('inventory')
+      .once('value');
+    const items: IInventoryItem[] = Object.values(rawItems.val() || {});
+    if (items.length) {
+      // @ts-ignore
+      const sameItem: IItem = items.find(item => item.id === id);
+      if (sameItem) {
+        item.amount = (sameItem.amount || 1) + 1;
+        item.time = sameItem.time;
+      }
+    }
+  }
+
+  const fullId = `${item.id}|${item.time}`;
   yield database
     .ref('users')
     .child(uid)
     .child('inventory')
-    .child(`${id}|${time}`)
-    .set({ id, time });
+    .child(fullId)
+    .set(item);
+
   actions.giveItemSuccess({ id, uid });
   return true;
 }

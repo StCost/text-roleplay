@@ -69,13 +69,13 @@ class Inventory extends Items<IInventoryProps> {
       const notLoadedItems: string[] = [];
 
       inventoryItems
-        .forEach(({ id, time }) => {
+        .forEach((inventoryItem) => {
+          const { id } = inventoryItem;
           const item = items.find((item: IItem) => item.id === id);
           if (item) {
             loadedItems.push({
               ...item,
-              id,
-              time,
+              ...inventoryItem,
             });
           } else {
             notLoadedItems.push(id);

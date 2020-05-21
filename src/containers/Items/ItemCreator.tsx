@@ -37,7 +37,6 @@ class ItemCreator extends Component<IItemCreatorProps, IItem> {
     price: 'Цена',
     capacity: 'Размер магазина',
     armor: 'Защита',
-    amount: 'Количество',
     approved: 'Подтверждён',
   };
 
@@ -173,14 +172,6 @@ class ItemCreator extends Component<IItemCreatorProps, IItem> {
     ),
     armor: (value: number, key: string, item: IItem) => (
       item.type === 'wearable' && <InputNumber
-        value={value}
-        min={0}
-        step={1}
-        onChange={(value?: number) => this.onChange(key, value || 0)}
-      />
-    ),
-    amount: (value: number, key: string, item: IItem) => (
-      item.type === 'ammo' && <InputNumber
         value={value}
         min={0}
         step={1}

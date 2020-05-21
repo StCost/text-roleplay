@@ -32,11 +32,15 @@ export interface IState {
   error: Error | false;
 }
 
+export interface IInventoryItem {
+  id: string;
+  time: number;
+  type: ItemType;
+  amount: number;
+}
+
 export interface IInventory {
-  [key: string]: {
-    id: string;
-    time: number;
-  }
+  [key: string]: IInventoryItem;
 }
 
 export interface IUser {
@@ -65,7 +69,7 @@ export interface IItem {
   price: number;
   capacity: number;
   armor: number;
-  amount: number;
+  amount?: number;
   approved: boolean;
   author?: string;
   type: ItemType,

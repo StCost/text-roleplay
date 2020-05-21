@@ -214,7 +214,7 @@ export class Items<T extends IItemsProps> extends React.Component<T, IItemsState
   cardControls: IControl[] = [
     {
       label: 'Взять',
-      onClick: (item: IItem) => actions.giveItem({ id: item.id, uid: this.props.uid }),
+      onClick: (item: IItem) => actions.giveItem({ id: item.id, uid: this.props.uid, itemType: item.type }),
       condition: () => Boolean(this.props.currentUser && this.props.currentUser.isAdmin)
     },
     {
