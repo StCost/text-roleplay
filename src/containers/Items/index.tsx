@@ -8,7 +8,7 @@ import {
   Dropdown,
   InputNumber,
   Tooltip,
-  Switch,
+  Switch, Modal,
 } from 'antd';
 import { RadioChangeEvent } from 'antd/lib/radio';
 import { RouteComponentProps } from 'react-router';
@@ -19,7 +19,7 @@ import actions from '../../actions';
 import { IItem, IState, ItemType, IUser } from '../../reducers/interfaces';
 import Loader from '../../components/Loader';
 import ItemCreator from './ItemCreator';
-import ItemsList from './ItemsList';
+import ItemsList, { IControl } from './ItemsList';
 
 export interface IItemsProps extends RouteComponentProps {
   loading: boolean;
@@ -199,6 +199,36 @@ export class Items<T extends IItemsProps> extends React.Component<T, IItemsState
     )
   };
 
+  deleteModal = (item: IItem) => Modal.confirm({
+    title: 'Удалить',
+    content: 'Это действие невозможно отменить. Вы уверены?',
+    maskClosable: true,
+    okText: 'Удалить',
+    cancelText: 'Отмена',
+    onOk: (close) => {
+      actions.deleteItem({ id: item.id });
+      close();
+    }
+  });
+
+  cardControls: IControl[] = [
+    {
+      label: 'Взять',
+      onClick: (item: IItem) => actions.giveItem({ id: item.id, uid: this.props.uid }),
+      condition: () => Boolean(this.props.currentUser && this.props.currentUser.isAdmin)
+    },
+    {
+      label: 'Редактировать',
+      onClick: (item: IItem) => this.toggleEditingItem(item),
+      condition: (item: IItem) => Boolean((this.props.uid === item.author && !item.approved) || (this.props.currentUser && this.props.currentUser.isAdmin))
+    },
+    {
+      label: 'Удалить',
+      onClick: (item: IItem) => this.deleteModal(item),
+      condition: (item: IItem) => Boolean((this.props.uid === item.author && !item.approved) || (this.props.currentUser && this.props.currentUser.isAdmin))
+    },
+  ];
+
   getItemsList = (items: IItem[]) => {
     const { currentUser, uid } = this.props;
     return (
@@ -207,13 +237,25 @@ export class Items<T extends IItemsProps> extends React.Component<T, IItemsState
         uid={uid}
         currentUser={currentUser}
         toggleEditingItem={this.toggleEditingItem}
+        controls={this.cardControls}
       />
+    )
+  };
+
+  getFooter = (items: IItem[]): JSX.Element | void => {
+    const { itemsToLoad } = this.state;
+    return (
+      <Button
+        className="items-load-button"
+        onClick={() => actions.getMoreItems({ amount: itemsToLoad, lastItem: items[items.length - 1] })}
+      >
+        Загрузить {itemsToLoad}шт
+      </Button>
     )
   };
 
   render = () => {
     const { loading } = this.props;
-    const { itemsToLoad } = this.state;
     const items = this.items;
 
     return (
@@ -222,12 +264,7 @@ export class Items<T extends IItemsProps> extends React.Component<T, IItemsState
         {this.getCreators()}
         {this.getControls()}
         {this.getItemsList(items)}
-        <Button
-          className="items-load-button"
-          onClick={() => actions.getMoreItems({ amount: itemsToLoad, lastItem: items[items.length - 1] })}
-        >
-          Загрузить {itemsToLoad}шт
-        </Button>
+        {this.getFooter(items)}
       </Card>
     )
   }

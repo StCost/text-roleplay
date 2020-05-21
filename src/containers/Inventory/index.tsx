@@ -4,8 +4,6 @@ import {
   Input,
   Dropdown,
   Button,
-  Tooltip,
-  InputNumber,
 } from 'antd';
 import { FilterOutlined } from '@ant-design/icons';
 
@@ -13,13 +11,19 @@ import { IItemsProps, Items } from '../Items';
 import { IInventory, IItem, IState } from '../../reducers/interfaces';
 import ItemCreator from '../Items/ItemCreator';
 import actions from "../../actions";
-import ItemsList from "../Items/ItemsList";
+import ItemsList, { IControl } from "../Items/ItemsList";
 
 interface IInventoryProps extends IItemsProps {
   inventory: IInventory;
 }
 
+const noop = () => {
+};
+
 class Inventory extends Items<IInventoryProps> {
+  componentDidMount = noop;
+  getFooter = noop;
+
   getCreators = () => {
     const { editingItem } = this.state;
     const { currentUser } = this.props;
@@ -52,19 +56,8 @@ class Inventory extends Items<IInventoryProps> {
             <FilterOutlined/>
           </Button>
         </Dropdown>
-        <Tooltip title="Кол-во загружаемых предметов за раз">
-          <InputNumber
-            value={this.state.itemsToLoad}
-            min={1}
-            max={99}
-            onChange={(itemsToLoad?: number) => this.setState({ itemsToLoad: itemsToLoad || 1 })}
-          />
-        </Tooltip>
       </div>
     )
-  };
-
-  componentDidMount = () => {
   };
 
   getInventoryItems = (items: IItem[]) => {
@@ -99,6 +92,42 @@ class Inventory extends Items<IInventoryProps> {
     return [];
   };
 
+  cardControls: IControl[] = [
+    {
+      label: 'Показать',
+      onClick: (item: IItem) => actions.passItem({
+        id: item.id,
+        uid: this.props.uid,
+        demonstrate: true,
+      }),
+    },
+    {
+      label: 'Использовать',
+      onClick: (item: IItem) => actions.passItem({
+        id: item.id,
+        uid: this.props.uid,
+        user: true,
+      }),
+    },
+    {
+      label: 'Выбросить',
+      onClick: (item: IItem) => actions.passItem({
+        id: item.id,
+        uid: this.props.uid,
+      }),
+    },
+    {
+      label: 'Передать',
+      onClick: (item: IItem) => {
+      },
+    },
+    {
+      label: 'Удалить',
+      onClick: (item: IItem) => this.deleteModal(item),
+      condition: () => Boolean(this.props.currentUser && this.props.currentUser.isAdmin)
+    },
+  ];
+
   getItemsList = (items: IItem[]) => {
     const { currentUser, uid } = this.props;
 
@@ -108,6 +137,7 @@ class Inventory extends Items<IInventoryProps> {
         currentUser={currentUser}
         toggleEditingItem={this.toggleEditingItem}
         items={this.getInventoryItems(items)}
+        controls={this.cardControls}
       />
     )
   };

@@ -24,7 +24,7 @@ function* setItem(payload: IPayload) {
       .set(itemData);
 
     actions.setItemSuccess({ itemData });
-    actions.getItemsById({ items: [id] });
+    actions.getItemById({ id });
 }
 
 function* getItems() {
