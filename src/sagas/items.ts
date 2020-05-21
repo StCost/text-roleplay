@@ -91,7 +91,15 @@ function* passItem(payload: IPayload) {
       actions.passItemSuccess({});
       return;
     } else if (use) {
-
+      const removed = yield removeItem({ id, uid });
+      if (removed) {
+        actions.sendMessage({
+          uid,
+          message: '*использовал предмет',
+          data: { itemId: id },
+        });
+        actions.passItemSuccess({});
+      }
     }
   }
 
