@@ -4,6 +4,7 @@ import auth from './auth';
 import users from './users';
 import messages from './messages';
 import items from './items';
+import inventory from './inventory';
 
 export default function* watchAll() {
   yield all([
@@ -11,5 +12,6 @@ export default function* watchAll() {
     users(),
     messages(),
     items(),
+    inventory(),
   ])
 }
