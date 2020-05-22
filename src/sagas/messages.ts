@@ -16,12 +16,18 @@ function* sendMessage(payload: IPayload) {
     data,
   });
 
-  yield database
-    .ref('messages')
-    .child(`${time}`)
-    .set(newMessage);
-  localStorage.setItem('message', '');
-  actions.sendMessageSuccess({ message: newMessage });
+  try {
+    yield database
+      .ref('messages')
+      .child(`${time}`)
+      .set(newMessage);
+    localStorage.setItem('message', '');
+    actions.sendMessageSuccess({ message: newMessage });
+  } catch (e) {
+    actions.sendMessageFail({});
+    console.error(e);
+    actions.notify({ message: 'Сообщение не было отправлено. Для деталей ctrl + shift + i, вкладка Console' });
+  }
 }
 
 function subscribe() {
@@ -85,6 +91,7 @@ function uploadFile(payload: IPayload) {
         uid,
         message: res.data.link,
       });
+      actions.notify({ message: 'Файл успешно загружен!' });
     }
   };
 

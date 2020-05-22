@@ -77,6 +77,7 @@ function* deleteItem(payload: IPayload) {
     .remove();
 
   actions.deleteItemSuccess({ id });
+  actions.notify({ message: 'Предмет успешно удалён' });
 }
 
 function* passItem(payload: IPayload) {
@@ -86,17 +87,19 @@ function* passItem(payload: IPayload) {
     if (demonstrate) {
       actions.sendMessage({
         uid,
-        message: '*показывает предмет',
+        message: `*показывает предмет`,
         data: { itemId: id },
       });
       actions.passItemSuccess({});
+      actions.notify({ message: `Вы показали ${item ? item.name : 'предмет'}` });
+      actions.redirect({ to: '/text-roleplay/chat' });
       return true;
     }
 
     const removed = yield removeItem({ id, uid });
     if (!removed) {
-      actions.passItemFail({ id, uid });
       console.error(`passItem error:`, payload);
+      actions.passItemFail({ id, uid });
       return false;
     }
 
@@ -106,6 +109,8 @@ function* passItem(payload: IPayload) {
         message: '*использовал предмет',
         data: { itemId: id },
       });
+      actions.notify({ message: `Вы использовали ${item ? item.name : 'предмет'}` });
+      actions.redirect({ to: '/text-roleplay/chat' });
       actions.passItemSuccess({});
       return true;
     }
@@ -116,6 +121,8 @@ function* passItem(payload: IPayload) {
         message: '*выбросил предмет',
         data: { itemId: id, item },
       });
+      actions.notify({ message: `Вы выбросили ${item ? item.name : 'предмет'}` });
+      actions.redirect({ to: '/text-roleplay/chat' });
       actions.passItemSuccess({});
       return true;
     }
@@ -152,6 +159,7 @@ function* removeItem(payload: IPayload) {
   }
 
   console.error(`removeItem error: User '${uid}' doesn't have item '${id}'`);
+  actions.notify({ message: 'Предмета нет в инвентаре' });
   actions.removeItemFail({ id, uid, error: 'has-no-item' });
   return false;
 }

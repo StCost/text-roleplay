@@ -225,6 +225,11 @@ export class Items<T extends IItemsProps> extends React.Component<T, IItemsState
       condition: (item: IItem) => Boolean((this.props.uid === item.author && !item.approved) || (this.props.currentUser && this.props.currentUser.isAdmin))
     },
     {
+      label: 'В консоль',
+      onClick: console.log,
+      condition: () => Boolean(this.props.currentUser && this.props.currentUser.isAdmin)
+    },
+    {
       label: 'Удалить',
       onClick: (item: IItem) => this.deleteModal(item),
       condition: (item: IItem) => Boolean((this.props.uid === item.author && !item.approved) || (this.props.currentUser && this.props.currentUser.isAdmin))

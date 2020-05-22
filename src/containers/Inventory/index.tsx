@@ -131,6 +131,11 @@ class Inventory extends Items<IInventoryProps> {
       },
     },
     {
+      label: 'В консоль',
+      onClick: console.log,
+      condition: () => Boolean(this.props.currentUser && this.props.currentUser.isAdmin)
+    },
+    {
       label: 'Удалить',
       onClick: (item: IItem) => Modal.confirm({
         title: 'Удалить',

@@ -127,6 +127,30 @@ const reducer = (state = initialState, action: IAction) => {
         items: state.items.filter((item: IItem) => item.id !== action.id),
       }
     }
+    case 'NOTIFY': {
+      return {
+        ...state,
+        notify: action.message,
+      }
+    }
+    case 'NOTIFY_SUCCESS': {
+      return {
+        ...state,
+        notify: undefined,
+      }
+    }
+    case 'REDIRECT': {
+      return {
+        ...state,
+        redirect: action.to,
+      }
+    }
+    case 'REDIRECT_SUCCESS': {
+      return {
+        ...state,
+        redirect: undefined,
+      }
+    }
     default:
       return state;
   }

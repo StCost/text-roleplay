@@ -45,6 +45,8 @@ const actions: IActions = {
   ...createAsyncAction('REMOVE_ITEM'),
   ...createAsyncAction('PASS_ITEM'),
   ...createAsyncAction('TAKE_ITEM'),
+  ...createAsyncAction('NOTIFY'),
+  ...createAsyncAction('REDIRECT'),
   updateLastOnline: createAction('UPDATE_LAST_ONLINE'),
   logout: createAction('LOGOUT'),
 };
