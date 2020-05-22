@@ -4,7 +4,7 @@ import {
   Card,
   Input,
   Button,
-  Popconfirm,
+  Popconfirm, Switch,
 } from 'antd';
 import { RouteComponentProps } from 'react-router';
 
@@ -22,6 +22,7 @@ interface ISettingsProps extends RouteComponentProps {
   user: IUser | null;
   hasRight: boolean;
   uid: string;
+  currentUser: IUser | null;
 }
 
 export class Settings extends React.Component<ISettingsProps> {
@@ -32,17 +33,21 @@ export class Settings extends React.Component<ISettingsProps> {
     }
   };
 
-  onChange = (field: string) => (event: ChangeEvent<HTMLInputElement>) => {
+  rawOnChange = (field: string, value: string | boolean) => {
     const { user } = this.props;
     if (!user) return;
 
     const newSettings = {
       ...user,
-      [field]: event.target.value,
+      [field]: value,
     };
 
     this.setSettings(newSettings);
   };
+
+  onChange = (field: string) =>
+    (event: ChangeEvent<HTMLInputElement>) =>
+      this.rawOnChange(field, event.target.value);
 
   setSettings = (newSettings: {}) => {
     const { user } = this.props;
@@ -61,7 +66,7 @@ export class Settings extends React.Component<ISettingsProps> {
 
   getField = (key: string, value: string, user: IUser) => {
     const { nickname = '' } = user;
-    const { hasRight } = this.props;
+    const { hasRight, currentUser, uid } = this.props;
     const disabled = !hasRight;
 
     switch (key) {
@@ -118,6 +123,20 @@ export class Settings extends React.Component<ISettingsProps> {
             'Пользователь ещё не был активен'
           );
 
+      case 'isAdmin':
+        return <>
+          {
+            (hasRight && (currentUser && currentUser.uid !== uid)) &&
+            <>
+              <Switch
+                checked={!!value}
+                onChange={(isAdmin: boolean) => this.rawOnChange(key, isAdmin)}
+              />
+            </>
+          }
+          {value ? 'Имеются' : 'Отсутствуют'}
+        </>;
+
       default:
         return (
           <Input
@@ -133,6 +152,7 @@ export class Settings extends React.Component<ISettingsProps> {
     'avatar': 'Аватар',
     'nickname': 'Никнейм',
     'lastOnline': 'Последняя активность',
+    'isAdmin': 'Права админа',
     'uid': 'UID',
   };
 
@@ -180,6 +200,7 @@ const mapStateToProps = (state: IState, props: ISettingsProps) => {
     user,
     uid,
     hasRight: (!!user && !!currentUser) && (currentUser.uid === user.uid || !!currentUser.isAdmin),
+    currentUser,
   };
 };
 

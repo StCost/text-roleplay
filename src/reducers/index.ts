@@ -22,6 +22,7 @@ export const defaultUser = {
   nickname: '',
   avatar: '',
 
+  isAdmin: false,
   uid: '',
 };
 
