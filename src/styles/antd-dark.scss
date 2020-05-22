@@ -137,6 +137,7 @@ div,span,pre,ul,li,h1 {
     pointer-events: none;
     * {
       color: $background-color-lighter;
+      fill: $background-color-lighter;
     }
   }
 }

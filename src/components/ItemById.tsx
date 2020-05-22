@@ -10,6 +10,7 @@ interface IItemByIdProps {
   item?: IItem;
   disabled?: boolean;
   footer?: JSX.Element;
+  messageId?: number;
 }
 
 const ItemById = (props: IItemByIdProps) => {

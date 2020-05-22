@@ -9,7 +9,6 @@ import actions from '../reducers/actions';
 
 interface IItemProps {
   item: IItem,
-  showTechInfo?: boolean,
   footer?: JSX.Element,
   disabled?: boolean;
   uid?: string;
@@ -62,8 +61,9 @@ class Item extends Component<IItemProps> {
   };
 
   render = () => {
+    const { disabled, item } = this.props;
     const {
-      name = this.props.item.id,
+      name = item.id,
       price = 0,
       description,
       image,
@@ -71,8 +71,7 @@ class Item extends Component<IItemProps> {
       weight = 0,
       type,
       approved,
-    } = this.props.item;
-    const { disabled } = this.props;
+    } = item;
 
     const stats = this.getStats();
     return (

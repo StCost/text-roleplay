@@ -2,111 +2,46 @@ import React, { ChangeEvent } from 'react';
 import { connect } from 'react-redux';
 import {
   Button,
-  Card,
   Input,
-  Radio,
   Dropdown,
   InputNumber,
   Tooltip,
-  Switch, Modal,
+  Modal,
 } from 'antd';
-import { RouteComponentProps } from 'react-router';
 import { FilterOutlined } from '@ant-design/icons';
 
 import '../../styles/items.scss';
 import actions from '../../reducers/actions';
-import { IItem, IState, ItemType, IUser } from '../../reducers/interfaces';
-import Loader from '../../components/Loader';
+import { IItem, IState, IUser } from '../../reducers/interfaces';
 import ItemCreator from './ItemCreator';
-import ItemsList, { IControl } from './ItemsList';
+import ItemsList, { IControl } from '../ItemsTable/ItemsList';
+import ItemsTable, { IItemsTableProps, IItemsTableState } from "../ItemsTable";
 
-export interface IItemsProps extends RouteComponentProps {
-  loading: boolean;
+export interface IItemsProps extends IItemsTableProps {
   user: IUser | null;
   uid: string;
-  items: IItem[];
   currentUser: IUser | null;
 }
 
-export interface IItemsState {
+interface IItemsState extends IItemsTableState {
   creatingItem: boolean;
   editingItem: IItem | null;
-  searchString: string;
-  filters: { [key: string]: boolean };
   itemsToLoad: number;
-  showApproved: boolean;
-  showNotApproved: boolean;
 }
 
-export class Items<T extends IItemsProps> extends React.Component<T, IItemsState> {
+export class Items extends ItemsTable<IItemsProps, IItemsState> {
   state = {
+    ...this.defaultState,
     creatingItem: false,
     editingItem: null,
-    searchString: '',
     itemsToLoad: 99,
-    showApproved: true,
-    showNotApproved: false,
-    filters: {
-      'weapon': true,
-      'usable': true,
-      'wearable': true,
-      'junk': true,
-      'ammo': true,
-      'note': true,
-      'key': true,
-      'misc': true,
-    },
   };
 
-  onFilterChange = () =>
-    this.setState({ filters: this.state.filters });
-
-  getFilters = () => {
-    const { showNotApproved, showApproved, filters } = this.state;
-
-    const getButton = (name: ItemType, label: string) => (
-      <div
-        tabIndex={0}
-        className="items-approved-button"
-        // @ts-ignore
-        onClick={() => this.setState({ filters: { ...filters, [name]: !filters[name] } })}
-      >
-        <Switch
-          checked={
-            // @ts-ignore
-            filters[name]
-          }/>
-        {label}
-      </div>
-    );
-
-    return (
-      <Radio.Group
-        onChange={this.onFilterChange}
-        defaultValue={undefined}
-        style={{ display: 'flex', flexDirection: 'column' }}
-      >
-        {getButton('weapon', 'Оружие')}
-        {getButton('usable', 'Используемое')}
-        {getButton('wearable', 'Одежда/Броня')}
-        {getButton('ammo', 'Патроны')}
-        {getButton('junk', 'Мусор')}
-        {getButton('note', 'Записки')}
-        {getButton('key', 'Ключи')}
-        {getButton('misc', 'Прочее')}
-        <div tabIndex={0} className="items-approved-button"
-             onClick={() => this.setState({ showApproved: !showApproved })}>
-          <Switch checked={showApproved}/>Подтвержденные
-        </div>
-        <div tabIndex={0} className="items-approved-button"
-             onClick={() => this.setState({ showNotApproved: !showNotApproved })}>
-          <Switch checked={showNotApproved}/>Не Подтвержденные
-        </div>
-      </Radio.Group>
-    )
+  componentDidMount = () => {
+    actions.getItems({});
   };
 
-  pageControls = [
+  getPageControls = () => [
     <Button
       key="creator"
       onClick={() => this.toggleCreatingItem(true)}
@@ -121,7 +56,7 @@ export class Items<T extends IItemsProps> extends React.Component<T, IItemsState
     />,
     <Dropdown
       key="filters"
-      overlay={this.getFilters()}
+      overlay={this.getFilters(this.state)}
       trigger={['click']}
     >
       <Button>
@@ -164,33 +99,6 @@ export class Items<T extends IItemsProps> extends React.Component<T, IItemsState
     },
   ];
 
-  get items() {
-    const { searchString, filters, showApproved, showNotApproved } = this.state;
-
-    const _searchString = searchString.toLowerCase();
-    return this
-      .props
-      .items
-      .filter((item: IItem) => {
-        const { name, description, effect, type, approved } = item;
-        return (
-          (name && name.toLowerCase().indexOf(_searchString) > -1)
-          || (description && description.toLowerCase().indexOf(_searchString) > -1)
-          || (effect && effect.toLowerCase().indexOf(_searchString) > -1)
-        ) && (
-          // @ts-ignore
-          filters[type]
-        ) && (
-          (showApproved && approved === true)
-          || (showNotApproved && approved === false)
-        )
-      })
-  }
-
-  componentDidMount = () => {
-    actions.getItems({});
-  };
-
   toggleCreatingItem = (creatingItem: boolean = !this.state.creatingItem) =>
     this.setState({ creatingItem });
 
@@ -227,14 +135,6 @@ export class Items<T extends IItemsProps> extends React.Component<T, IItemsState
     )
   };
 
-  getControls = () => {
-    return (
-      <div className="items-controls">
-        {this.pageControls}
-      </div>
-    )
-  };
-
   deleteModal: (item: IItem) => void = (item: IItem) => Modal.confirm({
     title: 'Удалить',
     content: 'Это действие невозможно отменить. Вы уверены?',
@@ -247,12 +147,11 @@ export class Items<T extends IItemsProps> extends React.Component<T, IItemsState
     }
   });
 
-  getItemsList = (items: IItem[]) => {
-    const { currentUser, uid } = this.props;
+  getContent = (items: IItem[]) => {
+    const { currentUser } = this.props;
     return (
       <ItemsList
         items={items}
-        uid={uid}
         currentUser={currentUser}
         toggleEditingItem={this.toggleEditingItem}
         controls={this.cardControls}
@@ -260,36 +159,23 @@ export class Items<T extends IItemsProps> extends React.Component<T, IItemsState
     )
   };
 
-  getFooter = (items: IItem[]): JSX.Element | void => {
+  getFooter = (items: IItem[]): JSX.Element => {
     const { itemsToLoad } = this.state;
     const { loading } = this.props;
-    return loading
-      ? (
-        <React.Fragment/>
-      ) : (
-        <Button
-          className="items-load-button"
-          onClick={() => actions.getMoreItems({ amount: itemsToLoad, lastItem: items[items.length - 1] })}
-        >
-          Загрузить {itemsToLoad}шт
-        </Button>
-      )
-  };
-
-  render = () => {
-    const { loading } = this.props;
-    const items = this.items;
-
     return (
-      <Card className="items">
-        <Loader loading={loading}/>
+      <>
         {this.getCreators()}
-        {this.getControls()}
-        {this.getItemsList(items)}
-        {this.getFooter(items)}
-      </Card>
+        {!loading && (
+          <Button
+            className="items-load-button"
+            onClick={() => actions.getMoreItems({ amount: itemsToLoad, lastItem: items[items.length - 1] })}
+          >
+            Загрузить {itemsToLoad}шт
+          </Button>
+        )}
+      </>
     )
-  }
+  };
 }
 
 const mapStateToProps = (state: IState) => {

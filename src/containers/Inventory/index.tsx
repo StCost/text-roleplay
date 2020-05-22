@@ -6,36 +6,46 @@ import {
   Button,
   Modal,
   message as notify,
-  Menu,
 } from 'antd';
 import { FilterOutlined } from '@ant-design/icons';
 
-import { IItemsProps, Items } from '../Items';
-import { IInventory, IItem, IMessage, IState, IUsers } from '../../reducers/interfaces';
+import { IInventory, IItem, IState, IUser } from '../../reducers/interfaces';
 import actions from '../../reducers/actions';
-import ItemsList, { IControl } from '../Items/ItemsList';
+import ItemsList, { IControl } from '../ItemsTable/ItemsList';
 import ActiveUsersList from "../../components/ActiveUsersList";
+import ItemsTable, { IItemsTableProps, IItemsTableState } from '../ItemsTable';
 
-interface IInventoryProps extends IItemsProps {
+interface IInventoryProps extends IItemsTableProps {
   inventory: IInventory;
+  loading: boolean;
+  user: IUser | null;
+  uid: string;
+  items: IItem[];
+  currentUser: IUser | null;
 }
 
-const noop = () => {
-};
+interface IInventoryState extends IItemsTableState {
+  editingItem: IItem | null;
+}
 
-class Inventory extends Items<IInventoryProps> {
+class Inventory extends ItemsTable<IInventoryProps, IInventoryState> {
+  state = {
+    ...this.defaultState,
+    editingItem: null,
+  };
+
   componentDidMount = () => {
     const { user, uid } = this.props;
     if (!user && uid) {
       actions.getUser({ uid });
     }
   };
-  getFooter = noop;
-  deleteModal = noop;
-  onCreateItem = noop;
-  toggleCreatingItem = noop;
 
-  pageControls = [
+  toggleEditingItem = (item?: IItem | null) =>
+    this.setState({ editingItem: item || null });
+
+
+  getPageControls = () => [
     <Input
       key="search"
       placeholder="Поиск предмета"
@@ -44,7 +54,7 @@ class Inventory extends Items<IInventoryProps> {
     />,
     <Dropdown
       key="filters"
-      overlay={this.getFilters()}
+      overlay={this.getFilters(this.state)}
       trigger={['click']}
     >
       <Button>
@@ -169,7 +179,7 @@ class Inventory extends Items<IInventoryProps> {
     },
   ];
 
-  getItemsList = (items: IItem[]) => {
+  getContent = (items: IItem[]) => {
     const { currentUser, uid } = this.props;
 
     return (
@@ -188,7 +198,7 @@ class Inventory extends Items<IInventoryProps> {
 }
 
 const mapStateToProps = (state: IState, props: IInventoryProps) => {
-  const { loading, users, currentUser, items, messages,usersActivity } = state;
+  const { loading, users, currentUser, items, messages, usersActivity } = state;
 
   const uid = new URLSearchParams(props.match.params).get('uid') || state.uid || '0';
   const user = users[uid];

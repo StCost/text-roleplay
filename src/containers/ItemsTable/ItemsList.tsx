@@ -19,7 +19,7 @@ export interface IControl {
 
 interface IItemsListProps {
   items: IItem[];
-  uid: string;
+  uid?: string;
   currentUser: IUser | null;
   toggleEditingItem: (item: IItem) => void;
   controls?: IControl[];
@@ -32,7 +32,7 @@ class ItemsList extends Component<IItemsListProps> {
 
     const controlButtons = controls
       .map(({ label, onClick, isAdmin, condition }: IControl) => {
-        if (condition && !condition(item)) return;
+        if (condition && !condition(item)) return false;
 
         return (
           <Menu.Item key={label}>
