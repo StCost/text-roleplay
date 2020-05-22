@@ -1,7 +1,7 @@
 import React from 'react';
 import { Button, Avatar, Card } from 'antd';
 
-import actions from '../actions/index';
+import actions from '../reducers/actions';
 
 const byeLink = 'https://cdn.lowgif.com/full/fc3d7d9abd06a92e-hi-bear-gifs-get-the-best-gif-on-giphy.gif';
 

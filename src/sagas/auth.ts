@@ -2,7 +2,7 @@ import { AnyAction } from 'redux';
 import { all, takeLatest } from 'redux-saga/effects';
 
 import { auth } from '../helpers/firebase';
-import actions from '../actions';
+import actions from '../reducers/actions';
 
 function* login(action: AnyAction) {
   const { email, password } = action;

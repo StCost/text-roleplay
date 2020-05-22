@@ -2,8 +2,8 @@ import { all, takeLatest } from 'redux-saga/effects';
 
 import { IInventoryItem, IItem } from '../reducers/interfaces';
 import { database } from '../helpers/firebase';
-import { IPayload } from '../actions';
-import actions from '../actions';
+import { IPayload } from '../reducers/actions';
+import actions from '../reducers/actions';
 import { changeMessage } from './messages';
 
 function* deleteItem(payload: IPayload) {

@@ -1,7 +1,7 @@
 import { all, takeLatest } from 'redux-saga/effects';
 
-import { IPayload } from '../actions';
-import actions from '../actions';
+import { IPayload } from '../reducers/actions';
+import actions from '../reducers/actions';
 import { database } from '../helpers/firebase';
 import { formatMessage } from '../helpers/utils';
 
@@ -52,7 +52,7 @@ function* getMessages() {
   const rawMessages = yield database
     .ref('messages')
     .orderByKey()
-    .limitToLast(30)
+    .limitToLast(100)
     .once('value');
 
   const messages = Object.values(rawMessages.val() || {});

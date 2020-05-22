@@ -1,6 +1,6 @@
 import { message as notify } from 'antd';
 
-import actions from '../actions';
+import actions from '../reducers/actions';
 import { IItem, IMessage } from '../reducers/interfaces';
 import { diceRegex, exportRolls, hasDice } from './dice';
 

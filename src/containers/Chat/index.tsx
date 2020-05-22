@@ -14,7 +14,7 @@ import {
 } from 'antd';
 
 import '../../styles/chat.scss';
-import actions from '../../actions';
+import actions from '../../reducers/actions';
 import { IMessage, IState, IUser, IUsers } from '../../reducers/interfaces';
 import Message from './Message';
 import { validateMessage } from '../../helpers/utils';

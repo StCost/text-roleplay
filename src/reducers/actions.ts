@@ -47,6 +47,7 @@ const actions: IActions = {
   ...createAsyncAction('TAKE_ITEM'),
   ...createAsyncAction('NOTIFY'),
   ...createAsyncAction('REDIRECT'),
+  ...createAsyncAction('GET_USERS_ACTIVITY'),
   updateLastOnline: createAction('UPDATE_LAST_ONLINE'),
   logout: createAction('LOGOUT'),
 };

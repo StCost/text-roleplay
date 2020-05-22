@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 
 import Item from './Item';
 import { IItem, IState } from '../reducers/interfaces';
-import actions from '../actions';
+import actions from '../reducers/actions';
 
 interface IItemByIdProps {
   id: string;

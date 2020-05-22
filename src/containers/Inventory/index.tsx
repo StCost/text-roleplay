@@ -6,13 +6,15 @@ import {
   Button,
   Modal,
   message as notify,
+  Menu,
 } from 'antd';
 import { FilterOutlined } from '@ant-design/icons';
 
 import { IItemsProps, Items } from '../Items';
-import { IInventory, IItem, IState } from '../../reducers/interfaces';
-import actions from '../../actions';
+import { IInventory, IItem, IMessage, IState, IUsers } from '../../reducers/interfaces';
+import actions from '../../reducers/actions';
 import ItemsList, { IControl } from '../Items/ItemsList';
+import ActiveUsersList from "../../components/ActiveUsersList";
 
 interface IInventoryProps extends IItemsProps {
   inventory: IInventory;
@@ -83,22 +85,28 @@ class Inventory extends Items<IInventoryProps> {
     return [];
   };
 
-  getItemsList = (items: IItem[]) => {
-    const { currentUser, uid } = this.props;
+  getPassMenu = () => (
+    <ActiveUsersList
+      // users={this.props.users}
+      // usersActivity={this.props.usersActivity}
+      // uid={this.props.uid}
+      // loading={this.props.loading}
+    />
+  );
 
-    return (
-      <ItemsList
-        uid={uid}
-        currentUser={currentUser}
-        toggleEditingItem={this.toggleEditingItem}
-        items={this.getInventoryItems(items)}
-        controls={(currentUser && (currentUser.uid === uid || currentUser.isAdmin))
-          ? this.cardControls
-          : undefined
-        }
-      />
-    )
-  };
+  getDeleteModalContent = (item: IItem) => (
+    <div>
+      <span>Это действие невозможно отменить. Вы уверены?</span>
+      <br/> <br/> <br/>
+      <Button
+        style={{ width: '-webkit-fill-available' }}
+        onClick={() => {
+          actions.removeItem({ id: item.id, uid: this.props.uid });
+          notify.success('Удалено');
+        }}
+      >Удалить один</Button>
+    </div>
+  );
 
   cardControls: IControl[] = [
     {
@@ -131,8 +139,12 @@ class Inventory extends Items<IInventoryProps> {
     },
     {
       label: 'Передать',
-      onClick: (item: IItem) => {
-      },
+      onClick: async () => {
+        Modal.confirm({
+          content: this.getPassMenu(),
+          cancelText: null,
+        })
+      }
     },
     {
       label: 'В консоль',
@@ -147,19 +159,7 @@ class Inventory extends Items<IInventoryProps> {
         okText: 'Удалить все',
         cancelText: 'Отмена',
         autoFocusButton: 'cancel',
-        content: (
-          <div>
-            <span>Это действие невозможно отменить. Вы уверены?</span>
-            <br/> <br/> <br/>
-            <Button
-              style={{ width: '-webkit-fill-available' }}
-              onClick={() => {
-                actions.removeItem({ id: item.id, uid: this.props.uid });
-                notify.success('Удалено');
-              }}
-            >Удалить один</Button>
-          </div>
-        ),
+        content: this.getDeleteModalContent(item),
         onOk: (close) => {
           actions.removeItem({ id: item.id, uid: this.props.uid, all: true });
           close();
@@ -168,10 +168,27 @@ class Inventory extends Items<IInventoryProps> {
       condition: () => Boolean(this.props.currentUser && this.props.currentUser.isAdmin)
     },
   ];
+
+  getItemsList = (items: IItem[]) => {
+    const { currentUser, uid } = this.props;
+
+    return (
+      <ItemsList
+        uid={uid}
+        currentUser={currentUser}
+        toggleEditingItem={this.toggleEditingItem}
+        items={this.getInventoryItems(items)}
+        controls={(currentUser && (currentUser.uid === uid || currentUser.isAdmin))
+          ? this.cardControls
+          : undefined
+        }
+      />
+    )
+  };
 }
 
 const mapStateToProps = (state: IState, props: IInventoryProps) => {
-  const { loading, users, currentUser, items } = state;
+  const { loading, users, currentUser, items, messages,usersActivity } = state;
 
   const uid = new URLSearchParams(props.match.params).get('uid') || state.uid || '0';
   const user = users[uid];
@@ -188,6 +205,9 @@ const mapStateToProps = (state: IState, props: IInventoryProps) => {
     inventory,
     user,
     currentUser,
+    users,
+    messages,
+    usersActivity,
   };
 };
 

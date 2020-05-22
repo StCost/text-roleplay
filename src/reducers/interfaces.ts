@@ -28,8 +28,9 @@ export interface IState {
   currentUser: IUser | null;
   items: IItem[];
   error: Error | false;
-  notify?: string,
-  redirect?: string,
+  notify?: string;
+  redirect?: string;
+  usersActivity: {[key: string]: string};
 }
 
 export interface IInventoryItem {

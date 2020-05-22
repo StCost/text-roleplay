@@ -1,7 +1,7 @@
 import { all, takeLatest, takeEvery } from 'redux-saga/effects';
 
-import { IPayload } from '../actions';
-import actions from '../actions';
+import { IPayload } from '../reducers/actions';
+import actions from '../reducers/actions';
 import { database } from '../helpers/firebase';
 import { generateID, getFailedItem } from '../helpers/utils';
 

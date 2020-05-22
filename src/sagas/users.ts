@@ -1,7 +1,7 @@
 import { all, takeLatest } from 'redux-saga/effects';
 
 import { database } from '../helpers/firebase';
-import actions, { IPayload } from '../actions/index';
+import actions, { IPayload } from '../reducers/actions';
 
 function* setUser(payload: IPayload) {
   const { uid, user } = payload;
@@ -46,12 +46,28 @@ function* updateLastOnline() {
     .child(`${uid}`)
     .child('lastOnline')
     .set(time);
+
+  yield database
+    .ref('usersActivity')
+    .child(`${uid}`)
+    .set(time);
+}
+
+function* getUsersActivity() {
+  const rawActivity = yield database
+    .ref('usersActivity')
+    .orderByValue()
+    .once('value');
+
+  const usersActivity = rawActivity.val() || {};
+  actions.getUsersActivitySuccess({ usersActivity });
 }
 
 export default function* watchForActions() {
   yield all([
     takeLatest('GET_USER', getUser),
     takeLatest('SET_USER', setUser),
-    takeLatest('UPDATE_LAST_ONLINE', updateLastOnline)
+    takeLatest('UPDATE_LAST_ONLINE', updateLastOnline),
+    takeLatest('GET_USERS_ACTIVITY', getUsersActivity),
   ]);
 }

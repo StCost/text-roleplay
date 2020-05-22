@@ -31,14 +31,17 @@ class ItemsList extends Component<IItemsListProps> {
     if (!controls) return;
 
     const controlButtons = controls
-      .map(({ label, onClick, isAdmin, condition }: IControl) => (
-        (!condition || condition(item)) &&
-        <Menu.Item key={label}>
-          <Button onClick={() => onClick(item)}>
-            {label}
-          </Button>
-        </Menu.Item>
-      )).filter(i => !!i);
+      .map(({ label, onClick, isAdmin, condition }: IControl) => {
+        if (condition && !condition(item)) return;
+
+        return (
+          <Menu.Item key={label}>
+            <Button onClick={() => onClick && onClick(item)}>
+              {label}
+            </Button>
+          </Menu.Item>
+        );
+      }).filter(Boolean);
     if (controlButtons.length === 0) return;
 
     return (

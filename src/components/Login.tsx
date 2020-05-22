@@ -8,7 +8,7 @@ import {
   Alert,
 } from 'antd';
 
-import actions from '../actions/index';
+import actions from '../reducers/actions';
 import { IState } from '../reducers/interfaces';
 
 interface ILoginProps {

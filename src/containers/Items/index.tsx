@@ -14,7 +14,7 @@ import { RouteComponentProps } from 'react-router';
 import { FilterOutlined } from '@ant-design/icons';
 
 import '../../styles/items.scss';
-import actions from '../../actions';
+import actions from '../../reducers/actions';
 import { IItem, IState, ItemType, IUser } from '../../reducers/interfaces';
 import Loader from '../../components/Loader';
 import ItemCreator from './ItemCreator';

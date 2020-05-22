@@ -5,7 +5,7 @@ import { DeleteOutlined } from '@ant-design/icons';
 import '../styles/item.scss';
 import { IItem } from '../reducers/interfaces';
 import Avatar from './Avatar';
-import actions from '../actions';
+import actions from '../reducers/actions';
 
 interface IItemProps {
   item: IItem,

@@ -12,7 +12,7 @@ import './styles/antd-dark.scss';
 import './styles/components.scss';
 import { listenForActivity } from './helpers/utils';
 import { IState } from './reducers/interfaces';
-import actions from "./actions";
+import actions from "./reducers/actions";
 
 // @ts-ignore
 const buildDate = (<div className="build-date">build date {window.buildDate.replace('_', ' ')}</div>);

@@ -14,6 +14,7 @@ export const initialState: IState = {
   currentUser: null,
   items: [],
   error: false,
+  usersActivity: {},
 };
 
 export const defaultUser = {
@@ -41,6 +42,7 @@ const reducer = (state = initialState, action: IAction) => {
     case 'GIVE_ITEM':
     case 'REMOVE_ITEM':
     case 'PASS_ITEM':
+    case 'GET_USERS_ACTIVITY':
     case 'UPLOAD_FILE': {
       return {
         ...state,
@@ -57,6 +59,7 @@ const reducer = (state = initialState, action: IAction) => {
     case 'REMOVE_ITEM_FAIL':
     case 'PASS_ITEM_SUCCESS':
     case 'PASS_ITEM_FAIL':
+    case 'GET_USERS_ACTIVITY_FAIL':
     case 'SEND_MESSAGE_FAIL': {
       return {
         ...state,
@@ -111,7 +114,7 @@ const reducer = (state = initialState, action: IAction) => {
       }
     }
     case 'GET_ITEMS_SUCCESS': {
-      const items: {[key: string]: IItem} = {};
+      const items: { [key: string]: IItem } = {};
       [...state.items, ...action.items]
         .forEach((item: IItem) => items[item.id] = item);
 
@@ -150,6 +153,13 @@ const reducer = (state = initialState, action: IAction) => {
       return {
         ...state,
         redirect: undefined,
+      }
+    }
+    case 'GET_USERS_ACTIVITY_SUCCESS': {
+      return {
+        ...state,
+        loading: false,
+        usersActivity: action.usersActivity,
       }
     }
     default:
