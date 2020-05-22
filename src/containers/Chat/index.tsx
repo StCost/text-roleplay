@@ -17,7 +17,7 @@ import '../../styles/chat.scss';
 import actions from '../../actions';
 import { IMessage, IState, IUser, IUsers } from '../../reducers/interfaces';
 import Message from './Message';
-import { validateMessage } from "../../helpers/utils";
+import { validateMessage } from '../../helpers/utils';
 
 interface IChatProps {
   messages: IMessage[],

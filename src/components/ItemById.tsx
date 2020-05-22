@@ -2,8 +2,8 @@ import React from 'react';
 import { connect } from 'react-redux';
 
 import Item from './Item';
-import { IItem, IState } from "../reducers/interfaces";
-import actions from "../actions";
+import { IItem, IState } from '../reducers/interfaces';
+import actions from '../actions';
 
 interface IItemByIdProps {
   id: string;

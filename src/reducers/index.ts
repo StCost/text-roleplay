@@ -1,5 +1,5 @@
 import { processMessages } from '../helpers/utils';
-import { IAction, IItem, IMessage, IState } from "./interfaces";
+import { IAction, IItem, IState } from './interfaces';
 
 const user = JSON.parse(localStorage.getItem('user') || 'null');
 if (user) localStorage.setItem('uid', user.uid);
@@ -96,11 +96,13 @@ const reducer = (state = initialState, action: IAction) => {
       }
     }
     case 'GET_USER_SUCCESS': {
+      const currentUser = action.user.uid === state.uid
+        ? action.user
+        : state.currentUser;
+
       return {
         ...state,
-        currentUser: action.currentUser
-          ? action.user
-          : state.currentUser,
+        currentUser,
         users: {
           ...state.users,
           [action.uid]: action.user,

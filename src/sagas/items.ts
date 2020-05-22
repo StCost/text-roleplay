@@ -3,9 +3,9 @@ import { all, takeLatest, takeEvery } from 'redux-saga/effects';
 import { IPayload } from '../actions';
 import actions from '../actions';
 import { database } from '../helpers/firebase';
-import { generateID } from '../helpers/utils';
-import { IInventory, IInventoryItem, IItem } from "../reducers/interfaces";
-import { changeMessage } from "./messages";
+import { generateID, getFailedItem } from '../helpers/utils';
+import { IInventoryItem, IItem } from '../reducers/interfaces';
+import { changeMessage } from './messages';
 
 function* setItem(payload: IPayload) {
   const { item } = payload;
@@ -48,8 +48,9 @@ function* getItemById(payload: IPayload) {
     .child(id)
     .once('value');
 
-  const item = rawItem.val();
+  const item = rawItem.val() || getFailedItem(id);
   actions.getItemsSuccess({ items: [item] });
+  return true;
 }
 
 function* getMoreItems(payload: IPayload) {
@@ -96,7 +97,7 @@ function* passItem(payload: IPayload) {
     const removed = yield removeItem({ id, uid });
     if (!removed) {
       actions.passItemFail({ id, uid });
-      console.error(`Pass item error`, payload);
+      console.error(`passItem error:`, payload);
       return false;
     }
 
@@ -122,7 +123,7 @@ function* passItem(payload: IPayload) {
   }
 
   actions.passItemFail({ id, uid });
-  console.error(`Pass item error. id and uid are not defined`, payload);
+  console.error(`passItem error: id and uid are not defined`, payload);
   return false;
 }
 
@@ -151,7 +152,7 @@ function* removeItem(payload: IPayload) {
     return true;
   }
 
-  console.error(`Remove item error: User '${uid}' doesn't have item '${id}'`);
+  console.error(`removeItem error: User '${uid}' doesn't have item '${id}'`);
   actions.removeItemFail({ id, uid, error: 'has-no-item' });
   return false;
 }
@@ -177,7 +178,7 @@ function* getInventoryItem(payload: IPayload) {
 function* giveItem(payload: IPayload) {
   const { id, uid, itemType, amount = 1 } = payload;
   if (!id || !uid || !itemType) {
-    console.error('Cant give item. One of properties are not defined', id, uid, itemType);
+    console.error('giveItem error. One of the properties are not defined', id, uid, itemType);
     actions.giveItemFail({});
     return;
   }
@@ -227,7 +228,7 @@ function* takeItem(payload: IPayload) {
     return true;
   }
 
-  console.error('Take item error. Cant take or no item', payload);
+  console.error('takeItem error. Cant take or no item', payload);
   actions.takeItemFail({});
   return false;
 }

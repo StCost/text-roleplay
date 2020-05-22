@@ -9,7 +9,7 @@ import {
 } from 'antd';
 
 import actions from '../actions/index';
-import { IState } from "../reducers/interfaces";
+import { IState } from '../reducers/interfaces';
 
 interface ILoginProps {
   loading: boolean;

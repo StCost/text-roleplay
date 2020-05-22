@@ -12,8 +12,8 @@ import { FilterOutlined } from '@ant-design/icons';
 import { IItemsProps, Items } from '../Items';
 import { IInventory, IItem, IState } from '../../reducers/interfaces';
 import ItemCreator from '../Items/ItemCreator';
-import actions from "../../actions";
-import ItemsList, { IControl } from "../Items/ItemsList";
+import actions from '../../actions';
+import ItemsList, { IControl } from '../Items/ItemsList';
 
 interface IInventoryProps extends IItemsProps {
   inventory: IInventory;
@@ -23,7 +23,12 @@ const noop = () => {
 };
 
 class Inventory extends Items<IInventoryProps> {
-  componentDidMount = noop;
+  componentDidMount = () => {
+    const { user, uid } = this.props;
+    if (!user && uid) {
+      actions.getUser({ uid });
+    }
+  };
   getFooter = noop;
 
   getCreators = () => {
@@ -163,16 +168,24 @@ class Inventory extends Items<IInventoryProps> {
         currentUser={currentUser}
         toggleEditingItem={this.toggleEditingItem}
         items={this.getInventoryItems(items)}
-        controls={this.cardControls}
+        controls={(currentUser && (currentUser.uid === uid || currentUser.isAdmin))
+          ? this.cardControls
+          : undefined
+        }
       />
     )
   };
 }
 
-const mapStateToProps = (state: IState) => {
-  const { loading, users, uid, currentUser, items } = state;
+const mapStateToProps = (state: IState, props: IInventoryProps) => {
+  const { loading, users, currentUser, items } = state;
 
+  const uid = new URLSearchParams(props.match.params).get('uid') || state.uid || '0';
   const user = users[uid];
+  if (user && !user.uid && uid) {
+    user.uid = uid;
+  }
+
   const inventory = user ? user.inventory : {};
 
   return {
@@ -180,6 +193,7 @@ const mapStateToProps = (state: IState) => {
     uid,
     items,
     inventory,
+    user,
     currentUser,
   };
 };

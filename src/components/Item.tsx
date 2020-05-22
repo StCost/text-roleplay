@@ -1,15 +1,18 @@
 import React, { Component } from 'react';
-import { Card } from 'antd';
+import { Card, Button } from 'antd';
+import { DeleteOutlined } from '@ant-design/icons';
 
 import '../styles/item.scss';
 import { IItem } from '../reducers/interfaces';
-import Avatar from "./Avatar";
+import Avatar from './Avatar';
+import actions from '../actions';
 
 interface IItemProps {
   item: IItem,
   showTechInfo?: boolean,
   footer?: JSX.Element,
   disabled?: boolean;
+  uid?: string;
 }
 
 class Item extends Component<IItemProps> {
@@ -33,6 +36,31 @@ class Item extends Component<IItemProps> {
     weapon: 'Магазин',
   };
 
+  getFooter = () => {
+    const { footer, uid } = this.props;
+    const { failed, id } = this.props.item;
+
+    if (failed) {
+      return (
+        <div className="item-footer">
+          <Button
+            disabled={!uid}
+            onClick={() => actions.removeItem({ uid, id, all: true })}
+          >
+            <DeleteOutlined/>
+          </Button>
+        </div>
+      )
+    }
+
+    if (footer)
+      return (
+        <div className="item-footer">
+          {footer}
+        </div>
+      )
+  };
+
   render = () => {
     const {
       name = this.props.item.id,
@@ -44,7 +72,7 @@ class Item extends Component<IItemProps> {
       type,
       approved,
     } = this.props.item;
-    const { footer, disabled } = this.props;
+    const { disabled } = this.props;
 
     const stats = this.getStats();
     return (
@@ -80,11 +108,7 @@ class Item extends Component<IItemProps> {
             <div className="item-effect">{effect}</div>
           </div>
         )}
-        {footer && (
-          <div className="item-footer">
-          {footer}
-          </div>
-        )}
+        {this.getFooter()}
       </Card>
     )
   }

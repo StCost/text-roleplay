@@ -1,7 +1,8 @@
 import React from 'react';
 import { Avatar as AntdAvatar } from 'antd';
 import { AvatarProps } from 'antd/es/avatar';
-import { colorFromString, isURL } from "../helpers/utils";
+
+import { colorFromString, isURL } from '../helpers/utils';
 
 interface IAvatarProps extends AvatarProps {
   avatar: string;

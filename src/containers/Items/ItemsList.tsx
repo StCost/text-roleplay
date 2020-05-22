@@ -54,7 +54,7 @@ class ItemsList extends Component<IItemsListProps> {
   };
 
   render = () => {
-    const { items } = this.props;
+    const { items, uid } = this.props;
 
     if (!items || items.length === 0) {
       return (
@@ -69,6 +69,7 @@ class ItemsList extends Component<IItemsListProps> {
             key={item.id + item.time}
             item={item}
             footer={this.getFooter(item)}
+            uid={uid}
           />
         ))}
       </div>

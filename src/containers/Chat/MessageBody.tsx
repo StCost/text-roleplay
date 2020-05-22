@@ -7,7 +7,7 @@ import { IMessage } from '../../reducers/interfaces';
 import { importRolls } from '../../helpers/dice';
 import Image from '../../components/Image';
 import ItemById from '../../components/ItemById';
-import actions from "../../actions";
+import actions from '../../actions';
 
 interface IMessageBodyProps {
   message: IMessage;

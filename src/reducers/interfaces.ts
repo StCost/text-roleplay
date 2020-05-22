@@ -1,4 +1,4 @@
-import { IRoll } from "../helpers/dice";
+import { IRoll } from '../helpers/dice';
 
 export interface IAction {
   type: string;
@@ -71,6 +71,7 @@ export interface IItem {
   approved: boolean;
   author?: string;
   type: ItemType;
+  failed?: boolean;
 }
 
 export const defaultItem: IItem = {

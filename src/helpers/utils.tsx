@@ -1,7 +1,7 @@
 import { message as notify } from 'antd';
 
 import actions from '../actions';
-import { IMessage } from '../reducers/interfaces';
+import { IItem, IMessage } from '../reducers/interfaces';
 import { diceRegex, exportRolls, hasDice } from './dice';
 
 export const camelize = (str: string) => {
@@ -152,3 +152,19 @@ export const validateMessage = (message: string) => {
 
 export const generateID = () =>
   '_' + Math.random().toString(36).substr(2, 9);
+
+export const getFailedItem: ((id: string) => IItem) = (id: string) => ({
+  id: id,
+  type: 'misc',
+  name: 'Ошибка',
+  weight: Number.MAX_SAFE_INTEGER,
+  time: 0,
+  effect: id,
+  image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/9/9a/JPEG_Corruption.jpg/800px-JPEG_Corruption.jpg',
+  description: 'ВНИМАНИЕ!\n\nПо какой-то причине была попытка загрузить не существующий предмет. Вероятно, кто-то удалил его, а он всё еще остался в Вашем инвентаре. Теперь он бесполезен. Удалите его, пожалуйста (кнопка вверху справа)',
+  price: Number.MIN_VALUE,
+  capacity: 0,
+  armor: 0,
+  approved: true,
+  failed: true,
+});
