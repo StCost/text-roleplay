@@ -11,7 +11,6 @@ import { FilterOutlined } from '@ant-design/icons';
 
 import { IItemsProps, Items } from '../Items';
 import { IInventory, IItem, IState } from '../../reducers/interfaces';
-import ItemCreator from '../Items/ItemCreator';
 import actions from '../../actions';
 import ItemsList, { IControl } from '../Items/ItemsList';
 
@@ -30,42 +29,27 @@ class Inventory extends Items<IInventoryProps> {
     }
   };
   getFooter = noop;
+  deleteModal = noop;
+  onCreateItem = noop;
+  toggleCreatingItem = noop;
 
-  getCreators = () => {
-    const { editingItem } = this.state;
-    const { currentUser } = this.props;
-    const isAdmin = !!(currentUser && currentUser.isAdmin);
-
-    return (
-      <ItemCreator
-        visible={!!editingItem}
-        onClose={() => this.toggleEditingItem(null)}
-        onSubmit={this.onCreateItem}
-        item={editingItem || undefined}
-        isAdmin={isAdmin}
-      />
-    )
-  };
-
-  getControls = () => {
-    return (
-      <div className="items-controls">
-        <Input
-          placeholder="Поиск предмета"
-          onChange={(e: ChangeEvent<HTMLInputElement>) => this.setState({ searchString: e.currentTarget.value })}
-          allowClear
-        />
-        <Dropdown
-          overlay={this.getFilters()}
-          trigger={['click']}
-        >
-          <Button>
-            <FilterOutlined/>
-          </Button>
-        </Dropdown>
-      </div>
-    )
-  };
+  pageControls = [
+    <Input
+      key="search"
+      placeholder="Поиск предмета"
+      onChange={(e: ChangeEvent<HTMLInputElement>) => this.setState({ searchString: e.currentTarget.value })}
+      allowClear
+    />,
+    <Dropdown
+      key="filters"
+      overlay={this.getFilters()}
+      trigger={['click']}
+    >
+      <Button>
+        <FilterOutlined/>
+      </Button>
+    </Dropdown>
+  ];
 
   getInventoryItems = (items: IItem[]) => {
     const { inventory, loading } = this.props;
@@ -97,6 +81,23 @@ class Inventory extends Items<IInventoryProps> {
     }
 
     return [];
+  };
+
+  getItemsList = (items: IItem[]) => {
+    const { currentUser, uid } = this.props;
+
+    return (
+      <ItemsList
+        uid={uid}
+        currentUser={currentUser}
+        toggleEditingItem={this.toggleEditingItem}
+        items={this.getInventoryItems(items)}
+        controls={(currentUser && (currentUser.uid === uid || currentUser.isAdmin))
+          ? this.cardControls
+          : undefined
+        }
+      />
+    )
   };
 
   cardControls: IControl[] = [
@@ -167,23 +168,6 @@ class Inventory extends Items<IInventoryProps> {
       condition: () => Boolean(this.props.currentUser && this.props.currentUser.isAdmin)
     },
   ];
-
-  getItemsList = (items: IItem[]) => {
-    const { currentUser, uid } = this.props;
-
-    return (
-      <ItemsList
-        uid={uid}
-        currentUser={currentUser}
-        toggleEditingItem={this.toggleEditingItem}
-        items={this.getInventoryItems(items)}
-        controls={(currentUser && (currentUser.uid === uid || currentUser.isAdmin))
-          ? this.cardControls
-          : undefined
-        }
-      />
-    )
-  };
 }
 
 const mapStateToProps = (state: IState, props: IInventoryProps) => {

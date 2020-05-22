@@ -10,7 +10,6 @@ import {
   Tooltip,
   Switch, Modal,
 } from 'antd';
-import { RadioChangeEvent } from 'antd/lib/radio';
 import { RouteComponentProps } from 'react-router';
 import { FilterOutlined } from '@ant-design/icons';
 
@@ -58,6 +57,112 @@ export class Items<T extends IItemsProps> extends React.Component<T, IItemsState
       'misc': true,
     },
   };
+
+  onFilterChange = () =>
+    this.setState({ filters: this.state.filters });
+
+  getFilters = () => {
+    const { showNotApproved, showApproved, filters } = this.state;
+
+    const getButton = (name: ItemType, label: string) => (
+      <div
+        tabIndex={0}
+        className="items-approved-button"
+        // @ts-ignore
+        onClick={() => this.setState({ filters: { ...filters, [name]: !filters[name] } })}
+      >
+        <Switch
+          checked={
+            // @ts-ignore
+            filters[name]
+          }/>
+        {label}
+      </div>
+    );
+
+    return (
+      <Radio.Group
+        onChange={this.onFilterChange}
+        defaultValue={undefined}
+        style={{ display: 'flex', flexDirection: 'column' }}
+      >
+        {getButton('weapon', 'Оружие')}
+        {getButton('usable', 'Используемое')}
+        {getButton('wearable', 'Одежда/Броня')}
+        {getButton('ammo', 'Патроны')}
+        {getButton('junk', 'Мусор')}
+        {getButton('note', 'Записки')}
+        {getButton('key', 'Ключи')}
+        {getButton('misc', 'Прочее')}
+        <div tabIndex={0} className="items-approved-button"
+             onClick={() => this.setState({ showApproved: !showApproved })}>
+          <Switch checked={showApproved}/>Подтвержденные
+        </div>
+        <div tabIndex={0} className="items-approved-button"
+             onClick={() => this.setState({ showNotApproved: !showNotApproved })}>
+          <Switch checked={showNotApproved}/>Не Подтвержденные
+        </div>
+      </Radio.Group>
+    )
+  };
+
+  pageControls = [
+    <Button
+      key="creator"
+      onClick={() => this.toggleCreatingItem(true)}
+    >
+      Создать предмет
+    </Button>,
+    <Input
+      key="search"
+      placeholder="Поиск предмета"
+      onChange={(e: ChangeEvent<HTMLInputElement>) => this.setState({ searchString: e.currentTarget.value })}
+      allowClear
+    />,
+    <Dropdown
+      key="filters"
+      overlay={this.getFilters()}
+      trigger={['click']}
+    >
+      <Button>
+        <FilterOutlined/>
+      </Button>
+    </Dropdown>,
+    <Tooltip
+      key="load-amount"
+      title="Кол-во загружаемых предметов за раз"
+    >
+      <InputNumber
+        value={this.state.itemsToLoad}
+        min={1}
+        max={99}
+        onChange={(itemsToLoad?: number) => this.setState({ itemsToLoad: itemsToLoad || 1 })}
+      />
+    </Tooltip>
+  ];
+
+  cardControls: IControl[] = [
+    {
+      label: 'Взять',
+      onClick: (item: IItem) => actions.giveItem({ id: item.id, uid: this.props.uid, itemType: item.type }),
+      condition: (item: IItem) => item.approved && Boolean(this.props.currentUser && this.props.currentUser.isAdmin)
+    },
+    {
+      label: 'Редактировать',
+      onClick: (item: IItem) => this.toggleEditingItem(item),
+      condition: (item: IItem) => Boolean((this.props.uid === item.author && !item.approved) || (this.props.currentUser && this.props.currentUser.isAdmin))
+    },
+    {
+      label: 'В консоль',
+      onClick: console.log,
+      condition: () => Boolean(this.props.currentUser && this.props.currentUser.isAdmin)
+    },
+    {
+      label: 'Удалить',
+      onClick: (item: IItem) => this.deleteModal(item),
+      condition: (item: IItem) => Boolean((this.props.uid === item.author && !item.approved) || (this.props.currentUser && this.props.currentUser.isAdmin))
+    },
+  ];
 
   get items() {
     const { searchString, filters, showApproved, showNotApproved } = this.state;
@@ -122,86 +227,15 @@ export class Items<T extends IItemsProps> extends React.Component<T, IItemsState
     )
   };
 
-  onFilterChange = (e: RadioChangeEvent) =>
-    this.setState({ filters: this.state.filters });
-
-  getFilters = () => {
-    const { showNotApproved, showApproved, filters } = this.state;
-
-    const getButton = (name: ItemType, label: string) => (
-      <div
-        tabIndex={0}
-        className="items-approved-button"
-        // @ts-ignore
-        onClick={() => this.setState({ filters: { ...filters, [name]: !filters[name] } })}
-      >
-        <Switch
-          checked={
-            // @ts-ignore
-            filters[name]
-          }/>
-        {label}
-      </div>
-    );
-
-    return (
-      <Radio.Group
-        onChange={this.onFilterChange}
-        defaultValue={undefined}
-        style={{ display: 'flex', flexDirection: 'column' }}
-      >
-        {getButton('weapon', 'Оружие')}
-        {getButton('usable', 'Используемое')}
-        {getButton('wearable', 'Одежда/Броня')}
-        {getButton('ammo', 'Патроны')}
-        {getButton('junk', 'Мусор')}
-        {getButton('note', 'Записки')}
-        {getButton('key', 'Ключи')}
-        {getButton('misc', 'Прочее')}
-        <div tabIndex={0} className="items-approved-button"
-             onClick={() => this.setState({ showApproved: !showApproved })}>
-          <Switch checked={showApproved}/>Подтвержденные
-        </div>
-        <div tabIndex={0} className="items-approved-button"
-             onClick={() => this.setState({ showNotApproved: !showNotApproved })}>
-          <Switch checked={showNotApproved}/>Не Подтвержденные
-        </div>
-      </Radio.Group>
-    )
-  };
-
   getControls = () => {
     return (
       <div className="items-controls">
-        <Button onClick={() => this.toggleCreatingItem(true)}>
-          Создать предмет
-        </Button>
-        <Input
-          placeholder="Поиск предмета"
-          onChange={(e: ChangeEvent<HTMLInputElement>) => this.setState({ searchString: e.currentTarget.value })}
-          allowClear
-        />
-        <Dropdown
-          overlay={this.getFilters()}
-          trigger={['click']}
-        >
-          <Button>
-            <FilterOutlined/>
-          </Button>
-        </Dropdown>
-        <Tooltip title="Кол-во загружаемых предметов за раз">
-          <InputNumber
-            value={this.state.itemsToLoad}
-            min={1}
-            max={99}
-            onChange={(itemsToLoad?: number) => this.setState({ itemsToLoad: itemsToLoad || 1 })}
-          />
-        </Tooltip>
+        {this.pageControls}
       </div>
     )
   };
 
-  deleteModal = (item: IItem) => Modal.confirm({
+  deleteModal: (item: IItem) => void = (item: IItem) => Modal.confirm({
     title: 'Удалить',
     content: 'Это действие невозможно отменить. Вы уверены?',
     maskClosable: true,
@@ -212,29 +246,6 @@ export class Items<T extends IItemsProps> extends React.Component<T, IItemsState
       close();
     }
   });
-
-  cardControls: IControl[] = [
-    {
-      label: 'Взять',
-      onClick: (item: IItem) => actions.giveItem({ id: item.id, uid: this.props.uid, itemType: item.type }),
-      condition: (item: IItem) => item.approved && Boolean(this.props.currentUser && this.props.currentUser.isAdmin)
-    },
-    {
-      label: 'Редактировать',
-      onClick: (item: IItem) => this.toggleEditingItem(item),
-      condition: (item: IItem) => Boolean((this.props.uid === item.author && !item.approved) || (this.props.currentUser && this.props.currentUser.isAdmin))
-    },
-    {
-      label: 'В консоль',
-      onClick: console.log,
-      condition: () => Boolean(this.props.currentUser && this.props.currentUser.isAdmin)
-    },
-    {
-      label: 'Удалить',
-      onClick: (item: IItem) => this.deleteModal(item),
-      condition: (item: IItem) => Boolean((this.props.uid === item.author && !item.approved) || (this.props.currentUser && this.props.currentUser.isAdmin))
-    },
-  ];
 
   getItemsList = (items: IItem[]) => {
     const { currentUser, uid } = this.props;
