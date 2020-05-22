@@ -122,7 +122,10 @@ class Inventory extends Items<IInventoryProps> {
       onClick: (item: IItem) => actions.passItem({
         id: item.id,
         uid: this.props.uid,
-        item,
+        item: {
+          ...item,
+          amount: 1,
+        },
       }),
     },
     {

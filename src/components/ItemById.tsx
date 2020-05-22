@@ -7,34 +7,32 @@ import actions from '../actions';
 
 interface IItemByIdProps {
   id: string;
-  loading: boolean;
-  items: IItem[];
+  item?: IItem;
   disabled?: boolean;
   footer?: JSX.Element;
 }
 
 const ItemById = (props: IItemByIdProps) => {
-  const { id, loading, items, ...itemProps } = props;
+  const { id, item, ...itemProps } = props;
 
-  const item = items.find((item: IItem) => item.id === id);
-  if (!item && !loading) {
+  if (!item) {
     actions.getItemById({ id });
+    return <React.Fragment/>;
   }
 
-  return item ? (
+  return (
     <Item
       item={item}
       {...itemProps}
     />
-  ) : (
-    <React.Fragment/>
   );
 };
 
-const mapStateToProps = (state: IState) => {
-  const { loading, items } = state;
+const mapStateToProps = (state: IState, props: IItemByIdProps) => {
+  const { items } = state;
+  const item = items.find((item: IItem) => item.id === props.id);
 
-  return { loading, items }
+  return { item }
 };
 
 export default connect(mapStateToProps)(ItemById);
