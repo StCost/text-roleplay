@@ -12,7 +12,7 @@ import { FilterOutlined } from '@ant-design/icons';
 
 import '../../styles/items.scss';
 import actions from '../../reducers/actions';
-import { IItem, IState, IUser } from '../../reducers/interfaces';
+import { IDeletedItemData, IItem, IState, IUser } from '../../reducers/interfaces';
 import ItemCreator from './ItemCreator';
 import ItemsList, { IControl } from '../ItemsTable/ItemsList';
 import ItemsTable, { IItemsTableProps, IItemsTableState } from "../ItemsTable";
@@ -22,6 +22,7 @@ export interface IItemsProps extends IItemsTableProps {
   user: IUser | null;
   uid: string;
   currentUser: IUser | null;
+  deletingItemData: IDeletedItemData;
 }
 
 interface IItemsState extends IItemsTableState {
@@ -169,12 +170,39 @@ export class Items extends ItemsTable<IItemsProps, IItemsState> {
     )
   };
 
+  getDeletingModal = () => {
+    const { deletingItemData, loading } = this.props;
+    const { itemId, usersChecked, messagesCleared, messagesChecked, deleted, usersCleared, done } = deletingItemData;
+    return itemId && (
+      <div className="item-deleting-modal">
+        <div>ID предмета: {itemId}</div>
+        <div>Удалён из списка предметов: {deleted ? 'готово' : 'в процессе'}</div>
+        <div>Проверено сообщений: {messagesChecked}</div>
+        <div>Очищено сообщений: {messagesCleared}</div>
+        <div>Проверено пользователей: {usersChecked}</div>
+        <div>Очищено пользователей: {usersCleared}</div>
+        <Button
+          onClick={() => actions.deleteItemProgress({ field: 'itemId', value: '' })}
+          disabled={!done || loading}
+        >
+          Готово
+        </Button>
+        <button
+          className="secret"
+          onClick={() => actions.deleteItemProgress({ field: 'itemId', value: '' })}
+          disabled={loading}
+        />
+      </div>
+    )
+  };
+
   getFooter = (items: IItem[]): JSX.Element => {
     const { itemsToLoad } = this.state;
     const { loading } = this.props;
     return (
       <>
         {this.getCreators()}
+        {this.getDeletingModal()}
         {!loading && (
           <Button
             className="items-load-button"
@@ -189,13 +217,14 @@ export class Items extends ItemsTable<IItemsProps, IItemsState> {
 }
 
 const mapStateToProps = (state: IState) => {
-  const { loading, currentUser, uid, items } = state;
+  const { loading, currentUser, uid, items, deletingItemData } = state;
 
   return {
     loading,
     currentUser,
     uid,
     items,
+    deletingItemData,
   };
 };
 

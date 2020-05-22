@@ -1,5 +1,5 @@
 import { processMessages } from '../helpers/utils';
-import { IAction, IItem, IState } from './interfaces';
+import { defaultDeletedItemData, IAction, IItem, IState } from './interfaces';
 
 const user = JSON.parse(localStorage.getItem('user') || 'null');
 if (user) localStorage.setItem('uid', user.uid);
@@ -15,6 +15,7 @@ export const initialState: IState = {
   items: [],
   error: false,
   usersActivity: {},
+  deletingItemData: defaultDeletedItemData,
 };
 
 export const defaultUser = {
@@ -38,7 +39,6 @@ const reducer = (state = initialState, action: IAction) => {
     case 'GET_MORE_ITEMS':
     case 'GET_ITEMS_BY_ID':
     case 'CREATE_ITEM':
-    case 'DELETE_ITEM':
     case 'GIVE_ITEM':
     case 'REMOVE_ITEM':
     case 'PASS_ITEM':
@@ -60,6 +60,7 @@ const reducer = (state = initialState, action: IAction) => {
     case 'PASS_ITEM_SUCCESS':
     case 'PASS_ITEM_FAIL':
     case 'GET_USERS_ACTIVITY_FAIL':
+    case "DELETE_ITEM_FAIL":
     case 'SEND_MESSAGE_FAIL': {
       return {
         ...state,
@@ -124,13 +125,6 @@ const reducer = (state = initialState, action: IAction) => {
         items: Object.values(items),
       }
     }
-    case 'DELETE_ITEM_SUCCESS': {
-      return {
-        ...state,
-        loading: false,
-        items: state.items.filter((item: IItem) => item.id !== action.id),
-      }
-    }
     case 'NOTIFY': {
       return {
         ...state,
@@ -160,6 +154,32 @@ const reducer = (state = initialState, action: IAction) => {
         ...state,
         loading: false,
         usersActivity: action.usersActivity,
+      }
+    }
+    case 'DELETE_ITEM': {
+      return {
+        ...state,
+        loading: true,
+        deletingItemData: {
+          itemId: action.id,
+          defaultDeletedItemData,
+        },
+      }
+    }
+    case 'DELETE_ITEM_PROGRESS': {
+      return {
+        ...state,
+        deletingItemData: {
+          ...state.deletingItemData,
+          [action.field]: action.value
+        },
+      }
+    }
+    case 'DELETE_ITEM_SUCCESS': {
+      return {
+        ...state,
+        loading: false,
+        items: state.items.filter((item: IItem) => item.id !== action.id),
       }
     }
     default:

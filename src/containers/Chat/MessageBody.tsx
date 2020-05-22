@@ -24,7 +24,7 @@ const MessageBody = (props: IMessageBodyProps) => {
     } = message;
 
     if (data) {
-      const { itemId, item, taken, amount } = data;
+      const { itemId, taken, amount, type } = data;
 
       if (itemId) {
         return (
@@ -37,10 +37,10 @@ const MessageBody = (props: IMessageBodyProps) => {
                 id={itemId.trim()}
                 amount={amount}
                 disabled={taken}
-                footer={(item && uid) ? (
+                footer={uid && type ? (
                   <Popconfirm
                     title="Подобрать предмет?"
-                    onConfirm={() => actions.takeItem({ uid, message })}
+                    onConfirm={() => actions.takeItem({ uid, message, data })}
                     okText="Подобрать"
                     cancelText="Отмена"
                     disabled={taken}

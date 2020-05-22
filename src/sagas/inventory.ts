@@ -5,31 +5,21 @@ import { database } from '../helpers/firebase';
 import { IPayload } from '../reducers/actions';
 import actions from '../reducers/actions';
 import { changeMessage } from './messages';
-
-function* deleteItem(payload: IPayload) {
-  const { id } = payload;
-
-  yield database
-    .ref('items')
-    .child(id)
-    .remove();
-
-  actions.deleteItemSuccess({ id });
-  actions.notify({ message: 'Предмет успешно удалён' });
-}
+import { getItemName } from "../helpers/utils";
 
 function* passItem(payload: IPayload) {
   const { id, uid, demonstrate, use, item, to } = payload;
 
   if (id && uid && item) {
+    const name = getItemName(item);
     if (demonstrate) {
       actions.sendMessage({
         uid,
-        message: `*показывает предмет`,
+        message: `*показывает ${name}`,
         data: { itemId: id, amount: item.amount },
       });
       actions.passItemSuccess({});
-      actions.notify({ message: `Вы показали ${item ? `'${item.name}'` : 'предмет'}` });
+      actions.notify({ message: `Вы показали ${name}`});
       actions.redirect({ to: '/text-roleplay/chat' });
       return true;
     }
@@ -42,12 +32,13 @@ function* passItem(payload: IPayload) {
     }
 
     if (use) {
+      const name = getItemName(item, false);
       actions.sendMessage({
         uid,
-        message: `*использовал ${item.name}`,
+        message: `*использовал ${name}`,
         data: { itemId: id },
       });
-      actions.notify({ message: `Вы использовали ${item ? `'${item.name}'` : 'предмет'}` });
+      actions.notify({ message: `Вы использовали ${name}` });
       actions.redirect({ to: '/text-roleplay/chat' });
       actions.passItemSuccess({});
       return true;
@@ -55,26 +46,20 @@ function* passItem(payload: IPayload) {
 
     if (to) {
       actions.giveItem({ uid: to.uid, id, itemType: item.type, amount: item.amount });
-      actions.notify({ message: `Вы передали '${item.name}' игроку '${to.nickname}'` });
+      actions.notify({ message: `Вы передали ${item.name} игроку '${to.nickname}'` });
       actions.passItemSuccess({});
       return;
     }
 
-    if (item) {
-      actions.sendMessage({
-        uid,
-        message: `*выбросил предмет ${item.name} ${item.amount >= 2 ? `(${item.amount}шт)` : ''}`,
-        data: { itemId: id, item, amount: item.amount },
-      });
-      actions.notify({ message: `Вы выбросили ${item ? `'${item.name}'` : 'предмет'}` });
-      actions.redirect({ to: '/text-roleplay/chat' });
-      actions.passItemSuccess({});
-      return true;
-    }
-
-    actions.notify({ message: `Произошла ошибка. Обратитесь к админу с ошибкой из консоли` });
-    console.error(payload);
-    return;
+    actions.sendMessage({
+      uid,
+      message: `*выбросил ${name}`,
+      data: { itemId: id, amount: item.amount, type: item.type },
+    });
+    actions.notify({ message: `Вы выбросили ${name}` });
+    actions.redirect({ to: '/text-roleplay/chat' });
+    actions.passItemSuccess({});
+    return true;
   }
 
   actions.passItemFail({ id, uid });
@@ -108,7 +93,7 @@ function* removeItem(payload: IPayload) {
   }
 
   console.error(`removeItem error: User '${uid}' doesn't have item '${id}'`);
-  actions.notify({ message: 'Предмета нет в инвентаре' });
+  actions.notify({ message: `Предмета нет в инвентаре` });
   actions.removeItemFail({ id, uid, error: 'has-no-item' });
   return false;
 }
@@ -140,7 +125,7 @@ function* giveItem(payload: IPayload) {
   }
 
   const time = new Date().getTime();
-  const item: IInventoryItem = { id, time, type: itemType, amount: amount };
+  let item: IInventoryItem = { id, time, type: itemType, amount: amount };
 
   if (itemType !== 'weapon' && itemType !== 'wearable') {
     const sameItem = yield getInventoryItem({ id, uid });
@@ -164,24 +149,26 @@ function* giveItem(payload: IPayload) {
 
 function* takeItem(payload: IPayload) {
   const { uid, message } = payload;
-  const item = message.data.item;
+  const { itemId, amount, type } = message.data;
 
   message.data.taken = true;
 
   const took = yield changeMessage({ uid, message });
-  if (took && item) {
-    yield giveItem({
-      id: item.id,
+  if (took && type) {
+    const item = yield giveItem({
+      id: itemId,
       uid,
-      amount: item.amount,
-      itemType: item.type,
+      amount: amount || 1,
+      itemType: type,
     });
-    actions.sendMessage({
-      uid,
-      message: `*подобрал ${item.name} ${item.amount >= 2 ? `(${item.amount}шт)` : ''}`,
-    });
-    actions.takeItemSuccess({});
-    return true;
+    if (item) {
+      actions.sendMessage({
+        uid,
+        message: `*подобрал предмет`,
+      });
+      actions.takeItemSuccess({});
+      return true;
+    }
   }
 
   console.error('takeItem error. Cant take or no item', payload);
@@ -191,7 +178,6 @@ function* takeItem(payload: IPayload) {
 
 export default function* watchForActions() {
   yield all([
-    takeLatest('DELETE_ITEM', deleteItem),
     takeLatest('GIVE_ITEM', giveItem),
     takeLatest('REMOVE_ITEM', removeItem),
     takeLatest('PASS_ITEM', passItem),

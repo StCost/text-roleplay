@@ -15,6 +15,7 @@ import ItemsList, { IControl } from '../ItemsTable/ItemsList';
 import ActiveUsersList from '../../components/ActiveUsersList';
 import ItemsTable, { IItemsTableProps, IItemsTableState } from '../ItemsTable';
 import amountModal from '../../components/AmountModal';
+import { getItemName } from "../../helpers/utils";
 
 interface IInventoryProps extends IItemsTableProps {
   inventory: IInventory;
@@ -153,11 +154,22 @@ class Inventory extends ItemsTable<IInventoryProps, IInventoryState> {
     },
     {
       label: 'Использовать',
-      onClick: (item: IItem) => actions.passItem({
-        id: item.id,
-        uid: this.props.uid,
-        item,
-        use: true,
+      onClick: (item: IItem) => Modal.confirm({
+        title: `Использовать ${getItemName(item, false)}?`,
+        onOk: (close) => {
+          actions.passItem({
+            id: item.id,
+            uid: this.props.uid,
+            item: {
+              ...item,
+              amount: 1,
+            },
+            use: true,
+          });
+          close();
+        },
+        okText: 'Да',
+        cancelText: 'Отмена',
       }),
       condition: (item: IItem) => item.type === 'usable',
     },
@@ -188,7 +200,7 @@ class Inventory extends ItemsTable<IInventoryProps, IInventoryState> {
       condition: () => Boolean(this.props.currentUser && this.props.currentUser.isAdmin)
     },
     {
-      label: 'Удалить',
+      label: 'Убрать',
       onClick: (item: IItem) => amountModal({
         item: item,
         onSubmit: (amount: number) =>

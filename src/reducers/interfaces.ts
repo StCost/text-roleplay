@@ -31,6 +31,7 @@ export interface IState {
   notify?: string;
   redirect?: string;
   usersActivity: {[key: string]: string};
+  deletingItemData: IDeletedItemData;
 }
 
 export interface IInventoryItem {
@@ -91,4 +92,24 @@ export const defaultItem: IItem = {
   armor: 0,
   time: 0,
   amount: 0,
+};
+
+export interface IDeletedItemData {
+  itemId?: string;
+  deleted?: boolean;
+  messagesChecked?: number;
+  messagesCleared?: number;
+  usersChecked?: number;
+  usersCleared?: number;
+  done?: boolean;
+}
+
+export const defaultDeletedItemData: IDeletedItemData = {
+  itemId: '',
+  deleted: false,
+  messagesChecked: 0,
+  messagesCleared: 0,
+  usersChecked: 0,
+  usersCleared: 0,
+  done: false,
 };

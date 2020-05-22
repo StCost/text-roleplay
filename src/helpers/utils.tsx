@@ -169,3 +169,6 @@ export const getFailedItem: ((id: string) => IItem) = (id: string) => ({
   failed: true,
   amount: Number.MAX_VALUE,
 });
+
+export const getItemName = (item: IItem, showAmount: boolean = true) =>
+  `${item ? `'${item.name}'` : 'предмет'}` + (showAmount && item.amount && item.amount >= 2 ? ` (${item.amount}шт)` : '');

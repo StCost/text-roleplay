@@ -48,6 +48,8 @@ const actions: IActions = {
   ...createAsyncAction('NOTIFY'),
   ...createAsyncAction('REDIRECT'),
   ...createAsyncAction('GET_USERS_ACTIVITY'),
+  ...createAsyncAction('DELETE_ITEM'),
+  deleteItemProgress: createAction('DELETE_ITEM_PROGRESS'),
   updateLastOnline: createAction('UPDATE_LAST_ONLINE'),
   logout: createAction('LOGOUT'),
 };
