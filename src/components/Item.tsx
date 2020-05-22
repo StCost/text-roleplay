@@ -9,6 +9,7 @@ interface IItemProps {
   item: IItem,
   showTechInfo?: boolean,
   footer?: JSX.Element,
+  disabled?: boolean;
 }
 
 class Item extends Component<IItemProps> {
@@ -43,11 +44,11 @@ class Item extends Component<IItemProps> {
       type,
       approved,
     } = this.props.item;
-    const { footer } = this.props;
+    const { footer, disabled } = this.props;
 
     const stats = this.getStats();
     return (
-      <Card className={`item ${approved ? '' : 'not-approved'}`}>
+      <Card className={`item ${(approved && !disabled) ? '' : 'disabled'}`}>
         <div className="item-info">
           <div className="item-name">{name}</div>
           <div className="item-subinfo">

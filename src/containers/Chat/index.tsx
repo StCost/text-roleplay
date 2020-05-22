@@ -156,7 +156,7 @@ class Chat extends Component<IChatProps, IChatState> {
   };
 
   render = () => {
-    const { messages, loading, users } = this.props;
+    const { messages, loading, users, uid } = this.props;
 
     return (
       <Spin spinning={loading}>
@@ -170,6 +170,7 @@ class Chat extends Component<IChatProps, IChatState> {
                 key={m.time}
                 message={m}
                 user={users[m.author]}
+                uid={uid}
               />
             ))}
           </div>

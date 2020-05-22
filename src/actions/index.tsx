@@ -32,6 +32,7 @@ const actions: IActions = {
   ...createAsyncAction('GET_MORE_MESSAGES'),
   ...createAsyncAction('SET_USER'),
   ...createAsyncAction('SEND_MESSAGE'),
+  ...createAsyncAction('CHANGE_MESSAGE'),
   ...createAsyncAction('SUBSCRIBE'),
   ...createAsyncAction('UNSUBSCRIBE'),
   ...createAsyncAction('UPLOAD_FILE'),

@@ -1,5 +1,5 @@
 import { processMessages } from '../helpers/utils';
-import { IAction, IItem, IState } from "./interfaces";
+import { IAction, IItem, IMessage, IState } from "./interfaces";
 
 const user = JSON.parse(localStorage.getItem('user') || 'null');
 if (user) localStorage.setItem('uid', user.uid);

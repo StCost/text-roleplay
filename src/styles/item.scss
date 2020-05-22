@@ -4,9 +4,10 @@ div.item.ant-card {
   width: 350px;
   margin: 6px;
 
-  &.not-approved {
+  &.disabled {
     opacity: 0.4;
     transition-duration: 0.3s;
+    cursor: default;
 
     &:hover {
       opacity: 1;

@@ -6,20 +6,22 @@ import { database } from '../helpers/firebase';
 import { formatMessage } from '../helpers/utils';
 
 function* sendMessage(payload: IPayload) {
-  const { uid, message, data} = payload;
+  const { uid, message, data = {} } = payload;
   const time = new Date().getTime();
+
+  const newMessage = formatMessage({
+    time,
+    author: uid,
+    body: `${message} `,
+    data,
+  });
 
   yield database
     .ref('messages')
     .child(`${time}`)
-    .set(formatMessage({
-      time,
-      author: uid,
-      body: `${message} `,
-      data,
-    }));
+    .set(newMessage);
   localStorage.setItem('message', '');
-  actions.sendMessageSuccess({});
+  actions.sendMessageSuccess({ message: newMessage });
 }
 
 function subscribe() {
@@ -89,6 +91,25 @@ function uploadFile(payload: IPayload) {
   request.send(formData);
 }
 
+export function* changeMessage(payload: IPayload) {
+  const { message } = payload;
+
+  const newMessage = formatMessage({
+    time: message.time,
+    author: message.author,
+    body: message.body,
+    data: message.data,
+  });
+
+  yield database
+    .ref('messages')
+    .child(`${message.time}`)
+    .set(newMessage);
+
+  actions.changeMessageSuccess({ message: newMessage });
+  return newMessage;
+}
+
 export default function* watchForActions() {
   yield all([
     takeLatest('SEND_MESSAGE', sendMessage),
@@ -97,5 +118,6 @@ export default function* watchForActions() {
     takeLatest('SUBSCRIBE', subscribe),
     takeLatest('UNSUBSCRIBE', unsubscribe),
     takeLatest('UPLOAD_FILE', uploadFile),
+    takeLatest('CHANGE_MESSAGE', changeMessage),
   ]);
 }

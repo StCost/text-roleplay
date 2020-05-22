@@ -1,5 +1,6 @@
 import React from 'react';
-import { Button} from 'antd';
+import { Button, Popconfirm } from 'antd';
+import { UploadOutlined } from '@ant-design/icons';
 
 import { isURL } from '../../helpers/utils';
 import { IMessage } from '../../reducers/interfaces';
@@ -10,31 +11,46 @@ import actions from "../../actions";
 
 interface IMessageBodyProps {
   message: IMessage;
+  uid?: string;
 }
 
 const MessageBody = (props: IMessageBodyProps) => {
+    const { uid, message } = props;
     const {
       body,
       isRP,
       rolls,
       data,
-    } = props.message;
+    } = message;
 
     if (data) {
-      const { itemId, item } = data;
+      const { itemId, item, taken } = data;
 
       if (itemId) {
         return (
           <>
             <i className="rp-message">
               {body}
-              <ItemById id={itemId.trim()}/>
-              {item && (
-                <Button className="take-button">
-                  Забрать предмет
-                </Button>
-              )}
             </i>
+            <div className={taken ? '' : 'rp-message'}>
+              <ItemById
+                id={itemId.trim()}
+                disabled={taken}
+                footer={(item && uid) ? (
+                  <Popconfirm
+                    title="Подобрать предмет?"
+                    onConfirm={() => actions.takeItem({ uid, message })}
+                    okText="Подобрать"
+                    cancelText="Отмена"
+                    disabled={taken}
+                  >
+                    <Button className="take-button" disabled={taken}>
+                      <UploadOutlined/>
+                    </Button>
+                  </Popconfirm>
+                ) : undefined}
+              />
+            </div>
           </>
         )
       }

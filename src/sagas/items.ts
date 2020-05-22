@@ -5,6 +5,7 @@ import actions from '../actions';
 import { database } from '../helpers/firebase';
 import { generateID } from '../helpers/utils';
 import { IInventory, IInventoryItem, IItem } from "../reducers/interfaces";
+import { changeMessage } from "./messages";
 
 function* setItem(payload: IPayload) {
   const { item } = payload;
@@ -174,7 +175,7 @@ function* getInventoryItem(payload: IPayload) {
 }
 
 function* giveItem(payload: IPayload) {
-  const { id, uid, itemType } = payload;
+  const { id, uid, itemType, amount = 1 } = payload;
   if (!id || !uid || !itemType) {
     console.error('Cant give item. One of properties are not defined', id, uid, itemType);
     actions.giveItemFail({});
@@ -182,12 +183,12 @@ function* giveItem(payload: IPayload) {
   }
 
   const time = new Date().getTime();
-  const item: IInventoryItem = { id, time, type: itemType, amount: 1 };
+  const item: IInventoryItem = { id, time, type: itemType, amount: amount };
 
   if (itemType !== 'weapon' && itemType !== 'wearable') {
     const sameItem = yield getInventoryItem({ id, uid });
     if (sameItem) {
-      item.amount = (sameItem.amount || 1) + 1;
+      item.amount = (sameItem.amount || 1) + amount;
       item.time = sameItem.time;
     }
   }
@@ -205,12 +206,30 @@ function* giveItem(payload: IPayload) {
 }
 
 function* takeItem(payload: IPayload) {
-  const { itemId, ownerId, uid } = payload;
-  const took = yield removeItem({ id: itemId, uid: ownerId });
-  if (took) {
-    giveItem({ id: itemId, uid });
-    actions.sendMessage({ uid, message: '*подобрал предмет' });
+  const { uid, message } = payload;
+  const item = message.data.item;
+
+  message.data.taken = true;
+
+  const took = yield changeMessage({ uid, message });
+  if (took && item) {
+    yield giveItem({
+      id: item.id,
+      uid,
+      amount: item.amount,
+      itemType: item.type,
+    });
+    actions.sendMessage({
+      uid,
+      message: `*подобрал ${item.name} ${item.amount >= 2 ? `(${item.amount}шт)` : ''}`,
+    });
+    actions.takeItemSuccess({});
+    return true;
   }
+
+  console.error('Take item error. Cant take or no item', payload);
+  actions.takeItemFail({});
+  return false;
 }
 
 export default function* watchForActions() {

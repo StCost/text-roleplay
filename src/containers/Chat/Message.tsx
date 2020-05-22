@@ -15,6 +15,7 @@ import {
 interface IMessageProps {
   message: IMessage,
   user: IUser,
+  uid: string;
 }
 
 const Message = (props: IMessageProps) => {
@@ -26,6 +27,7 @@ const Message = (props: IMessageProps) => {
       mentioned,
     },
     user,
+    uid,
   } = props;
 
   const title = user && (
@@ -58,7 +60,7 @@ const Message = (props: IMessageProps) => {
         </Tooltip>
       )}
     >
-      <MessageBody message={props.message}/>
+      <MessageBody message={props.message} uid={uid}/>
     </Card>
   );
 };
