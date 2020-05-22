@@ -19,7 +19,7 @@ function* deleteItem(payload: IPayload) {
 }
 
 function* passItem(payload: IPayload) {
-  const { id, uid, demonstrate, use, item } = payload;
+  const { id, uid, demonstrate, use, item, to } = payload;
 
   if (id && uid) {
     if (demonstrate) {
@@ -29,7 +29,7 @@ function* passItem(payload: IPayload) {
         data: { itemId: id },
       });
       actions.passItemSuccess({});
-      actions.notify({ message: `Вы показали ${item ? item.name : 'предмет'}` });
+      actions.notify({ message: `Вы показали ${item ? `'${item.name}'` : 'предмет'}` });
       actions.redirect({ to: '/text-roleplay/chat' });
       return true;
     }
@@ -47,23 +47,34 @@ function* passItem(payload: IPayload) {
         message: '*использовал предмет',
         data: { itemId: id },
       });
-      actions.notify({ message: `Вы использовали ${item ? item.name : 'предмет'}` });
+      actions.notify({ message: `Вы использовали ${item ? `'${item.name}'` : 'предмет'}` });
       actions.redirect({ to: '/text-roleplay/chat' });
       actions.passItemSuccess({});
       return true;
     }
 
-    if (removed && item) {
+    if (to) {
+      actions.giveItem({ uid: to.uid, id, itemType: item.type });
+      actions.notify({ message: `Вы передали '${item.name}' игроку '${to.nickname}'` });
+      actions.passItemSuccess({});
+      return;
+    }
+
+    if (item) {
       actions.sendMessage({
         uid,
         message: '*выбросил предмет',
         data: { itemId: id, item },
       });
-      actions.notify({ message: `Вы выбросили ${item ? item.name : 'предмет'}` });
+      actions.notify({ message: `Вы выбросили ${item ? `'${item.name}'` : 'предмет'}` });
       actions.redirect({ to: '/text-roleplay/chat' });
       actions.passItemSuccess({});
       return true;
     }
+
+    actions.notify({ message: `Произошла ошибка. Обратитесь к админу с ошибкой из консоли` });
+    console.error(payload);
+    return;
   }
 
   actions.passItemFail({ id, uid });

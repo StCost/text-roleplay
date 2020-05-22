@@ -21,7 +21,6 @@ interface IItemsListProps {
   items: IItem[];
   uid?: string;
   currentUser: IUser | null;
-  toggleEditingItem: (item: IItem) => void;
   controls?: IControl[];
 }
 

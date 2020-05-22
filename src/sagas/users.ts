@@ -56,10 +56,9 @@ function* updateLastOnline() {
 function* getUsersActivity() {
   const rawActivity = yield database
     .ref('usersActivity')
-    .orderByValue()
     .once('value');
 
-  const usersActivity = rawActivity.val() || {};
+  const usersActivity = (rawActivity.val() || {});
   actions.getUsersActivitySuccess({ usersActivity });
 }
 

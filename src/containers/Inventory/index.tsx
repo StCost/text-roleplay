@@ -4,8 +4,8 @@ import {
   Input,
   Dropdown,
   Button,
-  Modal,
   message as notify,
+  Modal,
 } from 'antd';
 import { FilterOutlined } from '@ant-design/icons';
 
@@ -25,13 +25,14 @@ interface IInventoryProps extends IItemsTableProps {
 }
 
 interface IInventoryState extends IItemsTableState {
-  editingItem: IItem | null;
+  passItem: IItem | null;
 }
 
 class Inventory extends ItemsTable<IInventoryProps, IInventoryState> {
   state = {
     ...this.defaultState,
     editingItem: null,
+    passItem: null,
   };
 
   componentDidMount = () => {
@@ -40,10 +41,6 @@ class Inventory extends ItemsTable<IInventoryProps, IInventoryState> {
       actions.getUser({ uid });
     }
   };
-
-  toggleEditingItem = (item?: IItem | null) =>
-    this.setState({ editingItem: item || null });
-
 
   getPageControls = () => [
     <Input
@@ -60,7 +57,8 @@ class Inventory extends ItemsTable<IInventoryProps, IInventoryState> {
       <Button>
         <FilterOutlined/>
       </Button>
-    </Dropdown>
+    </Dropdown>,
+    this.getPassModal(),
   ];
 
   getInventoryItems = (items: IItem[]) => {
@@ -95,14 +93,32 @@ class Inventory extends ItemsTable<IInventoryProps, IInventoryState> {
     return [];
   };
 
-  getPassMenu = () => (
-    <ActiveUsersList
-      // users={this.props.users}
-      // usersActivity={this.props.usersActivity}
-      // uid={this.props.uid}
-      // loading={this.props.loading}
-    />
-  );
+  passItem = (item?: IItem | null) =>
+      this.setState({ passItem: item || null });
+
+  getPassModal = () => {
+    const { passItem } = this.state;
+    return (
+      <Modal
+        key="pass-modal"
+        visible={!!passItem}
+        closable={false}
+      >
+        <ActiveUsersList onClick={(user: IUser) => {
+          if (passItem !== null) {
+            actions.passItem({
+              uid: this.props.uid,
+              // @ts-ignore
+              id: passItem.id,
+              to: user,
+              item: passItem,
+            });
+            this.passItem(null);
+          }
+        }}/>
+      </Modal>
+    )
+  };
 
   getDeleteModalContent = (item: IItem) => (
     <div>
@@ -149,12 +165,7 @@ class Inventory extends ItemsTable<IInventoryProps, IInventoryState> {
     },
     {
       label: 'Передать',
-      onClick: async () => {
-        Modal.confirm({
-          content: this.getPassMenu(),
-          cancelText: null,
-        })
-      }
+      onClick: this.passItem,
     },
     {
       label: 'В консоль',
@@ -186,7 +197,6 @@ class Inventory extends ItemsTable<IInventoryProps, IInventoryState> {
       <ItemsList
         uid={uid}
         currentUser={currentUser}
-        toggleEditingItem={this.toggleEditingItem}
         items={this.getInventoryItems(items)}
         controls={(currentUser && (currentUser.uid === uid || currentUser.isAdmin))
           ? this.cardControls

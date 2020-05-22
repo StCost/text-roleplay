@@ -13,7 +13,7 @@ div,span,pre,ul,li,h1 {
   background-color: $background-color-light;
   border-color: $background-color;
 
-  .ant-card,.ant-modal-header {
+  .ant-card,.ant-modal-header,.ant-modal-footer {
     background-color: $background-color-light;
     border-color: $border-color;
   }
@@ -302,5 +302,11 @@ div,span,pre,ul,li,h1 {
   border-color: $border-color-light;
   * {
     color: $text-color;
+  }
+}
+
+.ant-avatar {
+  * {
+    color: $background-color-lighter;
   }
 }

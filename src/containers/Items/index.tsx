@@ -153,7 +153,6 @@ export class Items extends ItemsTable<IItemsProps, IItemsState> {
       <ItemsList
         items={items}
         currentUser={currentUser}
-        toggleEditingItem={this.toggleEditingItem}
         controls={this.cardControls}
       />
     )
