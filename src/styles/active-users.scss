@@ -1,0 +1,55 @@
+@import "./colors";
+
+.active-users {
+  border: none;
+
+  .active-users__item {
+    width: 100%;
+    background-color: $background-color-interactive;
+    border: 1px solid $border-color-interactive;
+    border-radius: 4px;
+    margin: 6px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-right: 6px;
+
+    &:hover {
+      background-color: $background-color-selected;
+    }
+
+    .active-users__online {
+      height: 22px;
+      line-height: 22px;
+      width: fit-content;
+      margin-left: 24px;
+    }
+
+    .active-users__body {
+      padding: 6px;
+      display: flex;
+      align-items: center;
+      color: black;
+      width: fit-content;
+
+      &.online {
+        .ant-avatar {
+          border-color: $background-color-selected;
+        }
+      }
+
+      .ant-avatar {
+        background-color: transparent;
+        border: 2px solid $background-color;
+        margin: -4px 0;
+        display: block;
+        box-sizing: content-box;
+      }
+
+      .active-users__nickname {
+        margin-left: 12px;
+      }
+    }
+  }
+}

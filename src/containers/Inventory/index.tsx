@@ -12,8 +12,9 @@ import { FilterOutlined } from '@ant-design/icons';
 import { IInventory, IItem, IState, IUser } from '../../reducers/interfaces';
 import actions from '../../reducers/actions';
 import ItemsList, { IControl } from '../ItemsTable/ItemsList';
-import ActiveUsersList from "../../components/ActiveUsersList";
+import ActiveUsersList from '../../components/ActiveUsersList';
 import ItemsTable, { IItemsTableProps, IItemsTableState } from '../ItemsTable';
+import amountModal from '../../components/AmountModal';
 
 interface IInventoryProps extends IItemsTableProps {
   inventory: IInventory;
@@ -94,7 +95,7 @@ class Inventory extends ItemsTable<IInventoryProps, IInventoryState> {
   };
 
   passItem = (item?: IItem | null) =>
-      this.setState({ passItem: item || null });
+    this.setState({ passItem: item || null });
 
   getPassModal = () => {
     const { passItem } = this.state;
@@ -137,35 +138,49 @@ class Inventory extends ItemsTable<IInventoryProps, IInventoryState> {
   cardControls: IControl[] = [
     {
       label: 'Показать',
-      onClick: (item: IItem) => actions.passItem({
-        id: item.id,
-        uid: this.props.uid,
-        demonstrate: true,
-      }),
+      onClick: (item: IItem) => amountModal({
+        item: item,
+        onSubmit: (amount: number) => actions.passItem({
+          id: item.id,
+          uid: this.props.uid,
+          demonstrate: true,
+          item: {
+            ...item,
+            amount,
+          }
+        })
+      })
     },
     {
       label: 'Использовать',
       onClick: (item: IItem) => actions.passItem({
         id: item.id,
         uid: this.props.uid,
+        item,
         use: true,
       }),
       condition: (item: IItem) => item.type === 'usable',
     },
     {
       label: 'Выбросить',
-      onClick: (item: IItem) => actions.passItem({
-        id: item.id,
-        uid: this.props.uid,
-        item: {
-          ...item,
-          amount: 1,
-        },
+      onClick: (item: IItem) => amountModal({
+        item: item,
+        onSubmit: (amount: number) => actions.passItem({
+          id: item.id,
+          uid: this.props.uid,
+          item: {
+            ...item,
+            amount,
+          },
+        })
       }),
     },
     {
       label: 'Передать',
-      onClick: this.passItem,
+      onClick: (item: IItem) => amountModal({
+        item: item,
+        onSubmit: (amount: number) => this.passItem({ ...item, amount })
+      })
     },
     {
       label: 'В консоль',
@@ -174,17 +189,10 @@ class Inventory extends ItemsTable<IInventoryProps, IInventoryState> {
     },
     {
       label: 'Удалить',
-      onClick: (item: IItem) => Modal.confirm({
-        title: 'Удалить',
-        maskClosable: true,
-        okText: 'Удалить все',
-        cancelText: 'Отмена',
-        autoFocusButton: 'cancel',
-        content: this.getDeleteModalContent(item),
-        onOk: (close) => {
-          actions.removeItem({ id: item.id, uid: this.props.uid, all: true });
-          close();
-        },
+      onClick: (item: IItem) => amountModal({
+        item: item,
+        onSubmit: (amount: number) =>
+          actions.removeItem({ id: item.id, uid: this.props.uid, amount })
       }),
       condition: () => Boolean(this.props.currentUser && this.props.currentUser.isAdmin)
     },

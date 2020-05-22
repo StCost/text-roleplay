@@ -21,12 +21,12 @@ function* deleteItem(payload: IPayload) {
 function* passItem(payload: IPayload) {
   const { id, uid, demonstrate, use, item, to } = payload;
 
-  if (id && uid) {
+  if (id && uid && item) {
     if (demonstrate) {
       actions.sendMessage({
         uid,
         message: `*показывает предмет`,
-        data: { itemId: id },
+        data: { itemId: id, amount: item.amount },
       });
       actions.passItemSuccess({});
       actions.notify({ message: `Вы показали ${item ? `'${item.name}'` : 'предмет'}` });
@@ -34,7 +34,7 @@ function* passItem(payload: IPayload) {
       return true;
     }
 
-    const removed = yield removeItem({ id, uid });
+    const removed = yield removeItem({ id, uid, amount: item.amount });
     if (!removed) {
       console.error(`passItem error:`, payload);
       actions.passItemFail({ id, uid });
@@ -44,7 +44,7 @@ function* passItem(payload: IPayload) {
     if (use) {
       actions.sendMessage({
         uid,
-        message: '*использовал предмет',
+        message: `*использовал ${item.name}`,
         data: { itemId: id },
       });
       actions.notify({ message: `Вы использовали ${item ? `'${item.name}'` : 'предмет'}` });
@@ -54,7 +54,7 @@ function* passItem(payload: IPayload) {
     }
 
     if (to) {
-      actions.giveItem({ uid: to.uid, id, itemType: item.type });
+      actions.giveItem({ uid: to.uid, id, itemType: item.type, amount: item.amount });
       actions.notify({ message: `Вы передали '${item.name}' игроку '${to.nickname}'` });
       actions.passItemSuccess({});
       return;
@@ -63,8 +63,8 @@ function* passItem(payload: IPayload) {
     if (item) {
       actions.sendMessage({
         uid,
-        message: '*выбросил предмет',
-        data: { itemId: id, item },
+        message: `*выбросил предмет ${item.name} ${item.amount >= 2 ? `(${item.amount}шт)` : ''}`,
+        data: { itemId: id, item, amount: item.amount },
       });
       actions.notify({ message: `Вы выбросили ${item ? `'${item.name}'` : 'предмет'}` });
       actions.redirect({ to: '/text-roleplay/chat' });
@@ -78,12 +78,12 @@ function* passItem(payload: IPayload) {
   }
 
   actions.passItemFail({ id, uid });
-  console.error(`passItem error: id and uid are not defined`, payload);
+  console.error(`passItem error: id, uid, or item are not defined`, payload);
   return false;
 }
 
 function* removeItem(payload: IPayload) {
-  const { id, uid, all } = payload;
+  const { id, uid, amount = 1 } = payload;
   const ref = database
     .ref(`users`)
     .child(uid)
@@ -91,10 +91,10 @@ function* removeItem(payload: IPayload) {
 
   const sameItem = yield getInventoryItem({ id, uid });
   if (sameItem) {
-    if (!all && sameItem.amount >= 2) {
+    if (sameItem.amount - amount >= 1) {
       const item = {
         ...sameItem,
-        amount: sameItem.amount - 1,
+        amount: sameItem.amount - amount,
       };
 
       yield ref.child(`${id}|${sameItem.time}`).set(item);

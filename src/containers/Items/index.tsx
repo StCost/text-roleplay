@@ -16,6 +16,7 @@ import { IItem, IState, IUser } from '../../reducers/interfaces';
 import ItemCreator from './ItemCreator';
 import ItemsList, { IControl } from '../ItemsTable/ItemsList';
 import ItemsTable, { IItemsTableProps, IItemsTableState } from "../ItemsTable";
+import amountModal from "../../components/AmountModal";
 
 export interface IItemsProps extends IItemsTableProps {
   user: IUser | null;
@@ -79,7 +80,17 @@ export class Items extends ItemsTable<IItemsProps, IItemsState> {
   cardControls: IControl[] = [
     {
       label: 'Взять',
-      onClick: (item: IItem) => actions.giveItem({ id: item.id, uid: this.props.uid, itemType: item.type }),
+      onClick: (item: IItem) => amountModal({
+        item: item,
+        max: 100,
+        onSubmit: (amount: number) =>
+          actions.giveItem({
+            id: item.id,
+            uid: this.props.uid,
+            itemType: item.type,
+            amount,
+          })
+      }),
       condition: (item: IItem) => item.approved && Boolean(this.props.currentUser && this.props.currentUser.isAdmin)
     },
     {

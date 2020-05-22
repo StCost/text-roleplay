@@ -11,6 +11,7 @@ interface IItemByIdProps {
   disabled?: boolean;
   footer?: JSX.Element;
   messageId?: number;
+  amount?: number;
 }
 
 const ItemById = (props: IItemByIdProps) => {

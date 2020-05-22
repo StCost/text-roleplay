@@ -24,7 +24,7 @@ const MessageBody = (props: IMessageBodyProps) => {
     } = message;
 
     if (data) {
-      const { itemId, item, taken } = data;
+      const { itemId, item, taken, amount } = data;
 
       if (itemId) {
         return (
@@ -35,6 +35,7 @@ const MessageBody = (props: IMessageBodyProps) => {
             <div className={taken ? '' : 'rp-message'}>
               <ItemById
                 id={itemId.trim()}
+                amount={amount}
                 disabled={taken}
                 footer={(item && uid) ? (
                   <Popconfirm

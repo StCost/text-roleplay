@@ -12,11 +12,12 @@ interface IItemProps {
   footer?: JSX.Element,
   disabled?: boolean;
   uid?: string;
+  amount?: number;
 }
 
 class Item extends Component<IItemProps> {
   getStats = () => {
-    const { type, armor, amount, capacity } = this.props.item;
+    const { type, armor, capacity } = this.props.item;
 
     switch (type) {
       case 'wearable':
@@ -26,6 +27,7 @@ class Item extends Component<IItemProps> {
         return capacity;
 
       default:
+        const amount = this.props.amount || this.props.item.amount;
         return (amount && amount >= 2) ? `${amount}шт` : false;
     }
   };

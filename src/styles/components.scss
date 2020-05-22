@@ -94,3 +94,11 @@ div > img.chat-image {
 .help pre {
   white-space: pre-line;
 }
+
+.amount-modal {
+  width: fit-content !important;
+
+  .ant-input-number {
+    width: 100%;
+  }
+}
