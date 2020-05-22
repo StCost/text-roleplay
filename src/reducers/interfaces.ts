@@ -54,7 +54,7 @@ export interface IUsers {
   [key: string]: IUser;
 }
 
-export type ItemType = 'weapon' | 'consumable' | 'wearable' | 'junk' | 'ammo' | 'note' | 'key' | 'misc';
+export type ItemType = 'weapon' | 'usable' | 'wearable' | 'junk' | 'ammo' | 'note' | 'key' | 'misc';
 
 export interface IItem {
   id: string;

@@ -50,8 +50,8 @@ class ItemCreator extends Component<IItemCreatorProps, IItem> {
       value: 'Одежда/Броня',
     },
     {
-      key: 'consumable',
-      value: 'Употребляемое',
+      key: 'usable',
+      value: 'Используемое',
     },
     {
       key: 'ammo',
@@ -106,9 +106,9 @@ class ItemCreator extends Component<IItemCreatorProps, IItem> {
       <InputNumber
         value={value}
         min={0}
-        precision={1}
+        precision={2}
         onChange={(value?: number) => this.onChange(key, value || 0)}
-        step={0.1}
+        step={0.01}
       />
     ),
     effect: (value: string, key: string) => (
@@ -209,9 +209,6 @@ class ItemCreator extends Component<IItemCreatorProps, IItem> {
       return;
     }
 
-    if (this.props.isAdmin && !this.props.item) {
-      newItem.approved = true;
-    }
     onSubmit(newItem);
     this.setState(defaultItem);
   };

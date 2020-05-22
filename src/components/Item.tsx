@@ -27,7 +27,7 @@ class Item extends Component<IItemProps> {
         return capacity;
 
       default:
-        return `${amount}шт`;
+        return (amount && amount >= 2) ? `${amount}шт` : false;
     }
   };
 
@@ -81,10 +81,10 @@ class Item extends Component<IItemProps> {
           <div className="item-name">{name}</div>
           <div className="item-subinfo">
             <div className="item-price">
-              Цена: {price}
+              {price > 0 && `Цена: ${price}`}
             </div>
             <div className="item-weight">
-              Вес: {weight}lb
+              {weight > 0 && `Вес: ${weight}lb`}
             </div>
           </div>
         </div>

@@ -64,7 +64,6 @@ function* getMoreItems(payload: IPayload) {
     .once('value');
 
   const a = rawItems.val();
-  console.log(a);
   const items = Object.values(a || {}).splice(1);
   actions.getItemsSuccess({ items });
 }

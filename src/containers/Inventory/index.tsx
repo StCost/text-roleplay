@@ -115,6 +115,7 @@ class Inventory extends Items<IInventoryProps> {
         uid: this.props.uid,
         use: true,
       }),
+      condition: (item: IItem) => item.type === 'usable',
     },
     {
       label: 'Выбросить',

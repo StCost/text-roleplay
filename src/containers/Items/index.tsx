@@ -49,7 +49,7 @@ export class Items<T extends IItemsProps> extends React.Component<T, IItemsState
     showNotApproved: false,
     filters: {
       'weapon': true,
-      'consumable': true,
+      'usable': true,
       'wearable': true,
       'junk': true,
       'ammo': true,
@@ -151,7 +151,7 @@ export class Items<T extends IItemsProps> extends React.Component<T, IItemsState
         style={{ display: 'flex', flexDirection: 'column' }}
       >
         {getButton('weapon', 'Оружие')}
-        {getButton('consumable', 'Употребляемое')}
+        {getButton('usable', 'Используемое')}
         {getButton('wearable', 'Одежда/Броня')}
         {getButton('ammo', 'Патроны')}
         {getButton('junk', 'Мусор')}
@@ -217,7 +217,7 @@ export class Items<T extends IItemsProps> extends React.Component<T, IItemsState
     {
       label: 'Взять',
       onClick: (item: IItem) => actions.giveItem({ id: item.id, uid: this.props.uid, itemType: item.type }),
-      condition: () => Boolean(this.props.currentUser && this.props.currentUser.isAdmin)
+      condition: (item: IItem) => item.approved && Boolean(this.props.currentUser && this.props.currentUser.isAdmin)
     },
     {
       label: 'Редактировать',
