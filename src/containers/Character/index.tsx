@@ -381,7 +381,7 @@ class Character extends Component<ICharacterProps> {
                 uid,
                 user: {
                   ...user,
-                  character: this.state,
+                  character: this.state.char,
                 }
               })}
             >
