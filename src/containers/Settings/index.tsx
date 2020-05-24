@@ -164,22 +164,26 @@ export class Settings extends React.Component<ISettingsProps> {
         className="settings"
         bordered={false}
         loading={user === undefined}
+        title={user && `Настройки игрока ${user.nickname || user.uid}`}
       >
         <Loader loading={loading}/>
         {user && Object
           .keys(defaultUser)
-          .map((key: string) => (
-            <Card
-              className={key}
-              key={key}
-              title={this.labels[key]}
-            >
-              {
-                // @ts-ignore
-                this.getField(key, `${user[key] || ''}`, user)
-              }
-            </Card>
-          ))
+          .map((key: string) => {
+            const label = this.labels[key];
+            return label && (
+              <Card
+                className={key}
+                key={key}
+                title={label}
+              >
+                {
+                  // @ts-ignore
+                  this.getField(key, `${user[key] || ''}`, user)
+                }
+              </Card>
+            )
+          })
         }
       </Card>
     )

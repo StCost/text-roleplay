@@ -210,6 +210,8 @@ class Inventory extends ItemsTable<IInventoryProps, IInventoryState> {
     },
   ];
 
+  getTitle = () => !!this.props.user && `Инвентарь игрока ${this.props.user.nickname || this.props.user.uid}`;
+
   getContent = (items: IItem[]) => {
     const { currentUser, uid } = this.props;
 

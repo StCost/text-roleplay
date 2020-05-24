@@ -93,13 +93,16 @@ div,span,pre,ul,li,h1 {
   border-color: $border-color-interactive;
   color: $text-color;
 
+  &:hover {
+    border-color: $background-color-selected;
+  }
+
   &::placeholder {
     color: rgba(167, 167, 167, 0.6);
   }
 
   &:read-only {
     background-color: $background-color;
-    border-color: $border-color;
   }
 
   &:disabled {
@@ -121,6 +124,7 @@ div,span,pre,ul,li,h1 {
   &:hover {
     background-color: $border-color-interactive;
     color: #40a9ff;
+    border-color: $background-color-selected;
   }
 
   &:focus {
@@ -211,6 +215,23 @@ div,span,pre,ul,li,h1 {
   background-color: $background-color-interactive;
   border-color: $border-color-interactive;
   color: $text-color;
+
+  &:hover {
+    border-color: $background-color-selected;
+  }
+
+  &.ant-input-number-disabled:read-only {
+    background-color: $background-color;
+  }
+
+  &.ant-input-number-disabled {
+    background-color: $background-color;
+    border-color: $border-color;
+
+    * {
+      color: $background-color-lighter;
+    }
+  }
 
   .ant-input-number-handler-wrap {
     border-left: 1px solid $background-color-interactive-light;

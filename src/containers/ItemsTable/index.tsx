@@ -119,13 +119,14 @@ class ItemsTable<P extends IItemsTableProps, S extends IItemsTableState> extends
 
   getContent: ((items: IItem[]) => JSX.Element) = () => <React.Fragment/>;
   getFooter: ((items: IItem[]) => JSX.Element) = () => <React.Fragment/>;
+  getTitle: () => string | undefined | false = () => undefined;
 
   render = () => {
     const { loading } = this.props;
     const items = this.items;
 
     return (
-      <Card className="items">
+      <Card className="items" title={this.getTitle()}>
         <Loader loading={loading}/>
         {this.getHeader(items)}
         {this.getContent(items)}

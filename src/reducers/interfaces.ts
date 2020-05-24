@@ -1,4 +1,5 @@
 import { IRoll } from '../helpers/dice';
+import { ICharacter } from "../containers/Character/config";
 
 export interface IAction {
   type: string;
@@ -30,7 +31,7 @@ export interface IState {
   error: Error | false;
   notify?: string;
   redirect?: string;
-  usersActivity: {[key: string]: string};
+  usersActivity: { [key: string]: string };
   deletingItemData: IDeletedItemData;
 }
 
@@ -52,6 +53,7 @@ export interface IUser {
   lastOnline: number;
   isAdmin?: boolean;
   inventory: IInventory,
+  character?: ICharacter,
 }
 
 export interface IUsers {

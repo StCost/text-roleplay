@@ -6,6 +6,7 @@ import Logout from '../components/Logout';
 import Items from '../containers/Items';
 import Help from '../components/Help';
 import Inventory from '../containers/Inventory';
+import Character from '../containers/Character';
 
 export interface IRoute {
   path: string;
@@ -31,6 +32,16 @@ const routes: IRoute[] = [
   {
     path: '/text-roleplay/inventory',
     component: Inventory,
+    exact: true,
+  },
+  {
+    path: '/text-roleplay/:uid/character',
+    component: Character,
+    exact: true,
+  },
+  {
+    path: '/text-roleplay/character',
+    component: Character,
     exact: true,
   },
   {

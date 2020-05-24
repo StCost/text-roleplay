@@ -196,6 +196,8 @@ export class Items extends ItemsTable<IItemsProps, IItemsState> {
     )
   };
 
+  getTitle = () => !this.props.loading && `Список предметов. Количество: ${this.props.items.length}`;
+
   getFooter = (items: IItem[]): JSX.Element => {
     const { itemsToLoad } = this.state;
     const { loading } = this.props;

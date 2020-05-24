@@ -1,0 +1,264 @@
+@import "./colors";
+
+div.ant-card.char {
+  margin: 32px;
+  max-width: initial;
+  width: auto;
+
+  > .ant-card-body {
+    display: flex;
+    flex-direction: column;
+    padding: 12px;
+
+    > div {
+      display: flex;
+      > div {
+        margin: 12px;
+      }
+    }
+  }
+
+  .ant-card {
+    width: fit-content;
+  }
+
+  .char-bio .ant-form-item {
+    width: 100%;
+  }
+
+  .char-special {
+    width: auto;
+
+    .char-special-item {
+      display: flex;
+      align-items: center;
+      height: 32px;
+      margin: 6px 0;
+
+      .ant-form-item {
+        margin: 0;
+      }
+
+      .char-special-label {
+        width: 20px;
+        display: block;
+      }
+
+      .char-special-input {
+        width: 54px;
+        margin-left: 6px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+        &.total {
+          height: 32px;
+          width: 33px;
+        }
+
+        &input.total {
+          //border: 1px solid $border-color-light;
+          background-color: $background-color-light;
+        }
+      }
+    }
+  }
+
+  .char-skills {
+    .char-skills-item {
+      display: flex;
+      align-items: center;
+      height: 32px;
+      margin: 6px 0;
+
+      .ant-form-item {
+        margin: 0;
+      }
+
+      .char-skills-label {
+        width: 84px;
+        display: block;
+      }
+
+      .char-skills-input {
+        width: 64px;
+        margin-left: 6px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+        input {
+          pointer-events: none;
+        }
+
+        &.total {
+          height: 32px;
+          width: 43px;
+        }
+
+        &input.total {
+          //border: 1px solid $border-color-light;
+          background-color: $background-color-light;
+        }
+      }
+    }
+  }
+
+  .char-stats {
+    margin-top: 24px;
+    min-height: 280px;
+
+    .char-stats-item {
+      display: flex;
+      align-items: flex-start;
+      min-height: 32px;
+      margin: 6px 0;
+
+      .ant-form-item {
+        margin: 0;
+      }
+
+      .char-stats-label {
+        width: 85px;
+        display: block;
+        height: 32px;
+        line-height: 32px;
+      }
+
+      .char-stats-input {
+        width: 128px;
+        margin-left: 6px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+    }
+  }
+
+  .char-main-stats {
+    .ant-card-body {
+      display: flex;
+    }
+
+    .ant-form-item {
+      margin: 0;
+    }
+
+    .char-main-stats-health {
+      width: 267px;
+      margin-right: 24px;
+    }
+
+    .char-main-stats-info {
+      display: flex;
+      flex-wrap: wrap;
+      margin-left: 24px;
+    }
+
+    .char-main-stats-hp {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      width: fit-content;
+
+      .char-main-stats-hp-label {
+        width: fit-content;
+      }
+
+      .char-main-stats-hp-body {
+        display: flex;
+        font-size: 20px;
+        padding: 6px;
+        border: 1px solid $border-color-light;
+        background: $background-color-lightest;
+
+        .ant-row, .ant-col, .ant-input-number {
+          width: 64px;
+        }
+      }
+    }
+
+    .char-main-stats-ap-wrapper {
+      display: flex;
+      flex-direction: column;
+      padding: 6px;
+      border: 1px solid $border-color-light;
+      background: $background-color-lightest;
+      margin-top: 6px;
+
+      .char-main-stats-ap {
+        display: flex;
+
+        > div {
+          text-align: center;
+        }
+
+        .char-main-stats-ap-total, .char-main-stats-ap-change, .char-main-stats-ap-base {
+          width: 64px;
+        }
+        .char-main-stats-ap-change {
+          margin: 0 6px;
+        }
+      }
+    }
+
+    .char-main-stats-item {
+      display: flex;
+      margin: 6px;
+
+      .char-main-stats-item-label {
+        width: 24px;
+        text-align: right;
+        margin-right: 6px;
+        line-height: 32px;
+      }
+
+      .char-main-stats-item-input {
+        width: 64px;
+      }
+    }
+  }
+}
+
+@media(max-width: 767px) {
+  div.ant-card.char {
+    max-width: 100vw;
+    margin: 0;
+
+    .ant-card-body {
+      padding: 4px;
+    }
+
+    .char-main-stats {
+      flex-direction: column;
+
+      .ant-card-body {
+        flex-direction: column;
+      }
+
+      .char-main-stats-health {
+        margin-right: 0;
+        margin-bottom: 4px;
+      }
+
+      .char-main-stats-info {
+        margin: 0;
+      }
+    }
+
+    @media(max-width: 600px) {
+      > .ant-card-body > div {
+        flex-direction: column;
+      }
+
+      .char-stats {
+        width: auto;
+        min-height: initial;
+      }
+
+      .char-skills {
+        width: auto;
+      }
+    }
+  }
+}

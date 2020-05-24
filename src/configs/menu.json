@@ -8,12 +8,16 @@
     "path": "./inventory"
   },
   {
-    "label": "Предметы",
-    "path": "/text-roleplay/items"
+    "label": "Персонаж",
+    "path": "./character"
   },
   {
     "label": "Настройки",
     "path": "./settings"
+  },
+  {
+    "label": "Предметы",
+    "path": "/text-roleplay/items"
   },
   {
     "label": "Помощь",
