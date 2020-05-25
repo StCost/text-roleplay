@@ -41,6 +41,10 @@ function subscribe() {
         messages,
         concat: true
       });
+
+      const title = document.head.querySelector('title');
+      if (title)
+        title.innerText = document.hidden ? '(!) TRP' : 'TRP';
     });
 }
 
