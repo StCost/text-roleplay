@@ -4,6 +4,7 @@ import { IPayload } from '../reducers/actions';
 import actions from '../reducers/actions';
 import { database } from '../helpers/firebase';
 import { formatMessage } from '../helpers/utils';
+import { blinkTitle } from '../helpers/activity';
 
 function* sendMessage(payload: IPayload) {
   const { uid, message, data = {} } = payload;
@@ -42,9 +43,7 @@ function subscribe() {
         concat: true
       });
 
-      const title = document.head.querySelector('title');
-      if (title)
-        title.innerText = document.hidden ? '(!) TRP' : 'TRP';
+      blinkTitle();
     });
 }
 

@@ -1,6 +1,5 @@
 import { message as notify } from 'antd';
 
-import actions from '../reducers/actions';
 import { IItem, IMessage } from '../reducers/interfaces';
 import { diceRegex, exportRolls, hasDice } from './dice';
 
@@ -54,24 +53,6 @@ export const getFullTime = (time: number) => {
   const messageDate = [date.getDate(), date.getMonth() + 1, date.getFullYear()].map(doubleDigit).join('.');
 
   return [messageTime, messageDate].join(' ');
-};
-
-export const listenForActivity = () => {
-  const callback = () => {
-    if (!isOnline(parseInt(localStorage.getItem('lastActivity') || '0') - 60000))
-      actions.updateLastOnline({});
-  };
-
-  [
-    'mousedown',
-    'mousemove',
-    'keydown',
-    'scroll',
-    'touchstart'
-  ].forEach((eventName) => {
-    document.addEventListener(eventName, callback, true);
-  });
-  callback();
 };
 
 export const isURL = (str: string) =>
