@@ -4,16 +4,16 @@
   background-color: $background-color;
 }
 
-div,span,pre,ul,li,h1 {
+div, span, pre, ul, li, h1 {
   border-color: $border-color;
   color: $text-color;
 }
 
-.ant-card,.ant-modal-content {
+.ant-card, .ant-modal-content {
   background-color: $background-color-light;
   border-color: $background-color;
 
-  .ant-card,.ant-modal-header,.ant-modal-footer {
+  .ant-card, .ant-modal-header, .ant-modal-footer {
     background-color: $background-color-light;
     border-color: $border-color;
   }
@@ -241,7 +241,7 @@ div,span,pre,ul,li,h1 {
       border-color: $border-color-interactive;
       color: $text-color;
 
-      &.ant-input-number-handler-up-disabled,&.ant-input-number-handler-down-disabled {
+      &.ant-input-number-handler-up-disabled, &.ant-input-number-handler-down-disabled {
         background-color: $background-color-interactive;
         > span > svg {
           fill: $text-color;
@@ -330,4 +330,16 @@ div,span,pre,ul,li,h1 {
   * {
     color: $background-color-lighter;
   }
+}
+
+.ant-collapse,.ant-collapse-content {
+  .ant-collapse-header {
+    color: $text-color !important;
+  }
+  .ant-collapse-item {
+    background-color: $background-color-light;
+    border-color: $border-color-light !important;
+  }
+  background-color: $background-color-light;
+  border-color: $border-color-light;
 }

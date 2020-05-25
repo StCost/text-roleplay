@@ -10,9 +10,11 @@ import {
   Spin,
   Button,
   Popconfirm,
+  message as notify,
 } from 'antd';
 import { Callbacks, Store } from 'rc-field-form/lib/interface';
 import { RouteComponentProps } from 'react-router';
+import { diff } from 'deep-object-diff';
 
 import '../../styles/character.scss';
 import { IState, IUser } from '../../reducers/interfaces';
@@ -23,6 +25,11 @@ import {
   stats as configStats,
   subStats as configSubStats,
   ICharacteristic,
+  ICharacter,
+  IStats,
+  getConfigByField,
+  IField,
+  ICharacterChanges,
 } from './config';
 import actions from '../../reducers/actions';
 
@@ -34,8 +41,12 @@ interface ICharacterProps extends RouteComponentProps {
   currentUser: IUser | null;
 }
 
-class Character extends Component<ICharacterProps> {
-  state = { char: initialCharacter };
+/**
+ * This component is most complex one in whole project
+ * Beware of complex methods and data types
+ */
+class Character extends Component<ICharacterProps, ICharacter> {
+  state = initialCharacter;
 
   componentDidMount = () => {
     const { user, uid } = this.props;
@@ -103,9 +114,7 @@ class Character extends Component<ICharacterProps> {
 
   getSkills = () => {
     const { hasRight } = this.props;
-    const { stats } = this.state.char;
 
-    const disableChange = stats.skillPoints <= 0;
     return (
       <Card className="char-skills">
         <div className="char-skills-item">
@@ -141,7 +150,6 @@ class Character extends Component<ICharacterProps> {
                 disabled={!hasRight}
                 min={1}
                 max={95}
-                readOnly={disableChange}
               />
             </Form.Item>
             <Tooltip title={formula}>
@@ -213,8 +221,8 @@ class Character extends Component<ICharacterProps> {
             <div className="char-main-stats-hp-body">
               <Form.Item name={['stats', 'healthPoints']}>
                 <InputNumber
-                  max={this.state.char.stats.maxHealthPoints}
-                  min={-Math.floor(this.state.char.stats.maxHealthPoints / 2)}
+                  max={this.state.stats.maxHealthPoints || undefined}
+                  min={-Math.floor(this.state.stats.maxHealthPoints / 2)}
                   disabled={!hasRight}
                 />
               </Form.Item>
@@ -291,7 +299,11 @@ class Character extends Component<ICharacterProps> {
   };
 
   onChange: Callbacks['onValuesChange'] = (value, char) => {
-    this.setState({ char: this.processChar(value, char) });
+    if (value.bio) {
+      this.setState({ bio: value.bio });
+    } else {
+      this.setState(this.processChar(value, char));
+    }
   };
 
   // TODO Needs refactor for sure
@@ -353,8 +365,81 @@ class Character extends Component<ICharacterProps> {
     };
   };
 
+  getChanges = (beforeChar: ICharacter, afterChar: ICharacter) => {
+    const before = diff(afterChar, beforeChar);
+    const after = diff(beforeChar, afterChar);
+
+    const changes: ICharacterChanges[] = [];
+
+    Object.entries(before).forEach(([name, characteristic]: [string, string | ICharacteristic | IStats]) => {
+      if (name === 'bio' && typeof characteristic === 'string') {
+        // @ts-ignore
+        changes.push({
+          label: 'Bio',
+          full: 'Биография',
+          before: characteristic,
+          // @ts-ignore
+          after: after[name],
+        });
+        return;
+      }
+
+      Object.entries(characteristic).forEach(([field, value]: [string, ICharacteristic]) => {
+        // @ts-ignore
+        const afterValue = after[name][field];
+        const config: IField | undefined = getConfigByField(field);
+        if (config) {
+          changes.push({
+            label: config.label,
+            full: config.full,
+            before: value,
+            after: afterValue,
+          });
+        }
+      })
+    });
+
+    return changes;
+  };
+
+  onSave = () => {
+    const { uid, user } = this.props;
+    const character = this.state;
+
+    if (!user) {
+      notify.error('Пользователь не загружен!');
+      return;
+    }
+
+    if (character.stats.skillPoints < 0) {
+      notify.error('Очки Нвыков (ОН) не могут быть отрицательными!');
+      return;
+    }
+
+    const changes = this.getChanges(user.character || initialCharacter, character);
+    if (changes.length === 0) {
+      notify.error('В персонаже ничего не изменилось');
+      return;
+    }
+
+    notify.success('Персонаж сохранён');
+    actions.setUser({
+      uid,
+      user: {
+        ...user,
+        character,
+      }
+    });
+    actions.sendMessage({
+      uid,
+      message: `Характеристики персонажа изменены`,
+      data: { characterChanges: changes }
+    });
+  };
+
+
   render = () => {
-    const { user, hasRight, uid } = this.props;
+    const { user, hasRight } = this.props;
 
     if (!user) {
       return (
@@ -377,24 +462,18 @@ class Character extends Component<ICharacterProps> {
               title="Применить изменения?"
               okText="Да"
               cancelText="Отмена"
-              onConfirm={() => actions.setUser({
-                uid,
-                user: {
-                  ...user,
-                  character: this.state.char,
-                }
-              })}
+              onConfirm={this.onSave}
             >
-            <Button>Готово</Button>
-          </Popconfirm>
+              <Button>Готово</Button>
+            </Popconfirm>
           }
         >
           <div className="char-bio">
             <Form.Item name={['bio']}>
-            <Input.TextArea
-              disabled={!hasRight}
-              minLength={3}
-            />
+              <Input.TextArea
+                disabled={!hasRight}
+                minLength={3}
+              />
             </Form.Item>
           </div>
           <div>

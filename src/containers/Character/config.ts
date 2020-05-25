@@ -358,3 +358,14 @@ export const subStats: IField[] = [
   },
 ];
 
+export interface ICharacterChanges {
+  label: string;
+  full: string;
+  before: number | string | ICharacteristic;
+  after: number | string | ICharacteristic;
+}
+
+export const getConfigByField = (findField: string): IField | undefined  => {
+  return [...special, ...skills, ...stats, ...subStats].find(({ field }) => field === findField);
+};
+

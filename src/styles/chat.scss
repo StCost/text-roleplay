@@ -123,6 +123,26 @@
             margin-top: -6px;
           }
         }
+
+        .chat-char-changes {
+          display: flex;
+          width: 100%;
+          line-height: 32px;
+          height: 32px;
+          justify-content: center;
+
+          > span {
+            display: block;
+            width: -moz-fit-content;
+            width: 20%;
+            text-align: right;
+            margin-right: 12px;
+          }
+
+          > div > input {
+            width: 40%;
+          }
+        }
       }
 
       .item {

@@ -1,5 +1,11 @@
 import React from 'react';
-import { Button, Popconfirm } from 'antd';
+import {
+  Button,
+  Popconfirm,
+  Collapse,
+  Tooltip,
+  Input,
+} from 'antd';
 import { UploadOutlined } from '@ant-design/icons';
 
 import { isURL } from '../../helpers/utils';
@@ -8,6 +14,7 @@ import { importRolls } from '../../helpers/dice';
 import Image from '../../components/Image';
 import ItemById from '../../components/ItemById';
 import actions from '../../reducers/actions';
+import { ICharacterChanges, ICharacteristic } from "../Character/config";
 
 interface IMessageBodyProps {
   message: IMessage;
@@ -24,7 +31,57 @@ const MessageBody = (props: IMessageBodyProps) => {
     } = message;
 
     if (data) {
-      const { itemId, taken, amount, type } = data;
+      const { itemId, taken, amount, type, characterChanges } = data;
+
+      if (characterChanges) {
+        const changes: ICharacterChanges[] = Object.values(characterChanges);
+
+        const formatChange = (change: number | string | ICharacteristic) => {
+          switch (typeof change) {
+            case 'string':
+            case 'number':
+              return change;
+
+            default:
+              return [
+                change.base && `b:${change.base}`,
+                change.change && `${change.base ? ' + ' : ''}c:${change.change}`,
+                change.total && ` = t:${change.total}`,
+              ].filter(Boolean).join('');
+          }
+        };
+
+        return (
+          <Collapse>
+            <Collapse.Panel
+              key="char-changes"
+              header={body}
+            >
+              {changes.map(({ label, full, before, after }) => (
+                <div
+                  key={label}
+                  className="chat-char-changes"
+                >
+                  <Tooltip title={full}>
+                    <span>{label}</span>
+                  </Tooltip>
+                  <div>
+                    <Input
+                      value={formatChange(before)}
+                      readOnly
+                    />
+                    ->
+                    <Input
+                      value={formatChange(after)}
+                      readOnly
+                    />
+                  </div>
+                </div>
+              ))}
+            </Collapse.Panel>
+          </Collapse>
+        )
+      }
 
       if (itemId) {
         return (
@@ -74,7 +131,6 @@ const MessageBody = (props: IMessageBodyProps) => {
         </a>
       );
 
-      // https://youtu.be/afeWQn4DFKQ
       if (body.indexOf('youtu') > -1) {
         const getVideoId = (body: string) => {
           if (body.indexOf('youtu.be') > -1) {
