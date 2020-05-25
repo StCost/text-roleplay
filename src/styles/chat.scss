@@ -38,8 +38,8 @@
         margin-top: -6px;
         border-top-color: $border-color;
 
-        .ant-card-head {
-          display: none;
+        .ant-card-body i.rp-message {
+          margin-top: -12px;
         }
       }
 
@@ -76,6 +76,22 @@
 
       .chat-time {
         cursor: pointer;
+        position: absolute;
+        width: fit-content;
+        right: 6px;
+        transition-duration: 0.3s;
+        border-radius: 4px;
+        text-align: right;
+        color: $text-color;
+        opacity: 0.15;
+        margin-top: -6px;
+        padding: 6px;
+        z-index: 10;
+
+        &:hover {
+          background-color: $background-color-light;
+          opacity: 1;
+        }
       }
 
       .ant-card-head {

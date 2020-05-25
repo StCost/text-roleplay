@@ -45,6 +45,10 @@ div, span, pre, ul, li, h1 {
 }
 
 .ant-popover {
+  .ant-popover-arrow {
+    border-color: $background-color-light !important;
+  }
+
   .ant-popover-content, .ant-popover-inner {
     background-color: $background-color-light;
     border-color: $background-color;
@@ -54,10 +58,6 @@ div, span, pre, ul, li, h1 {
       color: $text-color;
     }
   }
-}
-
-.ant-popover-placement-top > .ant-popover-content > .ant-popover-arrow, .ant-popover-placement-topLeft > .ant-popover-content > .ant-popover-arrow, .ant-popover-placement-topRight > .ant-popover-content > .ant-popover-arrow {
-  border-color: $background-color-light;
 }
 
 .ant-menu {
