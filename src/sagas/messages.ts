@@ -77,7 +77,7 @@ function* getMoreMessages(payload: IPayload) {
 }
 
 function uploadFile(payload: IPayload) {
-  const { file, uid } = payload;
+  const { file, onFinish } = payload;
 
   const request = new XMLHttpRequest();
   const formData = new FormData();
@@ -90,11 +90,7 @@ function uploadFile(payload: IPayload) {
     if (request.status === 200 && request.readyState === 4) {
       let res = JSON.parse(request.responseText);
 
-      actions.sendMessage({
-        uid,
-        message: res.data.link,
-      });
-      actions.notify({ message: 'Файл успешно загружен!' });
+      onFinish(res.data.link);
     }
   };
 

@@ -16,6 +16,7 @@ import { IState, IUser, defaultUser } from '../../reducers/interfaces';
 import Avatar from '../../components/Avatar';
 import Loader from '../../components/Loader/index';
 import { getFullTime } from '../../helpers/utils';
+import InputUpload from "../../components/InputUpload";
 
 interface ISettingsProps extends RouteComponentProps {
   loading: boolean;
@@ -66,7 +67,7 @@ export class Settings extends React.Component<ISettingsProps> {
 
   getField = (key: string, value: string, user: IUser) => {
     const { nickname = '' } = user;
-    const { hasRight, currentUser, uid } = this.props;
+    const { hasRight, currentUser, uid, loading } = this.props;
     const disabled = !hasRight;
 
     switch (key) {
@@ -74,10 +75,15 @@ export class Settings extends React.Component<ISettingsProps> {
         return (
           <div>
             <div style={{ display: 'flex' }}>
-              <Input
-                value={value}
+              <InputUpload
+                placeholder="Введите сообщение"
                 onChange={this.onChange(key)}
-                readOnly={disabled}
+                value={value}
+                disabled={disabled || loading}
+                onUpload={(avatar: string) => {
+                  actions.notify({ message: 'Файл успешно загружен!' });
+                  this.rawOnChange(key, avatar);
+                }}
               />
               <Popconfirm
                 title="Очистить аватар?"

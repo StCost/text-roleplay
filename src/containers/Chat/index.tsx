@@ -2,16 +2,12 @@ import React, {
   ChangeEvent,
   Component,
   KeyboardEvent,
-  ClipboardEvent,
-  DragEvent,
 } from 'react';
 import { connect } from 'react-redux';
 import { SendOutlined } from '@ant-design/icons';
 import {
-  Input,
   message as notify,
   Spin,
-  Modal,
 } from 'antd';
 
 import '../../styles/chat.scss';
@@ -19,7 +15,7 @@ import actions from '../../reducers/actions';
 import { IMessage, IState, IUser, IUsers } from '../../reducers/interfaces';
 import Message from './Message';
 import { validateMessage } from '../../helpers/utils';
-import Image from '../../components/Image';
+import InputUpload from '../../components/InputUpload';
 
 interface IChatProps {
   messages: IMessage[],
@@ -140,48 +136,6 @@ class Chat extends Component<IChatProps, IChatState> {
     }
   };
 
-  uploadFile = (file: File, event: ClipboardEvent<HTMLTextAreaElement> | DragEvent<HTMLTextAreaElement>) => {
-    const { uid } = this.props;
-    if (file) {
-      if (file.type.indexOf('image') > -1) {
-        if (FileReader) {
-          const fileReader = new FileReader();
-          fileReader.onload = (e: ProgressEvent<FileReader>) => {
-            if (e.target && e.target.result && typeof e.target.result === 'string')
-              Modal.confirm({
-                title: 'Загрузить изображение?',
-                content: <Image src={e.target.result} noTitle/>,
-                onOk: (close) => {
-                  actions.uploadFile({ uid: uid, file });
-                  close();
-                },
-                okText: 'Загрузить',
-                cancelText: 'Отмена',
-                maskClosable: true,
-                centered: true,
-              });
-          };
-          fileReader.readAsDataURL(file);
-        } else {
-          notify.error('Загрузка не поддерживается браузером');
-        }
-      } else {
-        notify.error('Только картинки могут быть загружены');
-      }
-      event.preventDefault();
-    }
-  };
-
-  onPaste = (e: ClipboardEvent<HTMLTextAreaElement>) => {
-    this.uploadFile(e.clipboardData.files[0], e)
-  };
-
-  onDrop = (e: DragEvent<HTMLTextAreaElement>) => {
-    const file = e.dataTransfer.items[0].getAsFile();
-    if (file)
-      this.uploadFile(file, e)
-  };
-
   render = () => {
     const { messages, loading, users, uid } = this.props;
 
@@ -202,14 +156,17 @@ class Chat extends Component<IChatProps, IChatState> {
             ))}
           </div>
           <div className="chat-controls">
-            <Input.TextArea
+            <InputUpload
+              textArea={true}
               placeholder="Введите сообщение"
               autoSize={{ minRows: 1, maxRows: 10 }}
               onChange={this.onChangeMessage}
               onKeyDown={this.onKeyDown}
               value={this.state.message}
-              onPaste={this.onPaste}
-              onDrop={this.onDrop}
+              onUpload={(message: string) => {
+                actions.sendMessage({ uid, message });
+                actions.notify({ message: 'Файл успешно загружен!' });
+              }}
             />
             <SendOutlined
               onClick={this.onSendMessage}
