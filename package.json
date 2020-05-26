@@ -35,7 +35,7 @@
   "scripts": {
     "start": "react-scripts start",
     "build": " yarn run insert-date && react-scripts build && rm -r docs && mv build docs && yarn run post-build",
-    "post-build": "sed -i '' s/href=\\\"/href=\\\"./g docs/index.html &&  sed -i '' s/src=\\\"/src=\\\"./g docs/index.html",
+    "post-build": "sed -i '' s/href=\\\"/href=\\\"./g docs/index.html &&  sed -i '' s/src=\\\"/src=\\\"./g docs/index.html && find docs -name '*.name' -delete",
     "insert-date": "sed -i '' s/buildDate=\\\".*\\\"/buildDate=\\\"$(date '+%T'_'%d'.'%m'.'%y')\\\"/g public/index.html",
     "publish": "yarn run build && git add . && git commit -m 'Update build' && git push origin master",
     "test": "react-scripts test",

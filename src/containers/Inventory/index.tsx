@@ -124,20 +124,6 @@ class Inventory extends ItemsTable<IInventoryProps, IInventoryState> {
     )
   };
 
-  getDeleteModalContent = (item: IItem) => (
-    <div>
-      <span>Это действие невозможно отменить. Вы уверены?</span>
-      <br/> <br/> <br/>
-      <Button
-        style={{ width: '-webkit-fill-available' }}
-        onClick={() => {
-          actions.removeItem({ id: item.id, uid: this.props.uid });
-          notify.success('Удалено');
-        }}
-      >Удалить один</Button>
-    </div>
-  );
-
   cardControls: IControl[] = [
     {
       label: 'Показать',
