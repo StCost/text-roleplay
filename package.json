@@ -37,7 +37,7 @@
     "build": "yarn run insert-date && react-scripts build && yarn run build-to-docs && yarn run prepare-index && yarn run remove-maps",
     "insert-date": "sed -i '' s/buildDate=\\\".*\\\"/buildDate=\\\"$(date '+%T'_'%d'.'%m'.'%y')\\\"/g public/index.html",
     "build-to-docs": "rm -r docs && mv build docs",
-    "prepare-index": "sed -i '' s/href=\\\"/href=\\\"./g docs/index.html && sed -i '' s/src=\\\"/src=\\\"./g docs/index.html && sed -i '' s/\\\"static/\\\".\\\\/text-roleplay\\\\static/g docs/index.html",
+    "prepare-index": "sed -i '' s/href=\\\"/href=\\\"./g docs/index.html && sed -i '' s/src=\\\"/src=\\\"./g docs/index.html && sed -i '' s/\\\"static/\\\".\\\\/text-roleplay\\\\/static/g docs/index.html",
     "remove-maps": "find docs -name '*.map' -delete",
     "publish": "yarn run build && git add . && git commit -m 'Update build' && git push origin master",
     "test": "react-scripts test",
