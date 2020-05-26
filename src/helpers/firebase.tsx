@@ -2,7 +2,7 @@ import _firebase from 'firebase/app';
 import 'firebase/auth';
 import 'firebase/database';
 
-import firebaseConfig from '../configs/firebase.json';
+import firebaseConfig from '../configs/firebase';
 import actions from '../reducers/actions';
 
 const firebase = _firebase.initializeApp(firebaseConfig);

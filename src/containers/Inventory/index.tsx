@@ -4,7 +4,6 @@ import {
   Input,
   Dropdown,
   Button,
-  message as notify,
   Modal,
 } from 'antd';
 import { FilterOutlined } from '@ant-design/icons';
