@@ -106,6 +106,7 @@ class Inventory extends ItemsTable<IInventoryProps, IInventoryState> {
         key="pass-modal"
         visible={!!passItem}
         closable={false}
+        footer={<Button onClick={() => this.passItem(null)}>Закрыть</Button>}
       >
         <ActiveUsersList onClick={(user: IUser) => {
           if (passItem !== null) {
