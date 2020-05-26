@@ -1,10 +1,11 @@
-import React from 'react';
+import React, { lazy, Suspense } from 'react';
 import {
   Switch,
   Route,
   Redirect,
 } from 'react-router-dom';
 import { connect } from 'react-redux';
+import { Empty } from 'antd';
 
 import routes, { IRoute } from '../configs/routes';
 import Login from './Login';
@@ -28,16 +29,26 @@ function Router(props: IRouterProps) {
 
   return (
     <Switch>
-      {
-        routes.map((value: IRoute) =>
+      {routes.map((value: IRoute) => {
+        const C = lazy(() => import(`../${value.component}`));
+        const getComponent = () => (
+          <Suspense
+            key={value.path}
+            fallback={<Empty description="Страница грузится..."/>}
+          >
+            <C/>
+          </Suspense>
+        );
+
+        return (
           <Route
             key={value.path}
             path={value.path}
-            component={value.component}
             exact={value.exact || false}
+            component={getComponent}
           />
         )
-      }
+      })}
       <Redirect to="/text-roleplay/chat"/>
     </Switch>
   );

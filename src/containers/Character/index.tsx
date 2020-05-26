@@ -1,4 +1,5 @@
 import React, { ChangeEvent, Component } from 'react';
+import { withRouter } from 'react-router';
 import { connect } from 'react-redux';
 import {
   Form,
@@ -499,7 +500,7 @@ class Character extends Component<ICharacterProps, ICharacter> {
 const mapStateToProps = (state: IState, props: ICharacterProps) => {
   const { loading, users, currentUser } = state;
 
-  const uid = new URLSearchParams(props.match.params).get('uid') || state.uid || '0';
+  const uid = new URLSearchParams(props.match.params).get('uid') || state.uid || localStorage.getItem('uid') || '0';
   const user = users[uid];
   if (user && !user.uid && uid) {
     user.uid = uid;
@@ -514,4 +515,4 @@ const mapStateToProps = (state: IState, props: ICharacterProps) => {
   };
 };
 
-export default connect(mapStateToProps)(Character);
+export default withRouter(connect(mapStateToProps)(Character));

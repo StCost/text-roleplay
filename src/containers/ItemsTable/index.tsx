@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { RouteComponentProps } from 'react-router';
 import {
   Switch,
   Radio,
@@ -6,8 +7,7 @@ import {
 } from 'antd';
 
 import Loader from '../../components/Loader';
-import { RouteComponentProps } from "react-router";
-import { IItem, ItemType } from "../../reducers/interfaces";
+import { IItem, ItemType } from '../../reducers/interfaces';
 
 export interface IItemsTableProps extends RouteComponentProps {
   loading: boolean;

@@ -5,7 +5,7 @@ import { database } from '../helpers/firebase';
 import { IPayload } from '../reducers/actions';
 import actions from '../reducers/actions';
 import { changeMessage } from './messages';
-import { getItemName } from "../helpers/utils";
+import { getItemName } from '../helpers/utils';
 
 function* passItem(payload: IPayload) {
   const { id, uid, demonstrate, use, item, to } = payload;

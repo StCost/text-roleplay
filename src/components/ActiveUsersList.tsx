@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
 import { Menu } from 'antd';
-import '../styles/active-users.scss';
+import { connect } from 'react-redux';
 
+import '../styles/active-users.scss';
 import { IUsers, IUser, IState } from '../reducers/interfaces';
-import { connect } from "react-redux";
-import actions from "../reducers/actions";
-import { getFullTime, isOnline } from "../helpers/utils";
+import actions from '../reducers/actions';
+import { getFullTime, isOnline } from '../helpers/utils';
 import Avatar from './Avatar';
 
 interface IActiveUsersListProps {

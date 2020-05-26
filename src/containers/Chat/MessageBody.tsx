@@ -14,7 +14,7 @@ import { importRolls } from '../../helpers/dice';
 import Image from '../../components/Image';
 import ItemById from '../../components/ItemById';
 import actions from '../../reducers/actions';
-import { ICharacterChanges, ICharacteristic } from "../Character/config";
+import { ICharacterChanges, ICharacteristic } from '../Character/config';
 
 interface IMessageBodyProps {
   message: IMessage;

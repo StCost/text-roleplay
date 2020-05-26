@@ -1,4 +1,5 @@
 import React, { ChangeEvent } from 'react';
+import { withRouter } from 'react-router';
 import { connect } from 'react-redux';
 import {
   Input,
@@ -8,13 +9,14 @@ import {
 } from 'antd';
 import { FilterOutlined } from '@ant-design/icons';
 
+import '../../styles/items.scss';
 import { IInventory, IItem, IState, IUser } from '../../reducers/interfaces';
 import actions from '../../reducers/actions';
 import ItemsList, { IControl } from '../ItemsTable/ItemsList';
 import ActiveUsersList from '../../components/ActiveUsersList';
 import ItemsTable, { IItemsTableProps, IItemsTableState } from '../ItemsTable';
 import amountModal from '../../components/AmountModal';
-import { getItemName } from "../../helpers/utils";
+import { getItemName } from '../../helpers/utils';
 
 interface IInventoryProps extends IItemsTableProps {
   inventory: IInventory;
@@ -219,7 +221,8 @@ class Inventory extends ItemsTable<IInventoryProps, IInventoryState> {
 const mapStateToProps = (state: IState, props: IInventoryProps) => {
   const { loading, users, currentUser, items, messages, usersActivity } = state;
 
-  const uid = new URLSearchParams(props.match.params).get('uid') || state.uid || '0';
+  console.log(props);
+  const uid = new URLSearchParams(props.match.params).get('uid') || state.uid || localStorage.getItem('uid') || '0';
   const user = users[uid];
   if (user && !user.uid && uid) {
     user.uid = uid;
@@ -241,4 +244,4 @@ const mapStateToProps = (state: IState, props: IInventoryProps) => {
   };
 };
 
-export default connect(mapStateToProps)(Inventory);
+export default withRouter(connect(mapStateToProps)(Inventory));

@@ -1,5 +1,6 @@
 import React, { ChangeEvent } from 'react';
 import { connect } from 'react-redux';
+import { withRouter } from 'react-router';
 import {
   Button,
   Input,
@@ -15,8 +16,8 @@ import actions from '../../reducers/actions';
 import { IDeletedItemData, IItem, IState, IUser } from '../../reducers/interfaces';
 import ItemCreator from './ItemCreator';
 import ItemsList, { IControl } from '../ItemsTable/ItemsList';
-import ItemsTable, { IItemsTableProps, IItemsTableState } from "../ItemsTable";
-import amountModal from "../../components/AmountModal";
+import ItemsTable, { IItemsTableProps, IItemsTableState } from '../ItemsTable';
+import amountModal from '../../components/AmountModal';
 
 export interface IItemsProps extends IItemsTableProps {
   user: IUser | null;
@@ -231,4 +232,4 @@ const mapStateToProps = (state: IState) => {
   };
 };
 
-export default connect(mapStateToProps)(Items);
+export default withRouter(connect(mapStateToProps)(Items));

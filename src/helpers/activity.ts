@@ -1,5 +1,5 @@
-import { isOnline } from "./utils";
-import actions from "../reducers/actions";
+import { isOnline } from './utils';
+import actions from '../reducers/actions';
 
 const listenForOnline = () => {
   const callback = () => {

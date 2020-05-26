@@ -1,5 +1,5 @@
 import { IRoll } from '../helpers/dice';
-import { ICharacter } from "../containers/Character/config";
+import { ICharacter } from '../containers/Character/config';
 
 export interface IAction {
   type: string;

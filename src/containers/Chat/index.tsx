@@ -19,7 +19,7 @@ import actions from '../../reducers/actions';
 import { IMessage, IState, IUser, IUsers } from '../../reducers/interfaces';
 import Message from './Message';
 import { validateMessage } from '../../helpers/utils';
-import Image from "../../components/Image";
+import Image from '../../components/Image';
 
 interface IChatProps {
   messages: IMessage[],

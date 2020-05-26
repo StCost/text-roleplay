@@ -1,5 +1,6 @@
 import React, { ChangeEvent } from 'react';
 import { connect } from 'react-redux';
+import { withRouter } from 'react-router';
 import {
   Card,
   Input,
@@ -203,7 +204,7 @@ export class Settings extends React.Component<ISettingsProps> {
 const mapStateToProps = (state: IState, props: ISettingsProps) => {
   const { loading, users, currentUser } = state;
 
-  const uid = new URLSearchParams(props.match.params).get('uid') || state.uid || '0';
+  const uid = new URLSearchParams(props.match.params).get('uid') || state.uid || localStorage.getItem('uid') || '0';
   const user = users[uid];
   if (user && !user.uid && uid) {
     user.uid = uid;
@@ -218,4 +219,4 @@ const mapStateToProps = (state: IState, props: ISettingsProps) => {
   };
 };
 
-export default connect(mapStateToProps)(Settings);
+export default withRouter(connect(mapStateToProps)(Settings));

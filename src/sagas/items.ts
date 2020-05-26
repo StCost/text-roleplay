@@ -4,7 +4,7 @@ import { IPayload } from '../reducers/actions';
 import actions from '../reducers/actions';
 import { database } from '../helpers/firebase';
 import { generateID, getFailedItem } from '../helpers/utils';
-import { IInventoryItem, IMessage, IUser } from "../reducers/interfaces";
+import { IInventoryItem, IMessage, IUser } from '../reducers/interfaces';
 import { getRandomInt } from '../helpers/dice';
 
 function* setItem(payload: IPayload) {
