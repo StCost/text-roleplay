@@ -27,6 +27,8 @@ const createAsyncAction = (type: string) => {
 
 const actions: IActions = {
   ...createAsyncAction('LOGIN'),
+  ...createAsyncAction('REGISTER'),
+  ...createAsyncAction('RESET_PASSWORD'),
   ...createAsyncAction('GET_USER'),
   ...createAsyncAction('GET_MESSAGES'),
   ...createAsyncAction('GET_MORE_MESSAGES'),

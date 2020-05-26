@@ -44,6 +44,8 @@ const reducer = (state = initialState, action: IAction) => {
     case 'REMOVE_ITEM':
     case 'PASS_ITEM':
     case 'GET_USERS_ACTIVITY':
+    case 'REGISTER':
+    case 'RESET_PASSWORD':
     case 'UPLOAD_FILE': {
       return {
         ...state,
@@ -61,7 +63,9 @@ const reducer = (state = initialState, action: IAction) => {
     case 'PASS_ITEM_SUCCESS':
     case 'PASS_ITEM_FAIL':
     case 'GET_USERS_ACTIVITY_FAIL':
-    case "DELETE_ITEM_FAIL":
+    case 'DELETE_ITEM_FAIL':
+    case 'RESET_PASSWORD_FAIL':
+    case 'RESET_PASSWORD_SUCCESS':
     case 'SEND_MESSAGE_FAIL': {
       return {
         ...state,
@@ -81,6 +85,7 @@ const reducer = (state = initialState, action: IAction) => {
         loading: false,
       }
     }
+    case 'REGISTER_FAIL':
     case 'LOGIN_FAIL': {
       return {
         ...state,

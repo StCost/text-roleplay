@@ -97,7 +97,7 @@ export class Settings extends React.Component<ISettingsProps> {
             </div>
             <Avatar
               avatar={value}
-              nickname={nickname}
+              nickname={nickname || uid}
               size={128}
               style={{ margin: '8px auto', display: 'block' }}
             />

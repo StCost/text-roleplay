@@ -7,6 +7,7 @@ import actions from '../reducers/actions';
 
 const firebase = _firebase.initializeApp(firebaseConfig);
 const auth = firebase.auth();
+auth.languageCode = 'ru';
 const database = firebase.database();
 
 auth.onAuthStateChanged((user) => {

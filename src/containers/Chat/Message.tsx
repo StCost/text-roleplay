@@ -25,13 +25,14 @@ const Message = (props: IMessageProps) => {
       grouped,
       body,
       mentioned,
+      author,
     },
     user,
     uid,
   } = props;
 
   const title = user && (
-    <Link to={`./${user.uid}/settings`}>
+    <Link to={`./${author}/settings`}>
       <Tooltip
         title={user.lastOnline ? `Последняя активность: ${getFullTime(user.lastOnline)}` : undefined}
         placement="left"
@@ -39,10 +40,10 @@ const Message = (props: IMessageProps) => {
         <div className={`chat-message__title ${isOnline(user.lastOnline) ? 'online' : ''}`}>
           <Avatar
             avatar={user.avatar}
-            nickname={user.nickname}
+            nickname={user.nickname || user.uid || author}
           />
           <div className="chat-message__nickname">
-            {user.nickname || user.uid}
+            {user.nickname || user.uid || author}
           </div>
         </div>
       </Tooltip>
