@@ -6,6 +6,7 @@
   height: 100vh;
   width: 100%;
   justify-content: flex-end;
+  align-items: center;
   padding: 0;
   margin: 0;
 
@@ -183,23 +184,24 @@
     display: flex;
     align-items: center;
     width: inherit;
-    position: fixed;
+    position: absolute;
     z-index: 1000;
-    bottom: 0;
     background: $background-color-light;
     padding: 12px;
     border-top: 1px solid $border-color;
     max-width: 654px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    transform: translateX(calc(-50% - 67px));
-    left: calc(50% + 124px);
 
     @media (max-width: 767px) {
       transform: translateX(-50%);
       left: calc(50%);
     }
 
-    > span {
+    > textarea {
+      margin: 0 6px;
+    }
+
+    > .anticon {
       padding: 6px;
     }
   }

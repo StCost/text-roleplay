@@ -4,7 +4,7 @@ import React, {
   KeyboardEvent,
 } from 'react';
 import { connect } from 'react-redux';
-import { SendOutlined } from '@ant-design/icons';
+import { SendOutlined, DownOutlined } from '@ant-design/icons';
 import {
   message as notify,
   Spin,
@@ -136,14 +136,16 @@ class Chat extends Component<IChatProps, IChatState> {
     }
   };
 
+  bodyRef: HTMLDivElement | null = null;
   render = () => {
     const { messages, loading, users, uid } = this.props;
 
     return (
       <Spin spinning={loading}>
-        <div className={`chat-wrapper`}>
+        <div className="chat-wrapper">
           <div
             className="chat-body"
+            ref={ref => this.bodyRef = ref}
             onScroll={this.onScroll}
           >
             {messages.map((m: IMessage) => (
@@ -156,6 +158,7 @@ class Chat extends Component<IChatProps, IChatState> {
             ))}
           </div>
           <div className="chat-controls">
+            <DownOutlined onClick={() => this.bodyRef && this.bodyRef.scrollTo({ left: 0, top: Number.MAX_SAFE_INTEGER, behavior: 'smooth' })}/>
             <InputUpload
               textArea={true}
               placeholder="Введите сообщение"
@@ -168,9 +171,7 @@ class Chat extends Component<IChatProps, IChatState> {
                 actions.notify({ message: 'Файл успешно загружен!' });
               }}
             />
-            <SendOutlined
-              onClick={this.onSendMessage}
-            />
+            <SendOutlined onClick={this.onSendMessage}/>
           </div>
         </div>
       </Spin>
