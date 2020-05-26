@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { ChangeEvent, Component } from 'react';
 import { connect } from 'react-redux';
 import {
   Form,
@@ -298,16 +298,16 @@ class Character extends Component<ICharacterProps, ICharacter> {
     )
   };
 
-  onChange: Callbacks['onValuesChange'] = (value, char) => {
+  onChange: Callbacks['onValuesChange'] = async (value, char) => {
     if (value.bio) {
       this.setState({ bio: value.bio });
     } else {
-      this.setState(this.processChar(value, char));
+      this.setState(await this.processChar(value, char));
     }
   };
 
   // TODO Needs refactor for sure
-  processChar = (value: Store, char: Store) => {
+  processChar = async (value: Store, char: Store) => {
     const { special, skills, stats, bio } = char;
 
     if (!value.bio) {
@@ -470,12 +470,13 @@ class Character extends Component<ICharacterProps, ICharacter> {
           }
         >
           <div className="char-bio">
-            <Form.Item name={['bio']}>
-              <Input.TextArea
-                disabled={!hasRight}
-                minLength={3}
-              />
-            </Form.Item>
+            <Input.TextArea
+              // This Input is not a part of form in order to optimize changes a bit
+              disabled={!hasRight}
+              minLength={3}
+              value={this.state.bio}
+              onChange={(e: ChangeEvent<HTMLTextAreaElement>) => this.setState({ bio: e.currentTarget.value })}
+            />
           </div>
           <div>
             {this.getMainStats()}

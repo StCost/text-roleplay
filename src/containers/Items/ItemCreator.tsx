@@ -253,7 +253,6 @@ class ItemCreator extends Component<IItemCreatorProps, IPItem> {
                   <Card
                     className={key}
                     key={key}
-
                     title={this.labels[key]}
                   >
                     {field}
