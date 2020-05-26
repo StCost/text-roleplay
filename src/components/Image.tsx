@@ -43,9 +43,7 @@ class Image extends Component<{ src: string, noTitle?: boolean }, { visible: boo
           width="fit-content"
         >
           <img
-            style={{
-              maxWidth: '90vw',
-            }}
+            style={{ maxWidth: '100%' }}
             src={src}
             alt=""
           />

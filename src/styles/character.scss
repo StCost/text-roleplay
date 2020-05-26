@@ -22,8 +22,9 @@ div.ant-card.char {
     width: fit-content;
   }
 
-  .char-bio .ant-form-item {
-    width: 100%;
+  .char-bio {
+    flex-direction: column;
+    //width: 100%;
   }
 
   .char-special {

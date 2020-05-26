@@ -7,6 +7,10 @@
   margin: 32px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 
+  @media(max-width: 500px) {
+    margin: 0;
+  }
+
   .items-controls {
     display: flex;
     margin-bottom: 6px;
@@ -17,6 +21,25 @@
     z-index: 1;
     background-color: $background-color-light;
     border-radius: 2px 2px 0 0;
+
+    @media(max-width: 767px) {
+      flex-wrap: wrap;
+      justify-content: flex-start;
+
+      > * {
+        margin-bottom: 6px;
+      }
+
+      button.ant-btn:not(.ant-dropdown-trigger) {
+        width: 100%;
+      }
+      .ant-dropdown-trigger {
+        //width: 20%;
+      }
+      .ant-input-number {
+        //width: 75%;
+      }
+    }
 
     > .ant-btn {
       width: fit-content;
@@ -37,7 +60,9 @@
 
   .items-load-button {
     margin-top: 6px;
-    width: 100%;
+    position: absolute;
+    bottom: 12px;
+    width: calc(100% - 48px);
   }
 }
 
@@ -90,7 +115,6 @@
 }
 
 .item-creator {
-
   .item-creator__body {
     .ant-card-head {
       padding: 0 12px;
@@ -117,9 +141,17 @@
     position: sticky;
     bottom: 0;
     display: flex;
-    justify-content: space-between;
+    justify-content: flex-end;
     background: $background-color-light;
     border: 1px solid $border-color;
+
+    > button {
+      width: fit-content;
+    }
+
+    > :first-child {
+      margin-right: 32px;
+    }
   }
 }
 

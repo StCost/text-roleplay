@@ -102,3 +102,22 @@ div > img.chat-image {
     width: 100%;
   }
 }
+
+@media(max-width: 767px) {
+  .menu {
+    position: fixed;
+    width: 100vw;
+    top: 0;
+    left: 0;
+    height: 48px;
+    overflow: auto;
+    z-index: 1000;
+
+    .ant-menu.ant-menu-horizontal {
+      width: fit-content;
+      justify-content: center;
+      min-width: 100vw;
+      position: relative;
+    }
+  }
+}

@@ -153,10 +153,15 @@
             width: 20%;
             text-align: right;
             margin-right: 12px;
+            overflow: hidden;
           }
 
-          > div > input {
-            width: 40%;
+          > div {
+            width: 80%;
+
+            > input {
+              width: 46%;
+            }
           }
         }
       }
@@ -179,6 +184,7 @@
     align-items: center;
     width: inherit;
     position: fixed;
+    z-index: 1000;
     bottom: 0;
     background: $background-color-light;
     padding: 12px;

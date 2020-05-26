@@ -55,6 +55,7 @@ function* getItemById(payload: IPayload) {
 
 function* getMoreItems(payload: IPayload) {
   const { amount = 1, lastItem } = payload;
+  if (!lastItem) return;
 
   const rawItems = yield database
     .ref('items')

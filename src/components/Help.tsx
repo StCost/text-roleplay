@@ -68,7 +68,6 @@ export default () => (
       - Lazy loading для каждой основной страницы<br/>
       - Нужна кнопка быстрого скролла вниз чата<br/>
       - Загрузка аватара через буфер обмена<br/>
-      - Добавить подтверждение к отправке картинки<br/>
       - Порезать контейнеры на файлы поменьше<br/>
       - Отрефакторить ItemCreator на форму<br/>
       - <br/>
@@ -76,7 +75,6 @@ export default () => (
 
     <h1>Todo</h1>
     <pre>
-      - Character page<br/>
       - Effect cards?<br/>
       - Local Notes<br/>
       - Global notes<br/>

@@ -60,7 +60,7 @@ div, span, pre, ul, li, h1 {
   }
 }
 
-.ant-menu {
+.ant-menu, .ant-menu-submenu > .ant-menu {
   background-color: $background-color-light;
   border-color: $background-color;
 
@@ -80,6 +80,11 @@ div, span, pre, ul, li, h1 {
   .ant-menu-item-disabled > a, .ant-menu-submenu-disabled > a {
     color: $text-color-selected !important;
   }
+}
+
+.ant-menu-submenu {
+  background-color: $background-color-light;
+  border-color: $background-color;
 }
 
 .ant-tabs {
@@ -352,7 +357,7 @@ div, span, pre, ul, li, h1 {
   }
 }
 
-.ant-collapse,.ant-collapse-content {
+.ant-collapse, .ant-collapse-content {
   .ant-collapse-header {
     color: $text-color !important;
   }
@@ -362,4 +367,21 @@ div, span, pre, ul, li, h1 {
   }
   background-color: $background-color-light;
   border-color: $border-color-light;
+}
+
+.ant-slider {
+  &:hover {
+    .ant-slider-rail {
+      background-color: $background-color-selected;
+    }
+  }
+
+  .ant-slider-rail {
+    background-color: $background-color-interactive-light;
+
+  }
+
+  .ant-slider-handle {
+    background-color: $background-color-selected;
+  }
 }

@@ -27,35 +27,37 @@ function Menu(props: IMenuProps) {
     : 'inline';
 
   return (
-    <AntdMenu
-      mode={mode}
-      selectedKeys={[props.location.pathname.split('/').pop() || '']}
-    >
-      {menu.map((value: IMenuConfig) => (
-        <AntdMenu.Item
-          key={value.path.split('/').pop()}
-          disabled={value.path === props.location.pathname}
-        >
-          {
-            value.link
-              ? (
+    <div className="menu">
+      <AntdMenu
+        mode={mode}
+        selectedKeys={[props.location.pathname.split('/').pop() || '']}
+      >
+        {menu.map((value: IMenuConfig) => (
+          <AntdMenu.Item
+            key={value.path.split('/').pop()}
+            disabled={value.path === props.location.pathname}
+          >
+            {
+              value.link
+                ? (
 
-                <a
-                  href={value.path}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  Помощь
-                </a>
-              ) : (
-                <Link to={value.path}>
-                  {value.label}
-                </Link>
-              )
-          }
-        </AntdMenu.Item>
-      ))}
-    </AntdMenu>
+                  <a
+                    href={value.path}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    Помощь
+                  </a>
+                ) : (
+                  <Link to={value.path}>
+                    {value.label}
+                  </Link>
+                )
+            }
+          </AntdMenu.Item>
+        ))}
+      </AntdMenu>
+    </div>
   );
 }
 
