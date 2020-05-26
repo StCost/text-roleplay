@@ -407,14 +407,19 @@ class Character extends Component<ICharacterProps, ICharacter> {
       return;
     }
 
-    if (character.stats.skillPoints < 0) {
-      notify.error('Очки Нвыков (ОН) не могут быть отрицательными!');
+    let changes = this.getChanges(initialCharacter, character);
+    if (changes.length === 0) {
+      notify.error('В персонаже ничего не изменилось');
+      return;
+    }
+    changes = this.getChanges(user.character || initialCharacter, character);
+    if (changes.length === 0) {
+      notify.error('В персонаже ничего не изменилось');
       return;
     }
 
-    const changes = this.getChanges(user.character || initialCharacter, character);
-    if (changes.length === 0) {
-      notify.error('В персонаже ничего не изменилось');
+    if (character.stats.skillPoints < 0) {
+      notify.error('Очки Навыков (ОН) не могут быть отрицательными!');
       return;
     }
 
