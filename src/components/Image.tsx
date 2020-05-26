@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Modal } from 'antd';
 import { CloseOutlined } from '@ant-design/icons';
 
-class Image extends Component<{ src: string }, { visible: boolean }> {
+class Image extends Component<{ src: string, noTitle?: boolean }, { visible: boolean }> {
   state = { visible: false };
 
   toggleModal = () => {
@@ -12,7 +12,7 @@ class Image extends Component<{ src: string }, { visible: boolean }> {
   };
 
   render() {
-    const { src } = this.props;
+    const { src, noTitle = false } = this.props;
 
     return (
       <React.Fragment>
@@ -23,7 +23,7 @@ class Image extends Component<{ src: string }, { visible: boolean }> {
           className="chat-image"
         />
         <Modal
-          title={
+          title={!noTitle && (
             <div>
               <a
                 href={src}
@@ -34,7 +34,7 @@ class Image extends Component<{ src: string }, { visible: boolean }> {
               </a>
               <CloseOutlined onClick={this.toggleModal}/>
             </div>
-          }
+          )}
           className="image-modal"
           closable={false}
           footer={null}

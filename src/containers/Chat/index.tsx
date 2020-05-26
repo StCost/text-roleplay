@@ -11,6 +11,7 @@ import {
   Input,
   message as notify,
   Spin,
+  Modal,
 } from 'antd';
 
 import '../../styles/chat.scss';
@@ -18,6 +19,7 @@ import actions from '../../reducers/actions';
 import { IMessage, IState, IUser, IUsers } from '../../reducers/interfaces';
 import Message from './Message';
 import { validateMessage } from '../../helpers/utils';
+import Image from "../../components/Image";
 
 interface IChatProps {
   messages: IMessage[],
@@ -142,7 +144,27 @@ class Chat extends Component<IChatProps, IChatState> {
     const { uid } = this.props;
     if (file) {
       if (file.type.indexOf('image') > -1) {
-        actions.uploadFile({ uid: uid, file });
+        if (FileReader) {
+          const fileReader = new FileReader();
+          fileReader.onload = (e: ProgressEvent<FileReader>) => {
+            if (e.target && e.target.result && typeof e.target.result === 'string')
+              Modal.confirm({
+                title: 'Загрузить изображение?',
+                content: <Image src={e.target.result} noTitle/>,
+                onOk: (close) => {
+                  actions.uploadFile({ uid: uid, file });
+                  close();
+                },
+                okText: 'Загрузить',
+                cancelText: 'Отмена',
+                maskClosable: true,
+                centered: true,
+              });
+          };
+          fileReader.readAsDataURL(file);
+        } else {
+          notify.error('Загрузка не поддерживается браузером');
+        }
       } else {
         notify.error('Только картинки могут быть загружены');
       }
