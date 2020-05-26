@@ -313,10 +313,8 @@ class Character extends Component<ICharacterProps, ICharacter> {
     if (!value.bio) {
       const specialTotal: { [key: string]: number } = {};
       configSpecial.forEach(({ field, label }) => {
-        // @ts-ignore
         const value: ICharacteristic = special[field];
         const total = Math.max(0, Math.min(9, value.base + value.change));
-        // @ts-ignore
         special[field] = {
           ...value,
           total,
@@ -326,12 +324,11 @@ class Character extends Component<ICharacterProps, ICharacter> {
 
       stats.spentSkillPoints = 0;
       configSkills.forEach(({ field, getBase }) => {
-        // @ts-ignore
         const value: ICharacteristic = skills[field];
         const change = Math.max(1, value.change);
         const base = Math.max(1, getBase ? getBase(specialTotal, stats) : 1);
         const total = Math.max(1, Math.min(95, base + change));
-        // @ts-ignore
+
         skills[field] = {
           change,
           base,
@@ -373,19 +370,18 @@ class Character extends Component<ICharacterProps, ICharacter> {
 
     Object.entries(before).forEach(([name, characteristic]: [string, string | ICharacteristic | IStats]) => {
       if (name === 'bio' && typeof characteristic === 'string') {
-        // @ts-ignore
         changes.push({
           label: 'Bio',
           full: 'Биография',
           before: characteristic,
-          // @ts-ignore
+
           after: after[name],
         });
         return;
       }
 
       Object.entries(characteristic).forEach(([field, value]: [string, ICharacteristic]) => {
-        // @ts-ignore
+
         const afterValue = after[name][field];
         const config: IField | undefined = getConfigByField(field);
         if (config) {

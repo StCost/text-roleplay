@@ -15,6 +15,9 @@ import { ClearOutlined, CloseOutlined } from '@ant-design/icons';
 import { defaultItem, IItem } from '../../reducers/interfaces';
 import Avatar from '../../components/Avatar';
 
+interface IPItem extends Partial<IItem> {
+}
+
 interface IItemCreatorProps {
   onSubmit: (item: IItem) => void;
   onClose: () => void;
@@ -23,8 +26,8 @@ interface IItemCreatorProps {
   isAdmin?: boolean;
 }
 
-class ItemCreator extends Component<IItemCreatorProps, IItem> {
-  state = defaultItem;
+class ItemCreator extends Component<IItemCreatorProps, IPItem> {
+  state = {};
 
   labels = {
     id: 'ID',
@@ -76,7 +79,7 @@ class ItemCreator extends Component<IItemCreatorProps, IItem> {
   ];
 
   onChange = (key: string, value: string | boolean | number) =>
-    // @ts-ignore
+
     this.setState({ [key]: value });
 
   clearImage = () =>
@@ -187,22 +190,29 @@ class ItemCreator extends Component<IItemCreatorProps, IItem> {
     ),
   };
 
-  getField = (key: string, value: string | number | boolean, item: IItem) => {
-    // @ts-ignore
+  getField = (key: string, value: string | number | boolean, item: IPItem) => {
+
     const field = this.fields[key];
     return field && field(value, key, item);
   };
 
   onSubmit = () => {
-    const { state } = this;
-    const { onSubmit, item = {} } = this.props;
+    const { onSubmit } = this.props;
 
-    const newItem: IItem = { ...state };
-    Object.keys(state).forEach((key: string) =>
-      // @ts-ignore
-      // eslint-disable-next-line
-      newItem[key] = newItem[key] === defaultItem[key] && item[key] || (newItem[key])
-    );
+    const newItem = {};
+    Object.keys(defaultItem).forEach((key: string) => {
+      newItem[key] = this.getValue(key);
+    });
+
+    const instanceOfItem = (object: any): object is IItem => {
+      return object.discriminator === 'IItem';
+    };
+
+    if (!instanceOfItem(newItem)) {
+      notify.error('Ошибка генерации предмета!');
+      console.error(newItem);
+      return;
+    }
 
     if (!newItem.name) {
       notify.error('Имя не может быть пустым');
@@ -210,12 +220,27 @@ class ItemCreator extends Component<IItemCreatorProps, IItem> {
     }
 
     onSubmit(newItem);
-    this.setState(defaultItem);
+    this.setState({});
+  };
+
+  getValue = (key: string) => {
+    const { state } = this;
+    const { item } = this.props;
+
+    const value = state[key];
+    const itemValue = item ? item[key] : undefined;
+    const defaultValue = defaultItem[key];
+
+    if (value !== undefined)
+      return value;
+    else if (itemValue !== undefined)
+      return itemValue;
+    else
+      return defaultValue;
   };
 
   content = () => {
     const { state } = this;
-    const { item = {} } = this.props;
 
     return (
       <div className="item-creator">
@@ -223,15 +248,12 @@ class ItemCreator extends Component<IItemCreatorProps, IItem> {
           {Object
             .keys(defaultItem)
             .map((key: string) => {
-                // @ts-ignore
-                // eslint-disable-next-line
-                const value = state[key] === defaultItem[key] && item[key] || (state[key]);
-                const field = this.getField(key, value, state);
+                const field = this.getField(key, this.getValue(key), state);
                 return field && (
                   <Card
                     className={key}
                     key={key}
-                    // @ts-ignore
+
                     title={this.labels[key]}
                   >
                     {field}

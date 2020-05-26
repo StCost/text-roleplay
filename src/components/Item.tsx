@@ -101,10 +101,7 @@ class Item extends Component<IItemProps> {
         {(stats || effect) && (
           <div className="item-prefooter">
             <div className="item-ammo">
-              {
-                // @ts-ignore
-                stats ? `${this.labels[type] || 'Кол-во'}: ${stats}` : ''
-              }
+              {stats ? `${this.labels[type] || 'Кол-во'}: ${stats}` : ''}
             </div>
             <div className="item-effect">{effect}</div>
           </div>

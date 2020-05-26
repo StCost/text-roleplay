@@ -76,6 +76,7 @@ export const defaultUser: IUser = {
 export type ItemType = 'weapon' | 'usable' | 'wearable' | 'junk' | 'ammo' | 'note' | 'key' | 'misc';
 
 export interface IItem {
+  discriminator: 'IItem',
   id: string;
   name: string;
   weight: number;
@@ -94,6 +95,7 @@ export interface IItem {
 }
 
 export const defaultItem: IItem = {
+  discriminator: 'IItem',
   id: '',
   type: 'junk',
   name: '',

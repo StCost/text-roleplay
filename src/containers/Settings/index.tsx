@@ -190,10 +190,7 @@ export class Settings extends React.Component<ISettingsProps> {
                 key={key}
                 title={label}
               >
-                {
-                  // @ts-ignore
-                  this.getField(key, `${user[key] || ''}`, user)
-                }
+                {this.getField(key, `${user[key] || ''}`, user)}
               </Card>
             )
           })

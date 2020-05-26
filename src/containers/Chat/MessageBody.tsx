@@ -168,7 +168,7 @@ const MessageBody = (props: IMessageBodyProps) => {
                 id="ytplayer"
                 width="100%"
                 height="360"
-                src={`http://www.youtube.com/embed/${videoId}?${params}`}
+                src={`https://www.youtube.com/embed/${videoId}?${params}`}
                 frameBorder="0"
                 allow="accelerometer; encrypted-media; gyroscope; picture-in-picture"
                 allowFullScreen

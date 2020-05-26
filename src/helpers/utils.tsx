@@ -135,6 +135,7 @@ export const generateID = () =>
   '_' + Math.random().toString(36).substr(2, 9);
 
 export const getFailedItem: ((id: string) => IItem) = (id: string) => ({
+  discriminator: 'IItem',
   id: id,
   type: 'misc',
   name: 'Ошибка',

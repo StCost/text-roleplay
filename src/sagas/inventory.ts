@@ -108,8 +108,7 @@ function* getInventoryItem(payload: IPayload) {
     .once('value');
   const items: IInventoryItem[] = Object.values(rawItems.val() || {});
   if (items.length) {
-    // @ts-ignore
-    const item: IItem = items.find(item => item.id === id);
+    const item: IInventoryItem | undefined = items.find(item => item.id === id);
     if (item)
       return item;
   }

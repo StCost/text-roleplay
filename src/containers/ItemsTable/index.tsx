@@ -52,7 +52,7 @@ class ItemsTable<P extends IItemsTableProps, S extends IItemsTableState> extends
           || (description && description.toLowerCase().indexOf(_searchString) > -1)
           || (effect && effect.toLowerCase().indexOf(_searchString) > -1)
         ) && (
-          // @ts-ignore
+
           filters[type]
         ) && (
           (showApproved && approved === true)
@@ -68,17 +68,9 @@ class ItemsTable<P extends IItemsTableProps, S extends IItemsTableState> extends
       <div
         tabIndex={0}
         className="items-approved-button"
-        // @ts-ignore
-        onClick={() => {
-          console.log(name, filters[name]);
-          this.setState({ filters: { ...filters, [name]: !filters[name] } })
-        }}
+        onClick={() => this.setState({ filters: { ...filters, [name]: !filters[name] } })}
       >
-        <Switch
-          checked={
-            // @ts-ignore
-            filters[name]
-          }/>
+        <Switch checked={filters[name]}/>
         {label}
       </div>
     );
