@@ -507,7 +507,7 @@ const mapStateToProps = (state: IState, props: ICharacterProps) => {
     loading,
     user,
     uid,
-    hasRight: (!!user && !!currentUser) && (currentUser.uid === user.uid || !!currentUser.isAdmin),
+    hasRight: (!!user && !!currentUser) && user.approved && (currentUser.uid === user.uid || !!currentUser.isAdmin),
     currentUser,
   };
 };

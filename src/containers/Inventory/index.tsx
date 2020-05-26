@@ -24,6 +24,7 @@ interface IInventoryProps extends IItemsTableProps {
   uid: string;
   items: IItem[];
   currentUser: IUser | null;
+  hasRight: boolean;
 }
 
 interface IInventoryState extends IItemsTableState {
@@ -213,14 +214,14 @@ class Inventory extends ItemsTable<IInventoryProps, IInventoryState> {
   getTitle = () => !!this.props.user && `Инвентарь игрока ${this.props.user.nickname || this.props.user.uid}`;
 
   getContent = (items: IItem[]) => {
-    const { currentUser, uid } = this.props;
+    const { currentUser, uid, hasRight } = this.props;
 
     return (
       <ItemsList
         uid={uid}
         currentUser={currentUser}
         items={this.getInventoryItems(items)}
-        controls={(currentUser && (currentUser.uid === uid || currentUser.isAdmin))
+        controls={hasRight
           ? this.cardControls
           : undefined
         }
@@ -249,6 +250,7 @@ const mapStateToProps = (state: IState, props: IInventoryProps) => {
     currentUser,
     users,
     messages,
+    hasRight: (!!user && !!currentUser) && user.approved && (currentUser.uid === user.uid || !!currentUser.isAdmin),
     usersActivity,
   };
 };

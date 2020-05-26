@@ -11,8 +11,7 @@ import { RouteComponentProps } from 'react-router';
 import { ClearOutlined } from '@ant-design/icons';
 
 import actions from '../../reducers/actions';
-import { defaultUser } from '../../reducers';
-import { IState, IUser } from '../../reducers/interfaces';
+import { IState, IUser, defaultUser } from '../../reducers/interfaces';
 import Avatar from '../../components/Avatar';
 import Loader from '../../components/Loader/index';
 import { getFullTime } from '../../helpers/utils';
@@ -123,6 +122,19 @@ export class Settings extends React.Component<ISettingsProps> {
             'Пользователь ещё не был активен'
           );
 
+      case 'approved':
+        return <>
+          {(hasRight && (currentUser && currentUser.uid !== uid)) && (
+            <>
+              <Switch
+                checked={!!value}
+                onChange={(isAdmin: boolean) => this.rawOnChange(key, isAdmin)}
+              />
+            </>
+          )}
+          {value ? 'Активирован' : 'Не активирован'}
+        </>;
+
       case 'isAdmin':
         return <>
           {
@@ -154,6 +166,7 @@ export class Settings extends React.Component<ISettingsProps> {
     'lastOnline': 'Последняя активность',
     'isAdmin': 'Права админа',
     'uid': 'UID',
+    'approved': 'Активирован',
   };
 
   render = () => {

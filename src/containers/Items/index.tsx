@@ -47,6 +47,7 @@ export class Items extends ItemsTable<IItemsProps, IItemsState> {
     <Button
       key="creator"
       onClick={() => this.toggleCreatingItem(true)}
+      disabled={!this.props.currentUser || !this.props.currentUser.approved}
     >
       Создать предмет
     </Button>,
@@ -126,7 +127,7 @@ export class Items extends ItemsTable<IItemsProps, IItemsState> {
   getCreators = () => {
     const { creatingItem, editingItem } = this.state;
     const { currentUser } = this.props;
-    const isAdmin = !!(currentUser && currentUser.isAdmin);
+    const isAdmin = !!currentUser && currentUser.isAdmin && currentUser.approved;
 
     return (
       <>

@@ -111,6 +111,11 @@ class Chat extends Component<IChatProps, IChatState> {
       return;
     }
 
+    if (!user.approved) {
+      notify.error('Админ пока что не активировал Ваш аккаунт');
+      return;
+    }
+
     if (!validateMessage(message)) {
       return;
     }

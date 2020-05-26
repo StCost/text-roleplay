@@ -1,5 +1,11 @@
 import { processMessages } from '../helpers/utils';
-import { defaultDeletedItemData, IAction, IItem, IState, IUser } from './interfaces';
+import {
+  defaultDeletedItemData,
+  defaultUser,
+  IAction,
+  IItem,
+  IState
+} from './interfaces';
 
 const user = JSON.parse(localStorage.getItem('user') || 'null');
 if (user) localStorage.setItem('uid', user.uid);
@@ -16,17 +22,6 @@ export const initialState: IState = {
   error: false,
   usersActivity: {},
   deletingItemData: defaultDeletedItemData,
-};
-
-export const defaultUser: IUser = {
-  lastOnline: 0,
-
-  nickname: '',
-  avatar: '',
-
-  isAdmin: false,
-  uid: '',
-  inventory: {},
 };
 
 const reducer = (state = initialState, action: IAction) => {

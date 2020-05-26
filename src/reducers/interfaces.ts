@@ -54,11 +54,24 @@ export interface IUser {
   isAdmin?: boolean;
   inventory: IInventory,
   character?: ICharacter,
+  approved: boolean;
 }
 
 export interface IUsers {
   [key: string]: IUser;
 }
+
+export const defaultUser: IUser = {
+  lastOnline: 0,
+
+  nickname: '',
+  avatar: '',
+
+  isAdmin: false,
+  uid: '',
+  inventory: {},
+  approved: false,
+};
 
 export type ItemType = 'weapon' | 'usable' | 'wearable' | 'junk' | 'ammo' | 'note' | 'key' | 'misc';
 
