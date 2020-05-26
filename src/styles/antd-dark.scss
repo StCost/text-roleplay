@@ -73,12 +73,32 @@ div, span, pre, ul, li, h1 {
     color: $text-color !important;
 
     &:after {
-      border-color: #111d2c;
+      border-color: $text-color-selected;
     }
   }
 
   .ant-menu-item-disabled > a, .ant-menu-submenu-disabled > a {
     color: $text-color-selected !important;
+  }
+}
+
+.ant-tabs {
+  .ant-tabs-bar {
+    border-color: $border-color-light;
+  }
+
+  .ant-tabs-ink-bar {
+    background-color: $text-color-selected;
+  }
+
+  .ant-tabs-tab {
+    margin: 0;
+    padding: 12px;
+
+    &.ant-tabs-tab-active {
+      background-color: $background-color-selected;
+      color: $text-color-selected;
+    }
   }
 }
 

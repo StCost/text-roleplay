@@ -37,10 +37,6 @@
       &.grouped {
         margin-top: -6px;
         border-top-color: $border-color;
-
-        .ant-card-body i.rp-message {
-          margin-top: -12px;
-        }
       }
 
       .ant-card-head-title > a {
@@ -124,7 +120,7 @@
         }
 
         .rp-message {
-          margin: 12px -12px -12px -12px;
+          margin: -12px;
           padding: 12px;
           width: auto;
           display: block;

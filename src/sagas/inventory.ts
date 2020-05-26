@@ -1,6 +1,6 @@
 import { all, takeLatest } from 'redux-saga/effects';
 
-import { IInventoryItem, IItem } from '../reducers/interfaces';
+import { IInventoryItem } from '../reducers/interfaces';
 import { database } from '../helpers/firebase';
 import { IPayload } from '../reducers/actions';
 import actions from '../reducers/actions';
