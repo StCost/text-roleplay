@@ -59,7 +59,9 @@ class Item extends Component<IItemProps> {
         <div className="item-footer">
           {footer}
         </div>
-      )
+      );
+
+    return false;
   };
 
   render = () => {
