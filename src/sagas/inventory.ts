@@ -19,7 +19,7 @@ function* passItem(payload: IPayload) {
         data: { itemId: id, amount: item.amount },
       });
       actions.passItemSuccess({});
-      actions.notify({ message: `Вы показали ${name}`});
+      actions.notify({ message: `Вы показали ${name}` });
       actions.redirect({ to: '/text-roleplay/chat' });
       return true;
     }
@@ -46,7 +46,7 @@ function* passItem(payload: IPayload) {
 
     if (to) {
       actions.giveItem({ uid: to.uid, id, itemType: item.type, amount: item.amount });
-      actions.notify({ message: `Вы передали ${item.name} игроку '${to.nickname}'` });
+      actions.notify({ message: `Вы передали '${item.name}' игроку '${to.nickname}'` });
       actions.passItemSuccess({});
       return;
     }

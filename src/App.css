@@ -24,12 +24,6 @@
     overflow: auto;
 }
 
-@media (max-width: 767px) {
-    .app {
-        margin-top: 48px;
-    }
-}
-
 .app > div {
     width: 100%;
 }
