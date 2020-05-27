@@ -1,7 +1,10 @@
+import React from 'react';
 import { message as notify } from 'antd';
 
 import { IItem, IMessage } from '../reducers/interfaces';
 import { diceRegex, exportRolls, hasDice } from './dice';
+import Image from "../components/Image";
+import YoutubeEmbed from "../components/YoutubeEmbed";
 
 export const camelize = (str: string) => {
   return str
@@ -54,9 +57,6 @@ export const getFullTime = (time: number) => {
 
   return [messageTime, messageDate].join(' ');
 };
-
-export const isURL = (str: string) =>
-  /[-a-zA-Z0-9@:%._+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_+.~#?&//=]*)/igm.test(str);
 
 export const processMessages = (messages: IMessage[]) => {
   return messages
@@ -118,7 +118,7 @@ export const validateMessage = (message: string) => {
           return true;
         }
 
-        if ([2,4,6,8,10,12,20].indexOf(parseInt(size)) === -1) {
+        if ([2, 4, 6, 8, 10, 12, 20].indexOf(parseInt(size)) === -1) {
           notify.error(`Ошибка в дайсе ${roll}. Можно бросать только дайсы размеров 4 6 8 10 12 20`);
           return true;
         }
@@ -154,3 +154,58 @@ export const getFailedItem: ((id: string) => IItem) = (id: string) => ({
 
 export const getItemName = (item: IItem, showAmount: boolean = true) =>
   `${item ? `'${item.name}'` : 'предмет'}` + (showAmount && item.amount && item.amount >= 2 ? ` (${item.amount}шт)` : '');
+
+export const replaceString = (string: string, callback: (word: string, index: number) => string | JSX.Element) => {
+  return string.split(' ').map((word: string, index: number) => {
+    return callback ? callback(word, index) : ` ${word}`;
+  });
+};
+
+
+export const urlRegex = /https?:\/\/[-a-zA-Z0-9@:%._+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_+.~#?&//=]*)/igm;
+export const youtubeRegex = /(^| )https?:\/\/(www\.)?((youtube\.com(\/embed)?\/watch\?v=)|(youtu.be\/))[a-z0-9-_]{11}(\?t=[0-9]+)?(&feature=related)?(&list=[a-z0-9-_]{13})?(&index=[0-9]+)?(&t=[0-9]+)?/igm;
+export const imageRegex = /(^| )https?:\/\/(.*)\.(gif|jpe?g|tiff|png|webp|bmp)($| )/igm;
+
+export const isURL = (str: string) => urlRegex.test(str);
+export const getURLs = (str: string) => str.match(urlRegex);
+
+export const processLinks = (body: string) => {
+  const links = getURLs(body);
+
+  if (links && links.length > 0) {
+    const linkedBody = replaceString(body, (word: string, index: number) => {
+      const match = links.find((link: string) => link.trim() === word.trim());
+      return match
+        ? (
+          <React.Fragment key={word + index}>
+            {' '}
+            <a
+              href={word}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              {word}
+            </a>
+          </React.Fragment>
+        ) : (
+          ` ${word}`
+        )
+    });
+
+    const images = body.match(imageRegex);
+    const youtube = body.match(youtubeRegex);
+
+    return (
+      <>
+        <span>{linkedBody}</span>
+        {images && images.map((image: string, index: number) => (
+          <Image src={image} key={image + index}/>
+        ))}
+        {youtube && youtube.map((link: string, index: number) => (
+          <YoutubeEmbed link={link} key={link + index}/>
+        ))}
+      </>
+    );
+  }
+  return null;
+};

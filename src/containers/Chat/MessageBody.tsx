@@ -8,10 +8,9 @@ import {
 } from 'antd';
 import { UploadOutlined } from '@ant-design/icons';
 
-import { isURL } from '../../helpers/utils';
+import { isURL, processLinks } from '../../helpers/utils';
 import { IMessage } from '../../reducers/interfaces';
 import { importRolls } from '../../helpers/dice';
-import Image from '../../components/Image';
 import ItemById from '../../components/ItemById';
 import actions from '../../reducers/actions';
 import { ICharacterChanges, ICharacteristic } from '../Character/config';
@@ -115,70 +114,10 @@ const MessageBody = (props: IMessageBodyProps) => {
     }
 
     if (isURL(body)) {
-      if (/\.(gif|jpe?g|tiff|png|webp|bmp)/ig.test(body)) {
-        return (
-          <Image src={body}/>
-        )
+      const bodyWithLinks = processLinks(body);
+      if (bodyWithLinks) {
+        return <span>{bodyWithLinks}</span>;
       }
-
-      const link = (
-        <a
-          href={body}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          {body}
-        </a>
-      );
-
-      if (body.indexOf('youtu') > -1) {
-        const getVideoId = (body: string) => {
-          if (body.indexOf('youtu.be') > -1) {
-            const regExMatch = body.match(/youtu\.be\/.* /i);
-            if (regExMatch) {
-              const lastMatch = regExMatch.pop();
-              if (lastMatch) {
-                return lastMatch.split('/').pop() || '';
-              }
-            }
-          } else {
-            return new URL(body).searchParams.get('v') || '';
-          }
-          return ''
-        };
-
-        const searchParams = new URL(body).searchParams;
-        let params = 'listType=playlist';
-        const videoId = getVideoId(body);
-
-        if (videoId) {
-          const listId = searchParams.get('list');
-          if (listId)
-            params += '&list=' + listId;
-
-          const time = searchParams.get('t');
-          if (time)
-            params += '&start=' + time;
-
-          return (
-            <>
-              {link}
-              <iframe
-                title={videoId}
-                id="ytplayer"
-                width="100%"
-                height="360"
-                src={`https://www.youtube.com/embed/${videoId}?${params}`}
-                frameBorder="0"
-                allow="accelerometer; encrypted-media; gyroscope; picture-in-picture"
-                allowFullScreen
-              />
-            </>
-          )
-        }
-      }
-
-      return link;
     }
 
     const _body = rolls

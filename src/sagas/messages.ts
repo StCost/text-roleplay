@@ -13,7 +13,7 @@ function* sendMessage(payload: IPayload) {
   const newMessage = formatMessage({
     time,
     author: uid,
-    body: `${message} `,
+    body: `${message.replace(/\n/g,' \n')} `,
     data,
   });
 
