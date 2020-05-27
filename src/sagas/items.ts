@@ -55,7 +55,12 @@ function* getItemById(payload: IPayload) {
 
 function* getMoreItems(payload: IPayload) {
   const { amount = 1, lastItem } = payload;
-  if (!lastItem) return;
+  if (!lastItem) {
+    actions.notify({ message: 'Список предметов пуст!' });
+    console.error('No last item', payload);
+    actions.getMoreItemsFail({});
+    return;
+  }
 
   const rawItems = yield database
     .ref('items')
@@ -64,8 +69,7 @@ function* getMoreItems(payload: IPayload) {
     .limitToFirst(amount + 1)
     .once('value');
 
-  const a = rawItems.val();
-  const items = Object.values(a || {}).splice(1);
+  const items = Object.values(rawItems.val() || {}).splice(1);
   actions.getItemsSuccess({ items });
 }
 
