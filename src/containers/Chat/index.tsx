@@ -64,8 +64,10 @@ class Chat extends Component<IChatProps, IChatState> {
     });
   };
 
-  onChangeMessage = (event: ChangeEvent<HTMLTextAreaElement>) => {
-    const message = event.target.value;
+  onChangeMessage = (event: ChangeEvent<HTMLTextAreaElement>) =>
+    this.changeMessage(event.target.value);
+
+  changeMessage = (message: string) => {
     localStorage.setItem('message', message);
     this.setState({ message });
   };
@@ -158,7 +160,11 @@ class Chat extends Component<IChatProps, IChatState> {
             ))}
           </div>
           <div className="chat-controls">
-            <DownOutlined onClick={() => this.bodyRef && this.bodyRef.scrollTo({ left: 0, top: Number.MAX_SAFE_INTEGER, behavior: 'smooth' })}/>
+            <DownOutlined onClick={() => this.bodyRef && this.bodyRef.scrollTo({
+              left: 0,
+              top: Number.MAX_SAFE_INTEGER,
+              behavior: 'smooth'
+            })}/>
             <InputUpload
               textArea={true}
               placeholder="Введите сообщение"
@@ -167,7 +173,7 @@ class Chat extends Component<IChatProps, IChatState> {
               onKeyDown={this.onKeyDown}
               value={this.state.message}
               onUpload={(message: string) => {
-                actions.sendMessage({ uid, message });
+                this.changeMessage(`${this.state.message} ${message}`);
                 actions.notify({ message: 'Файл успешно загружен!' });
               }}
             />

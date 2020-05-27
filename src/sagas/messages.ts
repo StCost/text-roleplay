@@ -79,22 +79,29 @@ function* getMoreMessages(payload: IPayload) {
 function uploadFile(payload: IPayload) {
   const { file, onFinish } = payload;
 
-  const request = new XMLHttpRequest();
-  const formData = new FormData();
+  try {
+    const request = new XMLHttpRequest();
+    const formData = new FormData();
 
-  formData.append('image', file);
+    formData.append('image', file);
 
-  request.open('POST', 'https://api.imgur.com/3/image/');
-  request.setRequestHeader('Authorization', `Client-ID ea2c833b74d4583`);
-  request.onreadystatechange = () => {
-    if (request.status === 200 && request.readyState === 4) {
-      let res = JSON.parse(request.responseText);
+    request.open('POST', 'https://api.imgur.com/3/image/');
+    request.setRequestHeader('Authorization', `Client-ID ea2c833b74d4583`);
+    request.onreadystatechange = () => {
+      if (request.status === 200 && request.readyState === 4) {
+        let res = JSON.parse(request.responseText);
 
-      onFinish(res.data.link);
-    }
-  };
+        actions.uploadFileSuccess({});
+        onFinish(res.data.link);
+      }
+    };
 
-  request.send(formData);
+    request.send(formData);
+  } catch(error) {
+    actions.notify({ message: 'Изображение не было граужено! Проверьте консоль' });
+    console.error(error);
+    actions.uploadFileFail({ error });
+  }
 }
 
 export function* changeMessage(payload: IPayload) {

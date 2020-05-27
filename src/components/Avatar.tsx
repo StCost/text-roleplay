@@ -13,6 +13,7 @@ const Avatar = (props: IAvatarProps) => {
   const { avatar, nickname, style, ...rest } = props;
 
   const _avatar = isURL(avatar) ? avatar : '';
+  isURL(avatar); // For some reason validation returns always false without this line????????????????????
   return (
     <AntdAvatar
       src={_avatar}

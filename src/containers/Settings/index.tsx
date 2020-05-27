@@ -67,7 +67,7 @@ export class Settings extends React.Component<ISettingsProps> {
 
   getField = (key: string, value: string, user: IUser) => {
     const { nickname = '' } = user;
-    const { hasRight, currentUser, uid, loading } = this.props;
+    const { hasRight, currentUser, uid } = this.props;
     const disabled = !hasRight;
 
     switch (key) {
@@ -79,7 +79,7 @@ export class Settings extends React.Component<ISettingsProps> {
                 placeholder="Введите сообщение"
                 onChange={this.onChange(key)}
                 value={value}
-                disabled={disabled || loading}
+                disabled={disabled}
                 onUpload={(avatar: string) => {
                   actions.notify({ message: 'Файл успешно загружен!' });
                   this.rawOnChange(key, avatar);

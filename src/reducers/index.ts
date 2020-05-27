@@ -60,6 +60,8 @@ const reducer = (state = initialState, action: IAction) => {
     case 'GET_USERS_ACTIVITY_FAIL':
     case 'DELETE_ITEM_FAIL':
     case 'RESET_PASSWORD_FAIL':
+    case 'UPLOAD_FILE_SUCCESS':
+    case 'UPLOAD_FILE_FAIL':
     case 'RESET_PASSWORD_SUCCESS':
     case 'SEND_MESSAGE_FAIL': {
       return {
