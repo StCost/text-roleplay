@@ -99,7 +99,7 @@ const reducer = (state = initialState, action: IAction) => {
     }
     case 'GET_MESSAGES_SUCCESS': {
       const messages = action.concat
-        ? [...state.messages, ...action.messages]
+        ? [ ...action.messages, ...state.messages]
         : action.messages;
 
       return {

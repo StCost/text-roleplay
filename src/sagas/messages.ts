@@ -98,7 +98,7 @@ function uploadFile(payload: IPayload) {
 
     request.send(formData);
   } catch(error) {
-    actions.notify({ message: 'Изображение не было граужено! Проверьте консоль' });
+    actions.notify({ message: 'Изображение не было загружено! Проверьте консоль' });
     console.error(error);
     actions.uploadFileFail({ error });
   }
@@ -107,12 +107,7 @@ function uploadFile(payload: IPayload) {
 export function* changeMessage(payload: IPayload) {
   const { message } = payload;
 
-  const newMessage = formatMessage({
-    time: message.time,
-    author: message.author,
-    body: message.body,
-    data: message.data,
-  });
+  const newMessage = formatMessage(message);
 
   yield database
     .ref('messages')
@@ -120,6 +115,7 @@ export function* changeMessage(payload: IPayload) {
     .set(newMessage);
 
   actions.changeMessageSuccess({ message: newMessage });
+  actions.getMessagesSuccess({ messages: [newMessage], concat: true });
   return newMessage;
 }
 

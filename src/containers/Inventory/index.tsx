@@ -221,7 +221,6 @@ class Inventory extends ItemsTable<IInventoryProps, IInventoryState> {
 const mapStateToProps = (state: IState, props: IInventoryProps) => {
   const { loading, users, currentUser, items, messages, usersActivity } = state;
 
-  console.log(props);
   const uid = new URLSearchParams(props.match.params).get('uid') || state.uid || localStorage.getItem('uid') || '0';
   const user = users[uid];
   if (user && !user.uid && uid) {

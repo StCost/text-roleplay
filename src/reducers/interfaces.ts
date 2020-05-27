@@ -16,6 +16,7 @@ export interface IMessage {
   mentioned?: boolean;
   rolls?: IRoll[];
   data?: { [key: string]: any }; // Extra data for special purposes
+  pinned?: boolean;
 }
 
 export interface IState {

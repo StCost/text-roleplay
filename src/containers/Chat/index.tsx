@@ -4,7 +4,7 @@ import React, {
   KeyboardEvent,
 } from 'react';
 import { connect } from 'react-redux';
-import { SendOutlined, DownOutlined } from '@ant-design/icons';
+import { SendOutlined, DownOutlined, PushpinOutlined } from '@ant-design/icons';
 import {
   message as notify,
   Spin,
@@ -23,17 +23,20 @@ interface IChatProps {
   loading: boolean,
   users: IUsers;
   user: IUser;
+  currentUser: IUser | null;
 }
 
 interface IChatState {
   message: string;
   sending: boolean;
+  showPinned: boolean;
 }
 
 class Chat extends Component<IChatProps, IChatState> {
   state = {
     message: '',
     sending: false,
+    showPinned: true,
   };
 
   componentDidMount = () => {
@@ -63,6 +66,9 @@ class Chat extends Component<IChatProps, IChatState> {
       }
     });
   };
+
+  togglePinned = (showPinned = !this.state.showPinned) =>
+    this.setState({ showPinned });
 
   onChangeMessage = (event: ChangeEvent<HTMLTextAreaElement>) =>
     this.changeMessage(event.target.value);
@@ -138,26 +144,55 @@ class Chat extends Component<IChatProps, IChatState> {
     }
   };
 
+  onPinMessage = (message: IMessage) => () => {
+    actions.changeMessage({
+      message: {
+        ...message,
+        pinned: !message.pinned,
+      }
+    });
+    actions.notify({ message: `Сообщение ${message.pinned ? 'откреплено' : 'прикреплено'}!` });
+  };
+
+  getPinnedMessage = (messages: IMessage[]) => {
+    const pinnedMessage = messages.find((message: IMessage) => message.pinned);
+    if (!pinnedMessage) return false;
+
+    return (
+      <div className={`chat-pinned-message ${this.state.showPinned ? '' : 'hidden'}`}>
+        <PushpinOutlined onClick={() => this.togglePinned()}/>
+        {this.getMessage({ ...pinnedMessage, grouped: false })}
+      </div>
+    )
+  };
+
+  getMessage = (m: IMessage) => {
+    const { users, uid, currentUser } = this.props;
+    return (
+      <Message
+        key={m.time}
+        message={m}
+        user={users[m.author]}
+        uid={uid}
+        onDateClick={(currentUser && currentUser.isAdmin) ? this.onPinMessage(m) : undefined}
+      />
+    );
+  };
+
   bodyRef: HTMLDivElement | null = null;
   render = () => {
-    const { messages, loading, users, uid } = this.props;
+    const { messages, loading } = this.props;
 
     return (
       <Spin spinning={loading}>
         <div className="chat-wrapper">
+          {this.getPinnedMessage(messages)}
           <div
             className="chat-body"
             ref={ref => this.bodyRef = ref}
             onScroll={this.onScroll}
           >
-            {messages.map((m: IMessage) => (
-              <Message
-                key={m.time}
-                message={m}
-                user={users[m.author]}
-                uid={uid}
-              />
-            ))}
+            {messages.map(this.getMessage)}
           </div>
           <div className="chat-controls">
             <DownOutlined onClick={() => this.bodyRef && this.bodyRef.scrollTo({
@@ -186,14 +221,15 @@ class Chat extends Component<IChatProps, IChatState> {
 }
 
 const mapStateToProps = (state: IState) => {
-  const { messages, uid, loading, users } = state;
+  const { messages, uid, loading, users, currentUser } = state;
 
   return {
     messages,
     uid,
     loading,
     users,
-    user: users[uid]
+    currentUser,
+    user: users[uid],
   };
 };
 

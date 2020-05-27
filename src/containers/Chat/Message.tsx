@@ -16,6 +16,7 @@ interface IMessageProps {
   message: IMessage,
   user: IUser,
   uid: string;
+  onDateClick?: () => void;
 }
 
 const Message = (props: IMessageProps) => {
@@ -29,6 +30,7 @@ const Message = (props: IMessageProps) => {
     },
     user,
     uid,
+    onDateClick = () => {},
   } = props;
 
   const title = user && (
@@ -50,14 +52,20 @@ const Message = (props: IMessageProps) => {
     </Link>
   );
 
+  const className = [
+    'chat-message',
+    grouped && 'grouped',
+    mentioned && user && (body.indexOf(`@${user.nickname} `) > -1) && 'mentioned',
+  ].filter(Boolean).join(' ');
+
   return (
     <Card
-      className={`chat-message ${grouped ? 'grouped' : ''} ${mentioned && user && (body.indexOf(`@${user.nickname} `) > -1) ? 'mentioned' : ''}`}
+      className={className}
       title={grouped ? undefined : title}
       key={time}
     >
       <Tooltip
-        title={getDate(time)}
+        title={<div onClick={onDateClick}>{getDate(time)}</div>}
         placement="left"
       >
         <div className="chat-time">{getTime(time)}</div>
