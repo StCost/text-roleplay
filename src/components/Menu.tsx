@@ -4,17 +4,11 @@ import { Link, withRouter, RouteComponentProps } from 'react-router-dom';
 import { connect } from 'react-redux';
 
 import '../styles/menu.scss';
-import menu from '../configs/menu.json';
+import menu, { IMenuItem } from '../configs/menu';
 import { IState } from '../reducers/interfaces';
 
 interface IMenuProps extends RouteComponentProps {
   isLoggedIn: boolean;
-}
-
-interface IMenuConfig {
-  label: string;
-  path: string;
-  link?: boolean;
 }
 
 function Menu(props: IMenuProps) {
@@ -32,12 +26,13 @@ function Menu(props: IMenuProps) {
         mode={mode}
         selectedKeys={[props.location.pathname.split('/').pop() || '']}
       >
-        {menu.map((value: IMenuConfig) => (
+        {menu.map((value: IMenuItem) => (
           <AntdMenu.Item
             key={value.path.split('/').pop()}
             disabled={value.path === props.location.pathname}
           >
             <Link to={value.path}>
+              {value.icon}
               {value.label}
             </Link>
           </AntdMenu.Item>

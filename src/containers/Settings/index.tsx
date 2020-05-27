@@ -9,7 +9,7 @@ import {
 } from 'antd';
 import { RouteComponentProps } from 'react-router';
 
-import { ClearOutlined } from '@ant-design/icons';
+import { ClearOutlined, SettingOutlined } from '@ant-design/icons';
 
 import actions from '../../reducers/actions';
 import { IState, IUser, defaultUser } from '../../reducers/interfaces';
@@ -184,7 +184,13 @@ export class Settings extends React.Component<ISettingsProps> {
         className="settings"
         bordered={false}
         loading={user === undefined}
-        title={user && `Настройки игрока ${user.nickname || user.uid}`}
+        title={user && (
+          <>
+            <SettingOutlined/>
+            {' '}
+            Настройки игрока {user.nickname || user.uid}
+          </>
+        )}
       >
         <Loader loading={loading}/>
         {user && Object

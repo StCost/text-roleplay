@@ -9,7 +9,7 @@ import {
   Tooltip,
   Modal,
 } from 'antd';
-import { FilterOutlined } from '@ant-design/icons';
+import { FilterOutlined, AppstoreAddOutlined } from '@ant-design/icons';
 
 import '../../styles/items.scss';
 import actions from '../../reducers/actions';
@@ -198,7 +198,13 @@ export class Items extends ItemsTable<IItemsProps, IItemsState> {
     )
   };
 
-  getTitle = () => !this.props.loading && `Список предметов. Количество: ${this.props.items.length}`;
+  getTitle = () => !this.props.loading && (
+    <>
+      <AppstoreAddOutlined/>
+      {' '}
+      Список предметов. Количество: {this.props.items.length}
+    </>
+  );
 
   getFooter = (items: IItem[]): JSX.Element => {
     const { itemsToLoad } = this.state;

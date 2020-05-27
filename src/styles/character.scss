@@ -24,7 +24,7 @@ div.ant-card.char {
 
   .char-bio {
     flex-direction: column;
-    //width: 100%;
+    margin: 12px;
   }
 
   .char-special {
@@ -66,6 +66,8 @@ div.ant-card.char {
   }
 
   .char-skills {
+    width: 361px;
+
     .char-skills-item {
       display: flex;
       align-items: center;

@@ -111,7 +111,7 @@ class ItemsTable<P extends IItemsTableProps, S extends IItemsTableState> extends
 
   getContent: ((items: IItem[]) => JSX.Element) = () => <React.Fragment/>;
   getFooter: ((items: IItem[]) => JSX.Element) = () => <React.Fragment/>;
-  getTitle: () => string | undefined | false = () => undefined;
+  getTitle: () => JSX.Element | string | undefined | false = () => undefined;
 
   render = () => {
     const { loading } = this.props;

@@ -13,6 +13,7 @@ import {
   Popconfirm,
   message as notify,
 } from 'antd';
+import { UserOutlined } from '@ant-design/icons';
 import { Callbacks, Store } from 'rc-field-form/lib/interface';
 import { RouteComponentProps } from 'react-router';
 import { diff } from 'deep-object-diff';
@@ -458,7 +459,13 @@ class Character extends Component<ICharacterProps, ICharacter> {
       >
         <Card
           className="char"
-          title={`Персонаж игрока ${user.nickname || user.uid}`}
+          title={(
+            <>
+              <UserOutlined/>
+              {' '}
+              Персонаж игрока {user.nickname || user.uid}
+            </>
+          )}
           extra={
             <Popconfirm
               title="Применить изменения?"

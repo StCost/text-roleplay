@@ -7,7 +7,7 @@ import {
   Button,
   Modal,
 } from 'antd';
-import { FilterOutlined } from '@ant-design/icons';
+import { FilterOutlined, DatabaseOutlined } from '@ant-design/icons';
 
 import '../../styles/items.scss';
 import { IInventory, IItem, IState, IUser } from '../../reducers/interfaces';
@@ -199,7 +199,14 @@ class Inventory extends ItemsTable<IInventoryProps, IInventoryState> {
     },
   ];
 
-  getTitle = () => !!this.props.user && `Инвентарь игрока ${this.props.user.nickname || this.props.user.uid}`;
+  getTitle = () =>
+    !!this.props.user && (
+      <>
+        <DatabaseOutlined/>
+        {' '}
+        Инвентарь игрока {this.props.user.nickname || this.props.user.uid}
+      </>
+    );
 
   getContent = (items: IItem[]) => {
     const { currentUser, uid, hasRight } = this.props;

@@ -4,7 +4,12 @@ import React, {
   KeyboardEvent,
 } from 'react';
 import { connect } from 'react-redux';
-import { SendOutlined, DownOutlined, PushpinOutlined } from '@ant-design/icons';
+import {
+  SendOutlined,
+  DownOutlined,
+  EyeOutlined,
+  EyeInvisibleOutlined
+} from '@ant-design/icons';
 import {
   message as notify,
   Spin,
@@ -158,9 +163,13 @@ class Chat extends Component<IChatProps, IChatState> {
     const pinnedMessage = messages.find((message: IMessage) => message.pinned);
     if (!pinnedMessage) return false;
 
+    const { showPinned } = this.state;
     return (
-      <div className={`chat-pinned-message ${this.state.showPinned ? '' : 'hidden'}`}>
-        <PushpinOutlined onClick={() => this.togglePinned()}/>
+      <div className={`chat-pinned-message ${showPinned ? '' : 'hidden'}`}>
+        {showPinned
+          ? <EyeOutlined onClick={() => this.togglePinned()}/>
+          : <EyeInvisibleOutlined onClick={() => this.togglePinned()}/>
+        }
         {this.getMessage({ ...pinnedMessage, grouped: false })}
       </div>
     )
