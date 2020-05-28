@@ -8,7 +8,7 @@ import { formatMessage } from '../helpers/utils';
 
 function* sendMessage(payload: IPayload) {
   const { uid, message, data = {} } = payload;
-  const time = new Date().getTime();
+  const time = Date.now();
 
   const newMessage = formatMessage({
     time,

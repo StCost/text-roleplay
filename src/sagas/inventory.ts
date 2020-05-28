@@ -123,7 +123,7 @@ function* giveItem(payload: IPayload) {
     return;
   }
 
-  const time = new Date().getTime();
+  const time = Date.now();
   let item: IInventoryItem = { id, time, type: itemType, amount: amount };
 
   if (itemType !== 'weapon' && itemType !== 'wearable') {

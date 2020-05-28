@@ -6,7 +6,7 @@ let prevStatus = '';
 let lastStatusUpdate = 0;
 const changeStatus = (status: 'online' | 'afk' | 'offline', force: boolean = false) => {
   if (!force && prevStatus === status) return;
-  const time = new Date().getTime();
+  const time = Date.now();
   if (!force && time < lastStatusUpdate + 500) return;
   if (!uid) {
     uid = localStorage.getItem('uid');

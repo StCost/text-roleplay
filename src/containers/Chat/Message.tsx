@@ -34,11 +34,11 @@ const Message = (props: IMessageProps) => {
 
     switch (status) {
       case 'online':
-        if (lastOnline + 180000 > new Date().getTime())
+        if (lastOnline + 180000 > Date.now())
           return 'online';
       // Fallthrough is intended. If lastOnline is too far - user is not actually online
       case 'afk':
-        if (lastOnline + 600000 > new Date().getTime())
+        if (lastOnline + 600000 > Date.now())
           return 'afk';
       // Fallthrough is intended. If lastOnline is too far - user is not actually afk
       default:

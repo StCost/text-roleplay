@@ -46,7 +46,7 @@ function getUser(payload: IPayload) {
 function* updateLastOnline() {
   const uid = localStorage.getItem('uid');
   if (!uid || uid === 'undefined') return;
-  const time = new Date().getTime();
+  const time = Date.now();
 
   localStorage.setItem('lastActivity', `${time}`);
 

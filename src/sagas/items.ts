@@ -10,7 +10,7 @@ import { getRandomInt } from '../helpers/dice';
 
 function* setItem(payload: IPayload) {
   const { item } = payload;
-  const time = new Date().getTime();
+  const time = Date.now();
   const id = item.id || generateID();
   const author = localStorage.getItem('uid');
 
