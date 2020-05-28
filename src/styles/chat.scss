@@ -161,6 +161,19 @@
       border-top-color: $border-color;
     }
 
+    .ant-collapse {
+      margin: -12px;
+      border: none;
+
+      .ant-collapse-content {
+        border-top: none;
+      }
+
+      .ant-collapse-header,.ant-collapse-content,.ant-collapse-item  {
+        border-color: $border-color !important;
+      }
+    }
+
     .ant-card-head-title > a {
       height: auto;
       display: block;
@@ -238,14 +251,6 @@
 
       .critHit {
         background: rgba(10, 10, 255, 0.275);
-      }
-
-      .command-message {
-        display: flex;
-        > b {
-          margin-left: 4px;
-          background: rgba(24, 144, 255, 0.025);
-        }
       }
 
       div.rp-message {
