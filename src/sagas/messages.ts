@@ -1,5 +1,6 @@
 import { all, takeLatest } from 'redux-saga/effects';
 
+import firebase from 'firebase/app';
 import { IPayload } from '../reducers/actions';
 import actions from '../reducers/actions';
 import { database } from '../helpers/firebase';
@@ -30,27 +31,27 @@ function* sendMessage(payload: IPayload) {
   }
 }
 
-let firstSkipped = false;
-
 function subscribe() {
+  const handleMessage = (rawMessage: firebase.database.DataSnapshot) => {
+    const message = rawMessage.val();
+    console.log(message);
+    if (!message) return;
+
+    actions.getMessagesSuccess({
+      messages: [message],
+      concat: true
+    });
+
+    if (document.hidden || !document.hasFocus() || window.location.pathname !== 'text-roleplay/chat')
+      actions.setUnreadMessage({ unreadMessage: true });
+  };
+
   database
     .ref('messages')
-    .orderByKey()
-    .limitToLast(1)
-    .on('value', (rawMessages) => {
-      if (!firstSkipped) {
-        firstSkipped = true;
-        return;
-      }
-
-      const messages = Object.values(rawMessages.val() || {});
-      actions.getMessagesSuccess({
-        messages,
-        concat: true
-      });
-
-      actions.setUnreadMessage({ unreadMessage: true });
-    });
+    .on('child_added', handleMessage);
+  database
+    .ref('messages')
+    .on('child_changed', handleMessage);
 }
 
 function unsubscribe() {
@@ -121,7 +122,6 @@ export function* changeMessage(payload: IPayload) {
     .set(newMessage);
 
   actions.changeMessageSuccess({ message: newMessage });
-  actions.getMessagesSuccess({ messages: [newMessage], concat: true });
   return newMessage;
 }
 

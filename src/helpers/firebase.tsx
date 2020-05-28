@@ -20,6 +20,7 @@ auth.onAuthStateChanged((user) => {
 });
 
 export {
+  _firebase,
   auth,
   database,
   firebase,
