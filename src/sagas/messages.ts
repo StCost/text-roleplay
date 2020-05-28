@@ -34,7 +34,6 @@ function* sendMessage(payload: IPayload) {
 function subscribe() {
   const handleMessage = (rawMessage: firebase.database.DataSnapshot) => {
     const message = rawMessage.val();
-    console.log(message);
     if (!message) return;
 
     actions.getMessagesSuccess({

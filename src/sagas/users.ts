@@ -25,13 +25,22 @@ function getUser(payload: IPayload) {
 
   if (requestedUsers[uid] && !currentUser) return;
   requestedUsers[uid] = true;
-  database
+  const ref = database
     .ref('users')
-    .child(uid)
-    .on('value', (rawUser) => {
-      const user = rawUser.val() || {};
-      actions.getUserSuccess({ user, uid, currentUser });
-    });
+    .child(uid);
+
+  ref.once('value', (rawUser) => {
+    const user = rawUser.val() || {};
+    actions.getUserSuccess({ uid, user });
+  });
+
+  ref.on('child_changed', (rawProperty) => {
+    const key: string | null = rawProperty.key;
+    if (!key) return;
+
+    const value = rawProperty.val();
+    actions.getUserSuccess({ uid, updatedData: { [key]: value } })
+  });
 }
 
 function* updateLastOnline() {

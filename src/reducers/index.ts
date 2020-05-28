@@ -101,7 +101,7 @@ const reducer = (state = initialState, action: IAction) => {
     }
     case 'GET_MESSAGES_SUCCESS': {
       const messages = action.concat
-        ? [ ...action.messages, ...state.messages]
+        ? [...action.messages, ...state.messages]
         : action.messages;
 
       return {
@@ -111,8 +111,18 @@ const reducer = (state = initialState, action: IAction) => {
       }
     }
     case 'GET_USER_SUCCESS': {
-      const currentUser = action.user.uid === state.uid
-        ? action.user
+      const { uid, user, updatedData } = action;
+
+      const newUser = updatedData
+        ? ({
+          ...state.users[uid],
+          ...updatedData,
+        }) : (
+          user
+        );
+
+      const currentUser = uid === state.uid
+        ? newUser
         : state.currentUser;
 
       return {
@@ -120,7 +130,7 @@ const reducer = (state = initialState, action: IAction) => {
         currentUser,
         users: {
           ...state.users,
-          [action.uid]: action.user,
+          [action.uid]: newUser,
         },
       }
     }

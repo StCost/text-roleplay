@@ -1,4 +1,5 @@
 import { all, takeLatest, takeEvery } from 'redux-saga/effects';
+import firebase from 'firebase/app';
 
 import { IPayload } from '../reducers/actions';
 import actions from '../reducers/actions';
@@ -27,6 +28,26 @@ function* setItem(payload: IPayload) {
 
   actions.setItemSuccess({ itemData });
   actions.getItemById({ id });
+}
+
+function subscribe() {
+  const handleItem = (rawMessage: firebase.database.DataSnapshot) => {
+    const item = rawMessage.val();
+    if (!item) return;
+
+    actions.getItemsSuccess({ items: [item] });
+  };
+
+  database
+    .ref('items')
+    .on('child_added', handleItem);
+  database
+    .ref('items')
+    .on('child_changed', handleItem);
+}
+
+function unsubscribe() {
+  database.ref('items').off();
 }
 
 function* getItems() {
@@ -152,5 +173,7 @@ export default function* watchForActions() {
     takeLatest('GET_ITEMS', getItems),
     takeLatest('GET_MORE_ITEMS', getMoreItems),
     takeEvery('GET_ITEM_BY_ID', getItemById),
+    takeLatest('SUBSCRIBE', subscribe),
+    takeLatest('UNSUBSCRIBE', unsubscribe),
   ]);
 }
