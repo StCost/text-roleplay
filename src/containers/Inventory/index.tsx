@@ -44,6 +44,13 @@ class Inventory extends ItemsTable<IInventoryProps, IInventoryState> {
     if (!user && uid) {
       actions.getUser({ uid });
     }
+    this.setState(JSON.parse(localStorage.getItem('inventory-state') || '{}'));
+  };
+
+  componentDidUpdate = (prevProps: IInventoryProps,prevState: IInventoryState) => {
+    if (prevState !== this.state) {
+      localStorage.setItem('inventory-state', JSON.stringify(this.state));
+    }
   };
 
   getPageControls = () => [

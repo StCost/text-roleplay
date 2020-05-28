@@ -42,6 +42,13 @@ export class Items extends ItemsTable<IItemsProps, IItemsState> {
 
   componentDidMount = () => {
     actions.getItems({});
+    this.setState(JSON.parse(localStorage.getItem('items-state') || '{}'));
+  };
+
+  componentDidUpdate = (prevProps: IItemsProps,prevState: IItemsState) => {
+    if (prevState !== this.state) {
+      localStorage.setItem('items-state', JSON.stringify(this.state));
+    }
   };
 
   getPageControls = () => [

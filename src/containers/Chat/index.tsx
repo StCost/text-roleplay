@@ -47,10 +47,10 @@ class Chat extends Component<IChatProps, IChatState> {
   };
 
   componentDidMount = () => {
-    this.setState({ message: localStorage.getItem('message') || '' });
+    this.setState(JSON.parse(localStorage.getItem('chat-state') || '{}'));
   };
 
-  componentDidUpdate = (prevProps: IChatProps) => {
+  componentDidUpdate = (prevProps: IChatProps, prevState: IChatState) => {
     const { messages, users } = this.props;
 
     if (this.state.sending && prevProps.messages !== messages) {
@@ -66,6 +66,10 @@ class Chat extends Component<IChatProps, IChatState> {
         actions.getUser({ uid: m.author });
       }
     });
+
+    if(prevState !== this.state) {
+      localStorage.setItem('chat-state', JSON.stringify(this.state));
+    }
   };
 
   togglePinned = (showPinned = !this.state.showPinned) =>

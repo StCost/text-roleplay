@@ -6,7 +6,6 @@ import moment from 'moment';
 import { IMessage, IUser } from '../../reducers/interfaces';
 import Avatar from '../../components/Avatar';
 import MessageBody from './MessageBody';
-import { getFullTime } from '../../helpers/utils';
 
 interface IMessageProps {
   message: IMessage,
