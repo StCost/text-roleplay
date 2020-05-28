@@ -38,8 +38,9 @@ const Message = (props: IMessageProps) => {
           return 'online';
       // Fallthrough is intended. If lastOnline is too far - user is not actually online
       case 'afk':
-        return 'afk';
-
+        if (lastOnline + 600000 > new Date().getTime())
+          return 'afk';
+      // Fallthrough is intended. If lastOnline is too far - user is not actually afk
       default:
         return 'offline';
     }
@@ -81,7 +82,7 @@ const Message = (props: IMessageProps) => {
         onClick={() => onDateClick && onDateClick()}
       >
         {moment(time).fromNow()}
-        </div>
+      </div>
       <MessageBody message={props.message} uid={uid}/>
     </Card>
   );
