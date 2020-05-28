@@ -127,7 +127,7 @@ export function* changeMessage(payload: IPayload) {
 
 let blinking = false;
 
-export function* setUnreadMessage(payload: IPayload) {
+export function setUnreadMessage(payload: IPayload) {
   const { unreadMessage } = payload;
   if (unreadMessage === false) return;
 

@@ -15,7 +15,6 @@
     top: 0;
     max-width: 654px;
     width: 100%;
-    height: 100%;
 
     @media(max-width: 767px) {
       top: 48px;
@@ -53,7 +52,11 @@
     z-index: 100;
     width: 100%;
     max-width: 654px;
-    box-shadow: 0 0 10px rgba(0,0,0,0.5);
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+
+    @media(max-width: 767px) {
+      margin-top: 48px;
+    }
 
     &.hidden {
       .chat-message {
@@ -69,10 +72,6 @@
           opacity: 1;
         }
       }
-    }
-
-    @media(max-width: 767px) {
-      top: 48px;
     }
 
     > .anticon {
@@ -109,10 +108,30 @@
     flex-direction: column-reverse;
     align-items: center;
     height: 100%;
-    overflow: auto;
+    overflow: overlay;
     position: relative;
     margin-bottom: 57px;
     transition-duration: 0.3s;
+
+    &::-webkit-scrollbar-track {
+      display: none;
+    }
+
+    &::-webkit-scrollbar {
+      width: 12px;
+      background-color: $background-color;
+
+      @media(max-width: 676px) {
+        background-color: $background-color-light;
+      }
+    }
+
+    &::-webkit-scrollbar-thumb {
+      border-radius: 10px;
+      -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, .3);
+      background-color: $background-color-lightest;
+      border: 1px solid $border-color;
+    }
   }
 
   .chat-message {
