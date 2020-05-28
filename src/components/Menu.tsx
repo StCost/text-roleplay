@@ -9,10 +9,13 @@ import { IState } from '../reducers/interfaces';
 
 interface IMenuProps extends RouteComponentProps {
   isLoggedIn: boolean;
+  unreadMessage: boolean;
 }
 
-function Menu(props: IMenuProps) {
-  if (!props.isLoggedIn) {
+const Menu = (props: IMenuProps) => {
+  const { isLoggedIn, unreadMessage } = props;
+
+  if (!isLoggedIn) {
     return <React.Fragment/>;
   }
 
@@ -26,8 +29,9 @@ function Menu(props: IMenuProps) {
         mode={mode}
         selectedKeys={[props.location.pathname.split('/').pop() || '']}
       >
-        {menu.map((value: IMenuItem) => (
+        {menu.map((value: IMenuItem, index: number) => (
           <AntdMenu.Item
+            className={(index === 0 && unreadMessage) ? 'unread' : ''}
             key={value.path.split('/').pop()}
             disabled={value.path === props.location.pathname}
           >
@@ -42,4 +46,10 @@ function Menu(props: IMenuProps) {
   );
 }
 
-export default connect((state: IState) => ({ isLoggedIn: state.isLoggedIn }))(withRouter(Menu));
+const mapStateToProps = (state: IState) => ({
+  isLoggedIn: state.isLoggedIn,
+  unreadMessage: state.unreadMessage,
+});
+
+
+export default connect(mapStateToProps)(withRouter(Menu));

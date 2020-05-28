@@ -47,13 +47,7 @@ class Chat extends Component<IChatProps, IChatState> {
   };
 
   componentDidMount = () => {
-    actions.getMessages({});
-    actions.subscribe({});
     this.setState({ message: localStorage.getItem('message') || '' });
-  };
-
-  componentWillUnmount = () => {
-    actions.unsubscribe({});
   };
 
   componentDidUpdate = (prevProps: IChatProps) => {

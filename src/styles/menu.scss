@@ -24,6 +24,17 @@
     top: 0;
     left: 0;
 
+    .ant-menu-item.unread {
+      a {
+        animation: pulse-color 2s infinite;
+      }
+
+      svg {
+        border-radius: 50%;
+        animation: pulse-outline 2s infinite;
+      }
+    }
+
     &.ant-menu-horizontal {
       width: 100vw;
       height: 48px;
@@ -36,5 +47,32 @@
     &.ant-menu-inline {
       height: 100vh;
     }
+  }
+}
+
+@keyframes pulse-color {
+  0% {
+  }
+
+  70% {
+    color: #157ddc;
+  }
+
+  100% {
+  }
+}
+
+@keyframes pulse-outline {
+  0% {
+    box-shadow: 0 0 0 0 rgba(52, 172, 224, 0.7);
+  }
+
+  70% {
+    box-shadow: 0 0 0 10px rgba(52, 172, 224, 0);
+    fill: #157ddc;
+  }
+
+  100% {
+    box-shadow: 0 0 0 0 rgba(52, 172, 224, 0);
   }
 }

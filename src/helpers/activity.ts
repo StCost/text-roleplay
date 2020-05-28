@@ -19,25 +19,6 @@ const listenForOnline = () => {
   callback();
 };
 
-let blinking = false;
-export const blinkTitle = () => {
-  if (blinking) return;
-  blinking = true;
-
-  const interval = setInterval(() => {
-    const title = document.head.querySelector('title');
-    if (title) {
-      title.innerText = title.innerText === 'TRP' ? '(!) TRP' : 'TRP';
-
-      if (!blinking || !document.hidden) {
-        title.innerText = 'TRP';
-        clearInterval(interval);
-        blinking = false;
-      }
-    }
-  }, 500);
-};
-
 export const listenForActivity = () => {
   listenForOnline();
 };

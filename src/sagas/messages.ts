@@ -4,7 +4,6 @@ import { IPayload } from '../reducers/actions';
 import actions from '../reducers/actions';
 import { database } from '../helpers/firebase';
 import { formatMessage } from '../helpers/utils';
-import { blinkTitle } from '../helpers/activity';
 
 function* sendMessage(payload: IPayload) {
   const { uid, message, data = {} } = payload;
@@ -13,7 +12,7 @@ function* sendMessage(payload: IPayload) {
   const newMessage = formatMessage({
     time,
     author: uid,
-    body: `${message.replace(/\n/g,' \n')} `,
+    body: `${message.replace(/\n/g, ' \n')} `,
     data,
   });
 
@@ -31,19 +30,26 @@ function* sendMessage(payload: IPayload) {
   }
 }
 
+let firstSkipped = false;
+
 function subscribe() {
   database
     .ref('messages')
     .orderByKey()
     .limitToLast(1)
     .on('value', (rawMessages) => {
+      if (!firstSkipped) {
+        firstSkipped = true;
+        return;
+      }
+
       const messages = Object.values(rawMessages.val() || {});
       actions.getMessagesSuccess({
         messages,
         concat: true
       });
 
-      blinkTitle();
+      actions.setUnreadMessage({ unreadMessage: true });
     });
 }
 
@@ -97,7 +103,7 @@ function uploadFile(payload: IPayload) {
     };
 
     request.send(formData);
-  } catch(error) {
+  } catch (error) {
     actions.notify({ message: 'Изображение не было загружено! Проверьте консоль' });
     console.error(error);
     actions.uploadFileFail({ error });
@@ -119,6 +125,30 @@ export function* changeMessage(payload: IPayload) {
   return newMessage;
 }
 
+let blinking = false;
+
+export function* setUnreadMessage(payload: IPayload) {
+  const { unreadMessage } = payload;
+  if (unreadMessage === false) return;
+
+  if (blinking) return;
+  blinking = true;
+
+  const interval = setInterval(() => {
+    const title = document.head.querySelector('title');
+    if (title) {
+      title.innerText = title.innerText === 'TRP' ? '(!) TRP' : 'TRP';
+
+      if (!blinking || (document.visibilityState === 'visible' && window.location.pathname === '/text-roleplay/chat')) {
+        title.innerText = 'TRP';
+        clearInterval(interval);
+        blinking = false;
+        actions.setUnreadMessage({ unreadMessage: false });
+      }
+    }
+  }, 1000);
+}
+
 export default function* watchForActions() {
   yield all([
     takeLatest('SEND_MESSAGE', sendMessage),
@@ -128,5 +158,6 @@ export default function* watchForActions() {
     takeLatest('UNSUBSCRIBE', unsubscribe),
     takeLatest('UPLOAD_FILE', uploadFile),
     takeLatest('CHANGE_MESSAGE', changeMessage),
+    takeLatest('SET_UNREAD_MESSAGE', setUnreadMessage),
   ]);
 }

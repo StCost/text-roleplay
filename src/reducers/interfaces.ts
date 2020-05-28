@@ -34,6 +34,7 @@ export interface IState {
   redirect?: string;
   usersActivity: { [key: string]: string };
   deletingItemData: IDeletedItemData;
+  unreadMessage: boolean;
 }
 
 export interface IInventoryItem {

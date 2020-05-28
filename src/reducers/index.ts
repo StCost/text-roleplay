@@ -22,6 +22,7 @@ export const initialState: IState = {
   error: false,
   usersActivity: {},
   deletingItemData: defaultDeletedItemData,
+  unreadMessage: false,
 };
 
 const reducer = (state = initialState, action: IAction) => {
@@ -189,6 +190,12 @@ const reducer = (state = initialState, action: IAction) => {
         ...state,
         loading: false,
         items: state.items.filter((item: IItem) => item.id !== action.id),
+      }
+    }
+    case 'SET_UNREAD_MESSAGE': {
+      return {
+        ...state,
+        unreadMessage: !!action.unreadMessage,
       }
     }
     default:

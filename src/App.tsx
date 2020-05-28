@@ -18,7 +18,11 @@ import actions from './reducers/actions';
 const buildDate = (<div className="build-date">build date {window.buildDate.replace('_', ' ')}</div>);
 
 class App extends Component<{ redirect?: string; notify?: string }> {
-  componentDidMount = listenForActivity;
+  componentDidMount = () => {
+    actions.getMessages({});
+    actions.subscribe({});
+    listenForActivity();
+  };
 
   componentDidUpdate = () => {
     const { notify, redirect } = this.props;
