@@ -47,7 +47,10 @@ function subscribe() {
 
   database
     .ref('messages')
+    .orderByKey()
+    .startAt(`${Date.now()}`)
     .on('child_added', handleMessage);
+
   database
     .ref('messages')
     .on('child_changed', handleMessage);
