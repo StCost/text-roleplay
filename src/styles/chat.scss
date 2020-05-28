@@ -38,6 +38,9 @@
 
       &:hover {
         background: $background-color-light;
+        svg {
+          fill: $background-color-selected;
+        }
       }
     }
   }
@@ -92,6 +95,9 @@
 
       &:hover {
         background: $background-color-light;
+        svg {
+          fill: $background-color-selected;
+        }
       }
     }
 
@@ -324,6 +330,12 @@
 
     > .anticon {
       padding: 6px;
+
+      &:hover {
+        svg {
+          fill: $background-color-selected;
+        }
+      }
     }
   }
 }

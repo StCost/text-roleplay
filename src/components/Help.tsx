@@ -70,7 +70,6 @@ export default () => (
 
     <h1>Исправления</h1>
     <pre>
-      - eject и настроить webpack<br/>
       - <br/>
     </pre>
 

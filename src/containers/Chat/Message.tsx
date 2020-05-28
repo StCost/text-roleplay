@@ -77,7 +77,12 @@ const Message = (props: IMessageProps) => {
       title={grouped ? undefined : title}
       key={time}
     >
-      <div className="chat-time">{moment(time).fromNow()}</div>
+      <div
+        className="chat-time"
+        onClick={() => onDateClick && onDateClick()}
+      >
+        {moment(time).fromNow()}
+        </div>
       <MessageBody message={props.message} uid={uid}/>
     </Card>
   );

@@ -183,6 +183,7 @@ div, span, pre, ul, li, h1 {
 
 .anticon svg {
   fill: $text-color;
+  transition-duration: 0.3s;
 }
 
 .ant-spin-nested-loading > div > .ant-spin {

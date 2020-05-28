@@ -3,9 +3,9 @@
 .settings {
   position: relative;
   max-width: 600px;
-  box-shadow: 0 0 10px rgba(0,0,0,0.1);
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 
-  .isAdmin,.nickname {
+  .isAdmin, .nickname {
     margin-top: 24px;
   }
 
@@ -32,6 +32,12 @@
 
     > .ant-card-body {
       padding: 0;
+    }
+  }
+
+  .avatar button:hover {
+    svg {
+      fill: $background-color-selected;
     }
   }
 }

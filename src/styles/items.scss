@@ -43,6 +43,12 @@ div.ant-card.items {
 
     > .ant-btn {
       width: fit-content;
+
+      &:hover {
+        svg {
+          fill: $background-color-selected;
+        }
+      }
     }
 
     > * {
