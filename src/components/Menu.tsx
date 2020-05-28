@@ -44,7 +44,7 @@ const Menu = (props: IMenuProps) => {
       </AntdMenu>
     </div>
   );
-}
+};
 
 const mapStateToProps = (state: IState) => ({
   isLoggedIn: state.isLoggedIn,
