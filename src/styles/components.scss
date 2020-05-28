@@ -86,6 +86,12 @@ img.chat-image {
         position: absolute;
         top: -16px;
         right: -24px;
+        transition-duration: 0.3s;
+        border-radius: 4px;
+
+        &:hover {
+          background: $background-color-light;
+        }
       }
     }
   }

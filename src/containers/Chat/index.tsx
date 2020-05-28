@@ -8,7 +8,9 @@ import {
   SendOutlined,
   DownOutlined,
   EyeOutlined,
-  EyeInvisibleOutlined
+  EyeInvisibleOutlined,
+  ReloadOutlined,
+  SyncOutlined,
 } from '@ant-design/icons';
 import {
   message as notify,
@@ -188,6 +190,13 @@ class Chat extends Component<IChatProps, IChatState> {
     );
   };
 
+  scrollDown = () =>
+    this.bodyRef && this.bodyRef.scrollTo({
+      left: 0,
+      top: Number.MAX_SAFE_INTEGER,
+      behavior: 'smooth'
+    });
+
   bodyRef: HTMLDivElement | null = null;
   render = () => {
     const { messages, loading } = this.props;
@@ -195,6 +204,12 @@ class Chat extends Component<IChatProps, IChatState> {
     return (
       <Spin spinning={loading}>
         <div className="chat-wrapper">
+          <div className="chat-reload">
+            {loading
+              ? <SyncOutlined spin/>
+              : <ReloadOutlined onClick={() => actions.getMessages({})}/>
+            }
+          </div>
           {this.getPinnedMessage(messages)}
           <div
             className="chat-body"
@@ -204,11 +219,7 @@ class Chat extends Component<IChatProps, IChatState> {
             {messages.map(this.getMessage)}
           </div>
           <div className="chat-controls">
-            <DownOutlined onClick={() => this.bodyRef && this.bodyRef.scrollTo({
-              left: 0,
-              top: Number.MAX_SAFE_INTEGER,
-              behavior: 'smooth'
-            })}/>
+            <DownOutlined onClick={this.scrollDown}/>
             <InputUpload
               textArea={true}
               placeholder="Введите сообщение"
