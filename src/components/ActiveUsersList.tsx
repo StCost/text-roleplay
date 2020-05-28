@@ -1,11 +1,12 @@
 import React, { Component } from 'react';
 import { Menu } from 'antd';
 import { connect } from 'react-redux';
+import moment from 'moment';
 
 import '../styles/active-users.scss';
 import { IUsers, IUser, IState } from '../reducers/interfaces';
 import actions from '../reducers/actions';
-import { getFullTime, isOnline } from '../helpers/utils';
+import { isOnline } from '../helpers/utils';
 import Avatar from './Avatar';
 
 interface IActiveUsersListProps {
@@ -58,7 +59,7 @@ class ActiveUsersList extends Component<IActiveUsersListProps> {
               </div>
               {user.lastOnline && (
                 <div className="active-users__online">
-                  {getFullTime(user.lastOnline)}
+                  {moment(user.lastOnline).fromNow()}
                 </div>
               )}
           </div>

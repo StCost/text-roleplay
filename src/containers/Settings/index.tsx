@@ -1,6 +1,7 @@
 import React, { ChangeEvent } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
+import moment from 'moment';
 import {
   Card,
   Input,
@@ -122,7 +123,7 @@ export class Settings extends React.Component<ISettingsProps> {
         return value
           ? (
             <Input
-              value={getFullTime(parseInt(value))}
+              value={`${moment(parseInt(value)).fromNow()} (${getFullTime(parseInt(value))})`}
               readOnly
             />
           ) : (

@@ -1,15 +1,12 @@
 import React from 'react';
 import { Card, Tooltip } from 'antd';
 import { Link } from 'react-router-dom';
+import moment from 'moment';
 
 import { IMessage, IUser } from '../../reducers/interfaces';
 import Avatar from '../../components/Avatar';
 import MessageBody from './MessageBody';
-import {
-  getDate,
-  getFullTime,
-  getTime,
-} from '../../helpers/utils';
+import { getFullTime } from '../../helpers/utils';
 
 interface IMessageProps {
   message: IMessage,
@@ -29,17 +26,18 @@ const Message = (props: IMessageProps) => {
     },
     user,
     uid,
-    onDateClick = () => {},
+    onDateClick = () => {
+    },
   } = props;
 
   const getUserStatus = (user: IUser) => {
     const { status, lastOnline } = user;
 
-    switch(status) {
+    switch (status) {
       case 'online':
         if (lastOnline + 180000 > new Date().getTime())
           return 'online';
-        // Fallthrough is intended. If lastOnline is too far - user is not actually online
+      // Fallthrough is intended. If lastOnline is too far - user is not actually online
       case 'afk':
         return 'afk';
 
@@ -51,7 +49,7 @@ const Message = (props: IMessageProps) => {
   const title = user && (
     <Link to={`./${author}/settings`}>
       <Tooltip
-        title={user.lastOnline ? `Последняя активность: ${getFullTime(user.lastOnline)}` : undefined}
+        title={user.lastOnline ? `Последняя активность: ${moment(user.lastOnline).fromNow()}` : undefined}
         placement="left"
       >
         <div className={`chat-message__title ${getUserStatus(user)}`}>
@@ -79,12 +77,7 @@ const Message = (props: IMessageProps) => {
       title={grouped ? undefined : title}
       key={time}
     >
-      <Tooltip
-        title={<div onClick={onDateClick}>{getDate(time)}</div>}
-        placement="left"
-      >
-        <div className="chat-time">{getTime(time)}</div>
-      </Tooltip>
+      <div className="chat-time">{moment(time).fromNow()}</div>
       <MessageBody message={props.message} uid={uid}/>
     </Card>
   );

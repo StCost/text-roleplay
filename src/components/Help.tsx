@@ -70,7 +70,6 @@ export default () => (
 
     <h1>Исправления</h1>
     <pre>
-      - Подключить moment.js<br/>
       - eject и настроить webpack<br/>
       - <br/>
     </pre>

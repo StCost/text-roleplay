@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import { BrowserRouter, Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { message } from 'antd';
+import moment from 'moment';
+import 'moment/locale/ru';
 import 'antd/dist/antd.css';
 
 import Menu from './components/Menu';
@@ -16,6 +18,7 @@ import actions from './reducers/actions';
 
 // @ts-ignore
 const buildDate = (<div className="build-date">build date {window.buildDate.replace('_', ' ')}</div>);
+moment().locale('ru');
 
 class App extends Component<{ redirect?: string; notify?: string }> {
   componentDidMount = () => {
