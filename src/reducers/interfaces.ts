@@ -53,6 +53,7 @@ export interface IUser {
   avatar: string;
   uid: string,
   lastOnline: number;
+  status?: 'online' | 'offline' | 'afk';
   isAdmin?: boolean;
   inventory: IInventory,
   character?: ICharacter,

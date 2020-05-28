@@ -9,7 +9,6 @@ import {
   getDate,
   getFullTime,
   getTime,
-  isOnline
 } from '../../helpers/utils';
 
 interface IMessageProps {
@@ -33,13 +32,29 @@ const Message = (props: IMessageProps) => {
     onDateClick = () => {},
   } = props;
 
+  const getUserStatus = (user: IUser) => {
+    const { status, lastOnline } = user;
+
+    switch(status) {
+      case 'online':
+        if (lastOnline + 180000 > new Date().getTime())
+          return 'online';
+        // Fallthrough is intended. If lastOnline is too far - user is not actually online
+      case 'afk':
+        return 'afk';
+
+      default:
+        return 'offline';
+    }
+  };
+
   const title = user && (
     <Link to={`./${author}/settings`}>
       <Tooltip
         title={user.lastOnline ? `Последняя активность: ${getFullTime(user.lastOnline)}` : undefined}
         placement="left"
       >
-        <div className={`chat-message__title ${isOnline(user.lastOnline) ? 'online' : ''}`}>
+        <div className={`chat-message__title ${getUserStatus(user)}`}>
           <Avatar
             avatar={user.avatar}
             nickname={user.nickname || user.uid || author}
