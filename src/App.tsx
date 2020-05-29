@@ -21,11 +21,7 @@ const buildDate = (<div className="build-date">build date {window.buildDate.repl
 moment().locale('ru');
 
 class App extends Component<{ redirect?: string; notify?: string }> {
-  componentDidMount = () => {
-    actions.getMessages({});
-    actions.subscribe({});
-    listenForActivity();
-  };
+  componentDidMount = listenForActivity;
 
   componentDidUpdate = () => {
     const { notify, redirect } = this.props;

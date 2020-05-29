@@ -9,6 +9,8 @@ function* login(payload: IPayload) {
   try {
     const user = yield auth.signInWithEmailAndPassword(email, password);
     actions.loginSuccess({ user });
+    actions.getMessages({});
+    actions.subscribe({});
     localStorage.setItem('user', JSON.stringify(user.user));
     localStorage.setItem('uid', user.user.uid);
     return user.user;
