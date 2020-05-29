@@ -9,8 +9,6 @@ function* login(payload: IPayload) {
   try {
     const user = yield auth.signInWithEmailAndPassword(email, password);
     actions.loginSuccess({ user });
-    actions.getMessages({});
-    actions.subscribe({});
     localStorage.setItem('user', JSON.stringify(user.user));
     localStorage.setItem('uid', user.user.uid);
     return user.user;
@@ -61,11 +59,17 @@ function* logout() {
   yield auth.signOut();
 }
 
+function loginSuccess() {
+  actions.getMessages({});
+  actions.subscribe({});
+}
+
 export default function* watchForActions() {
   yield all([
     takeLatest('LOGIN', login),
     takeLatest('REGISTER', register),
     takeLatest('RESET_PASSWORD', resetPassword),
     takeLatest('LOGOUT', logout),
+    takeLatest('LOGIN_SUCCESS', loginSuccess),
   ])
 }
