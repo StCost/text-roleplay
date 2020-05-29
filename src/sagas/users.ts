@@ -15,7 +15,6 @@ function* setUser(payload: IPayload) {
     });
 
   actions.setUserSuccess({});
-  actions.getUser({ uid });
 }
 
 const requestedUsers: { [key: string]: true } = {};
@@ -23,7 +22,10 @@ const requestedUsers: { [key: string]: true } = {};
 function getUser(payload: IPayload) {
   const { uid, currentUser } = payload;
 
-  if (requestedUsers[uid] && !currentUser) return;
+  if (requestedUsers[uid] && !currentUser) {
+    actions.getUserFail({ uid, error: 'User is already listened', requestedUsers });
+    return;
+  }
   requestedUsers[uid] = true;
   const ref = database
     .ref('users')

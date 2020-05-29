@@ -12,6 +12,7 @@ import { RouteComponentProps } from 'react-router';
 
 import { ClearOutlined, SettingOutlined } from '@ant-design/icons';
 
+import '../../styles/settings.scss';
 import actions from '../../reducers/actions';
 import { IState, IUser, defaultUser } from '../../reducers/interfaces';
 import Avatar from '../../components/Avatar';

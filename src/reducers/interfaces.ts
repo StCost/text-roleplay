@@ -70,10 +70,10 @@ export const defaultUser: IUser = {
   nickname: '',
   avatar: '',
 
-  isAdmin: false,
+  approved: false,
   uid: '',
   inventory: {},
-  approved: false,
+  isAdmin: false,
 };
 
 export type ItemType = 'weapon' | 'usable' | 'wearable' | 'junk' | 'ammo' | 'note' | 'key' | 'misc';

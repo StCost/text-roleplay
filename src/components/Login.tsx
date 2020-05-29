@@ -53,8 +53,15 @@ const Login = (props: ILoginProps) => {
         </Tabs.TabPane>
         <Tabs.TabPane tab="Регистрация" key="2">
           <Form
-            onFinish={(values) => actions.register(values)}
+            onFinish={actions.register}
           >
+            <Form.Item
+              label="Никнейм"
+              name="nickname"
+              rules={[{ required: true, message: 'Введите никнейм!' }]}
+            >
+              <Input/>
+            </Form.Item>
             <Form.Item
               label="Email"
               name="email"

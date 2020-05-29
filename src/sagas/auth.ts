@@ -1,7 +1,8 @@
 import { all, takeLatest } from 'redux-saga/effects';
 
-import { auth } from '../helpers/firebase';
+import { auth, database } from '../helpers/firebase';
 import actions, { IPayload } from '../reducers/actions';
+import { defaultUser } from "../reducers/interfaces";
 
 function* login(payload: IPayload) {
   const { email, password } = payload;
@@ -19,7 +20,7 @@ function* login(payload: IPayload) {
 }
 
 function* register(payload: IPayload) {
-  const { email, password, passwordConfirm } = payload;
+  const { email, password, passwordConfirm, nickname } = payload;
 
   if (password !== passwordConfirm) {
     actions.registerFail({ error: { message: 'Пароли не совпадают!' } });
@@ -31,7 +32,18 @@ function* register(payload: IPayload) {
     actions.registerSuccess({});
     const user = yield login(payload);
     if (user) {
-      actions.sendMessage({ uid: user.uid, message: '*[Новый пользователь зарегистрирован]*' });
+      const { uid } = user;
+      yield database
+        .ref(`users/${uid}`)
+        .set({
+          ...defaultUser,
+          uid,
+          nickname,
+          lastOnline: Date.now(),
+          status: 'online',
+        });
+      actions.getUser({ uid, currentUser: true });
+      actions.sendMessage({ uid, message: '*[Новый пользователь зарегистрирован]*' });
     }
   } catch (error) {
     console.error(error);
@@ -45,7 +57,7 @@ function* resetPassword(payload: IPayload) {
     yield auth.sendPasswordResetEmail(email);
     actions.resetPasswordSuccess({});
     actions.notify({ message: 'Ссылка отправлена на E-mail!' });
-  } catch(error) {
+  } catch (error) {
     console.error(error);
     actions.resetPasswordFail({ error });
   }
@@ -53,6 +65,9 @@ function* resetPassword(payload: IPayload) {
 
 
 function* logout() {
+  const uid = localStorage.getItem('uid');
+  actions.setUserStatus({ uid, status: 'offline' });
+
   localStorage.removeItem('user');
   localStorage.removeItem('uid');
   localStorage.removeItem('loggedIn');

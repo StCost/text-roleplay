@@ -20,7 +20,7 @@ const Avatar = (props: IAvatarProps) => {
       style={{ ...style, backgroundColor: _avatar ? 'transparent' : colorFromString(nickname) }}
       {...rest}
     >
-      {nickname && nickname.substr(0, 5)}
+      {nickname && nickname}
     </AntdAvatar>
   )
 };
