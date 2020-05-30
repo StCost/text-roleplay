@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { BrowserRouter, Redirect } from 'react-router-dom';
+import { HashRouter, Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { message } from 'antd';
 import moment from 'moment';
@@ -44,13 +44,13 @@ class App extends Component<{ redirect?: string; notify?: string }> {
     return (
       <>
         {buildDate}
-        <BrowserRouter>
+        <HashRouter>
           {this.getRedirect()}
           <Menu/>
           <div className="app">
             <Router/>
           </div>
-        </BrowserRouter>
+        </HashRouter>
       </>
     );
   }

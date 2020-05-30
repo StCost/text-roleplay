@@ -20,7 +20,7 @@ function* passItem(payload: IPayload) {
       });
       actions.passItemSuccess({});
       actions.notify({ message: `Вы показали ${name}` });
-      actions.redirect({ to: '/text-roleplay/chat' });
+      actions.redirect({ to: '/chat' });
       return true;
     }
 
@@ -39,7 +39,7 @@ function* passItem(payload: IPayload) {
         data: { itemId: id },
       });
       actions.notify({ message: `Вы использовали ${name}` });
-      actions.redirect({ to: '/text-roleplay/chat' });
+      actions.redirect({ to: '/chat' });
       actions.passItemSuccess({});
       return true;
     }
@@ -57,7 +57,7 @@ function* passItem(payload: IPayload) {
       data: { itemId: id, amount: item.amount, type: item.type },
     });
     actions.notify({ message: `Вы выбросили ${name}` });
-    actions.redirect({ to: '/text-roleplay/chat' });
+    actions.redirect({ to: '/chat' });
     actions.passItemSuccess({});
     return true;
   }

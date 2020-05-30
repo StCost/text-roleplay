@@ -1,5 +1,5 @@
 import React, { ChangeEvent } from 'react';
-import { withRouter } from 'react-router';
+import { withRouter, Redirect } from 'react-router';
 import { connect } from 'react-redux';
 import {
   Input,
@@ -216,7 +216,17 @@ class Inventory extends ItemsTable<IInventoryProps, IInventoryState> {
     );
 
   getContent = (items: IItem[]) => {
-    const { currentUser, uid, hasRight } = this.props;
+    const { currentUser, uid, hasRight, user, history } = this.props;
+
+    if (user && user.uid && currentUser && currentUser.uid === user.uid && history.location.pathname === '/inventory') {
+      return (
+        <Redirect
+          from="/inventory"
+          to={`/${currentUser.uid}/inventory`}
+          exact
+        />
+      )
+    }
 
     return (
       <ItemsList

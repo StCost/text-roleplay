@@ -41,7 +41,7 @@ function subscribe() {
       concat: true
     });
 
-    if (document.hidden || !document.hasFocus() || window.location.pathname !== 'text-roleplay/chat')
+    if (document.hidden || !document.hasFocus() || window.location.hash !== '#/chat')
       actions.setUnreadMessage({ unreadMessage: true });
   };
 
@@ -141,7 +141,7 @@ export function setUnreadMessage(payload: IPayload) {
     if (title) {
       title.innerText = title.innerText === 'TRP' ? '(!) TRP' : 'TRP';
 
-      if (!blinking || (document.visibilityState === 'visible' && window.location.pathname === '/text-roleplay/chat')) {
+      if (!blinking || (document.visibilityState === 'visible' && window.location.hash === '#/chat')) {
         title.innerText = 'TRP';
         clearInterval(interval);
         blinking = false;

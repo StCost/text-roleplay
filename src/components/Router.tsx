@@ -49,7 +49,7 @@ function Router(props: IRouterProps) {
           />
         )
       })}
-      <Redirect to="/text-roleplay/chat"/>
+      <Redirect to="/chat"/>
     </Switch>
   );
 }

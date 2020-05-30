@@ -1,5 +1,5 @@
 import React, { ChangeEvent, Component } from 'react';
-import { withRouter } from 'react-router';
+import { withRouter, Redirect } from 'react-router';
 import { connect } from 'react-redux';
 import {
   Form,
@@ -442,7 +442,7 @@ class Character extends Component<ICharacterProps, ICharacter> {
 
 
   render = () => {
-    const { user, hasRight } = this.props;
+    const { user, hasRight, currentUser, history } = this.props;
 
     if (!user) {
       return (
@@ -450,6 +450,16 @@ class Character extends Component<ICharacterProps, ICharacter> {
           <Empty description="Пользователь не загружен"/>
         </Spin>
       );
+    }
+
+    if (user && user.uid && currentUser && currentUser.uid === user.uid && history.location.pathname === '/character') {
+      return (
+        <Redirect
+          from="/character"
+          to={`/${currentUser.uid}/character`}
+          exact
+        />
+      )
     }
 
     return (

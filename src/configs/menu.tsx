@@ -18,7 +18,7 @@ export interface IMenuItem {
 const menu: IMenuItem[] = [
   {
     "label": "Чат",
-    "path": "/text-roleplay/chat",
+    "path": "/chat",
     icon: <MessageOutlined/>,
   },
   {
@@ -38,17 +38,17 @@ const menu: IMenuItem[] = [
   },
   {
     "label": "Предметы",
-    "path": "/text-roleplay/items",
+    "path": "/items",
     icon: <AppstoreAddOutlined/>
   },
   {
     "label": "Помощь",
-    "path": "/text-roleplay/help",
+    "path": "/help",
     icon: <QuestionCircleOutlined/>
   },
   {
     "label": "Выйти",
-    "path": "/text-roleplay/logout",
+    "path": "/logout",
     icon: <LogoutOutlined/>
   }
 ];

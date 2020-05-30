@@ -6,49 +6,49 @@ export interface IRoute {
 
 const routes: IRoute[] = [
   {
-    path: '/text-roleplay/chat',
+    path: '/chat',
     component: 'containers/Chat',
   },
   {
-    path: '/text-roleplay/:uid/settings',
+    path: '/:uid/settings',
     component: 'containers/Settings',
     exact: true,
   },
   {
-    path: '/text-roleplay/:uid/inventory',
+    path: '/:uid/inventory',
     component: 'containers/Inventory',
     exact: true,
   },
   {
-    path: '/text-roleplay/inventory',
+    path: '/inventory',
     component: 'containers/Inventory',
     exact: true,
   },
   {
-    path: '/text-roleplay/:uid/character',
+    path: '/:uid/character',
     component: 'containers/Character',
     exact: true,
   },
   {
-    path: '/text-roleplay/character',
+    path: '/character',
     component: 'containers/Character',
     exact: true,
   },
   {
-    path: '/text-roleplay/settings',
+    path: '/settings',
     component: 'containers/Settings',
     exact: true,
   },
   {
-    path: '/text-roleplay/items',
+    path: '/items',
     component: 'containers/Items',
   },
   {
-    path: '/text-roleplay/help',
+    path: '/help',
     component: 'components/Help',
   },
   {
-    path: '/text-roleplay/logout',
+    path: '/logout',
     component: 'components/Logout',
   },
 ];

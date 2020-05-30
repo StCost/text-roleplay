@@ -181,11 +181,11 @@ export class Settings extends React.Component<ISettingsProps> {
   render = () => {
     const { user, loading, currentUser, history } = this.props;
 
-    if (user && user.uid && currentUser && currentUser.uid === user.uid && history.location.pathname === '/text-roleplay/settings') {
+    if (user && user.uid && currentUser && currentUser.uid === user.uid && history.location.pathname === '/settings') {
       return (
         <Redirect
-          from="/text-roleplay/settings"
-          to={`/text-roleplay/${currentUser.uid}/settings`}
+          from="/settings"
+          to={`/${currentUser.uid}/settings`}
           exact
         />
       )
