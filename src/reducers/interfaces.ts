@@ -32,7 +32,6 @@ export interface IState {
   error: Error | false;
   notify?: string;
   redirect?: string;
-  usersActivity: { [key: string]: string };
   deletingItemData: IDeletedItemData;
   unreadMessage: boolean;
 }

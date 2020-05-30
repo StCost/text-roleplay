@@ -7,6 +7,7 @@ import {
   AppstoreAddOutlined,
   QuestionCircleOutlined,
   LogoutOutlined,
+  UsergroupAddOutlined,
 } from '@ant-design/icons';
 
 export interface IMenuItem {
@@ -40,6 +41,11 @@ const menu: IMenuItem[] = [
     "label": "Предметы",
     "path": "/items",
     icon: <AppstoreAddOutlined/>
+  },
+  {
+    "label": "Пользователи",
+    "path": "/users",
+    icon: <UsergroupAddOutlined/>
   },
   {
     "label": "Помощь",

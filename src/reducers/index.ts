@@ -4,7 +4,7 @@ import {
   defaultUser,
   IAction,
   IItem,
-  IState
+  IState, IUsers
 } from './interfaces';
 
 const user = JSON.parse(localStorage.getItem('user') || 'null');
@@ -20,7 +20,6 @@ export const initialState: IState = {
   currentUser: null,
   items: [],
   error: false,
-  usersActivity: {},
   deletingItemData: defaultDeletedItemData,
   unreadMessage: false,
 };
@@ -39,7 +38,7 @@ const reducer = (state = initialState, action: IAction) => {
     case 'GIVE_ITEM':
     case 'REMOVE_ITEM':
     case 'PASS_ITEM':
-    case 'GET_USERS_ACTIVITY':
+    case 'GET_USERS_BASE':
     case 'REGISTER':
     case 'RESET_PASSWORD':
     case 'UPLOAD_FILE': {
@@ -58,7 +57,7 @@ const reducer = (state = initialState, action: IAction) => {
     case 'REMOVE_ITEM_FAIL':
     case 'PASS_ITEM_SUCCESS':
     case 'PASS_ITEM_FAIL':
-    case 'GET_USERS_ACTIVITY_FAIL':
+    case 'GET_USERS_BASE_FAIL':
     case 'DELETE_ITEM_FAIL':
     case 'RESET_PASSWORD_FAIL':
     case 'UPLOAD_FILE_SUCCESS':
@@ -134,6 +133,22 @@ const reducer = (state = initialState, action: IAction) => {
         },
       }
     }
+    case 'GET_USERS_BASE_SUCCESS': {
+      const users: IUsers = action.users;
+      const newUsers: IUsers = {};
+      Object.entries(users).forEach(([uid, user]) => {
+        newUsers[uid] = {
+          ...state.users[uid],
+          ...user,
+        }
+      });
+
+      return {
+        ...state,
+        loading: false,
+        users: newUsers,
+      }
+    }
     case 'GET_ITEMS_SUCCESS': {
       const items: { [key: string]: IItem } = {};
       [...state.items, ...action.items]
@@ -167,13 +182,6 @@ const reducer = (state = initialState, action: IAction) => {
       return {
         ...state,
         redirect: undefined,
-      }
-    }
-    case 'GET_USERS_ACTIVITY_SUCCESS': {
-      return {
-        ...state,
-        loading: false,
-        usersActivity: action.usersActivity,
       }
     }
     case 'DELETE_ITEM': {

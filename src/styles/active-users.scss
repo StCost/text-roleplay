@@ -4,16 +4,15 @@
   border: none;
 
   .active-users__item {
-    width: 100%;
     background-color: $background-color-interactive;
-    border: 1px solid $border-color-interactive;
+    border: 1px solid #112a45;
     border-radius: 4px;
     margin: 6px;
-    cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding-right: 6px;
+    padding: 0 6px;
+    height: auto;
 
     &:hover {
       background-color: $background-color-selected;

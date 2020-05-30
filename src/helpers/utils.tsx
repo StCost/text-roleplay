@@ -1,7 +1,7 @@
 import React from 'react';
 import { message as notify } from 'antd';
 
-import { IItem, IMessage } from '../reducers/interfaces';
+import { IItem, IMessage, IUser } from '../reducers/interfaces';
 import { diceRegex, exportRolls, hasDice } from './dice';
 import Image from "../components/Image";
 import YoutubeEmbed from "../components/YoutubeEmbed";
@@ -208,4 +208,21 @@ export const processLinks = (body: string) => {
     );
   }
   return null;
+};
+
+export const getUserStatus = (user: IUser) => {
+  const { status, lastOnline } = user;
+
+  switch (status) {
+    case 'online':
+      if (lastOnline + 180000 > Date.now())
+        return 'online';
+    // Fallthrough is intended. If lastOnline is too far - user is not actually online
+    case 'afk':
+      if (lastOnline + 600000 > Date.now())
+        return 'afk';
+    // Fallthrough is intended. If lastOnline is too far - user is not actually afk
+    default:
+      return 'offline';
+  }
 };

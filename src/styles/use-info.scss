@@ -1,0 +1,40 @@
+@import "./colors";
+
+.user-info {
+  height: auto;
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+
+  .user-info-title {
+    display: flex;
+    align-items: center;
+    color: black;
+    width: fit-content;
+
+    &.online {
+      .ant-avatar {
+        border-color: $background-color-selected;
+      }
+    }
+
+    &.afk {
+      .ant-avatar {
+        border-color: #dcc825;
+      }
+    }
+
+    .ant-avatar {
+      background-color: transparent;
+      border: 2px solid $border-color;
+      margin: -4px 0;
+      display: block;
+      box-sizing: content-box;
+      transition-duration: 0.5s;
+    }
+
+    .user-info-nickname {
+      margin-left: 12px;
+    }
+  }
+}

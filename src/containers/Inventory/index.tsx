@@ -13,7 +13,7 @@ import '../../styles/items.scss';
 import { IInventory, IItem, IState, IUser } from '../../reducers/interfaces';
 import actions from '../../reducers/actions';
 import ItemsList, { IControl } from '../ItemsTable/ItemsList';
-import ActiveUsersList from '../../components/ActiveUsersList';
+import ActiveUsersList from '../../components/UsersList';
 import ItemsTable, { IItemsTableProps, IItemsTableState } from '../ItemsTable';
 import amountModal from '../../components/AmountModal';
 import { getItemName } from '../../helpers/utils';
@@ -243,7 +243,7 @@ class Inventory extends ItemsTable<IInventoryProps, IInventoryState> {
 }
 
 const mapStateToProps = (state: IState, props: IInventoryProps) => {
-  const { loading, users, currentUser, items, messages, usersActivity } = state;
+  const { loading, users, currentUser, items, messages } = state;
 
   const uid = new URLSearchParams(props.match.params).get('uid') || state.uid || localStorage.getItem('uid') || '0';
   const user = users[uid];
@@ -263,7 +263,6 @@ const mapStateToProps = (state: IState, props: IInventoryProps) => {
     users,
     messages,
     hasRight: (!!user && !!currentUser) && user.approved && (currentUser.uid === user.uid || !!currentUser.isAdmin),
-    usersActivity,
   };
 };
 

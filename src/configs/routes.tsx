@@ -44,6 +44,10 @@ const routes: IRoute[] = [
     component: 'containers/Items',
   },
   {
+    path: '/users',
+    component: 'components/Users',
+  },
+  {
     path: '/help',
     component: 'components/Help',
   },

@@ -174,44 +174,6 @@
       }
     }
 
-    .ant-card-head-title > a {
-      height: auto;
-      display: block;
-      width: fit-content;
-
-      .chat-message__title {
-        display: flex;
-        align-items: center;
-        color: black;
-        width: fit-content;
-
-        &.online {
-          .ant-avatar {
-            border-color: $background-color-selected;
-          }
-        }
-
-        &.afk {
-          .ant-avatar {
-            border-color: #dcc825;
-          }
-        }
-
-        .ant-avatar {
-          background-color: transparent;
-          border: 2px solid $border-color;
-          margin: -4px 0;
-          display: block;
-          box-sizing: content-box;
-          transition-duration: 0.5s;
-        }
-
-        .chat-message__nickname {
-          margin-left: 12px;
-        }
-      }
-    }
-
     .chat-time {
       cursor: pointer;
       position: absolute;

@@ -6,6 +6,7 @@ import moment from 'moment';
 import { IMessage, IUser } from '../../reducers/interfaces';
 import Avatar from '../../components/Avatar';
 import MessageBody from './MessageBody';
+import UserInfo from "../../components/UserInfo";
 
 interface IMessageProps {
   message: IMessage,
@@ -21,7 +22,6 @@ const Message = (props: IMessageProps) => {
       grouped,
       body,
       mentioned,
-      author,
     },
     user,
     uid,
@@ -29,41 +29,7 @@ const Message = (props: IMessageProps) => {
     },
   } = props;
 
-  const getUserStatus = (user: IUser) => {
-    const { status, lastOnline } = user;
-
-    switch (status) {
-      case 'online':
-        if (lastOnline + 180000 > Date.now())
-          return 'online';
-      // Fallthrough is intended. If lastOnline is too far - user is not actually online
-      case 'afk':
-        if (lastOnline + 600000 > Date.now())
-          return 'afk';
-      // Fallthrough is intended. If lastOnline is too far - user is not actually afk
-      default:
-        return 'offline';
-    }
-  };
-
-  const title = user && (
-    <Link to={`./${author}/settings`}>
-      <Tooltip
-        title={user.lastOnline ? `Последняя активность: ${moment(user.lastOnline).fromNow()}` : undefined}
-        placement="left"
-      >
-        <div className={`chat-message__title ${getUserStatus(user)}`}>
-          <Avatar
-            avatar={user.avatar}
-            nickname={user.nickname || user.uid || author}
-          />
-          <div className="chat-message__nickname">
-            {user.nickname || user.uid || author}
-          </div>
-        </div>
-      </Tooltip>
-    </Link>
-  );
+  const title = user && <UserInfo user={user}/>;
 
   const className = [
     'chat-message',

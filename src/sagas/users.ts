@@ -14,6 +14,18 @@ function* setUser(payload: IPayload) {
       uid,
     });
 
+  const { nickname = '', avatar = '', lastOnline = 0, status = 'offline' } = user;
+  yield database
+    .ref('users-base')
+    .child(uid)
+    .set({
+      uid,
+      nickname,
+      avatar,
+      lastOnline,
+      status,
+    });
+
   actions.setUserSuccess({});
 }
 
@@ -65,18 +77,19 @@ function* updateLastOnline() {
     .set('online');
 
   yield database
-    .ref('usersActivity')
+    .ref('users-base')
     .child(`${uid}`)
+    .child('lastOnline')
     .set(time);
 }
 
-function* getUsersActivity() {
-  const rawActivity = yield database
-    .ref('usersActivity')
+function* getUsersBase() {
+  const rawUsers = yield database
+    .ref('users-base')
     .once('value');
 
-  const usersActivity = (rawActivity.val() || {});
-  actions.getUsersActivitySuccess({ usersActivity });
+  const users = rawUsers.val();
+  actions.getUsersBaseSuccess({ users });
 }
 
 export function* setUserStatus(payload: IPayload) {
@@ -96,7 +109,7 @@ export default function* watchForActions() {
     takeLatest('GET_USER', getUser),
     takeLatest('SET_USER', setUser),
     takeLatest('UPDATE_LAST_ONLINE', updateLastOnline),
-    takeLatest('GET_USERS_ACTIVITY', getUsersActivity),
+    takeLatest('GET_USERS_BASE', getUsersBase),
     takeEvery('SET_USER_STATUS', setUserStatus),
   ]);
 }

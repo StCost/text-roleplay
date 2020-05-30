@@ -49,7 +49,7 @@ const actions: IActions = {
   ...createAsyncAction('TAKE_ITEM'),
   ...createAsyncAction('NOTIFY'),
   ...createAsyncAction('REDIRECT'),
-  ...createAsyncAction('GET_USERS_ACTIVITY'),
+  ...createAsyncAction('GET_USERS_BASE'),
   ...createAsyncAction('DELETE_ITEM'),
   ...createAsyncAction('SET_USER_STATUS'),
   setUnreadMessage: createAction('SET_UNREAD_MESSAGE'),
