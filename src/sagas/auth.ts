@@ -1,6 +1,6 @@
 import { all, takeLatest } from 'redux-saga/effects';
 
-import { auth, database } from '../helpers/firebase';
+import { auth } from '../helpers/firebase';
 import actions, { IPayload } from '../reducers/actions';
 import { defaultUser } from "../reducers/interfaces";
 
@@ -33,15 +33,16 @@ function* register(payload: IPayload) {
     const user = yield login(payload);
     if (user) {
       const { uid } = user;
-      yield database
-        .ref(`users/${uid}`)
-        .set({
+      actions.setUser({
+        uid,
+        user: {
           ...defaultUser,
           uid,
           nickname,
           lastOnline: Date.now(),
           status: 'online',
-        });
+        }
+      });
       actions.getUser({ uid, currentUser: true });
       actions.sendMessage({ uid, message: '*[Новый пользователь зарегистрирован]*' });
     }

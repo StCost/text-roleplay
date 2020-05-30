@@ -7,6 +7,7 @@ import {
   Card,
   Alert,
   Tabs,
+  Spin,
 } from 'antd';
 
 import actions from '../reducers/actions';
@@ -21,106 +22,108 @@ const Login = (props: ILoginProps) => {
   const { error, loading } = props;
 
   return (
-    <Card loading={loading}>
-      <Tabs defaultActiveKey="1">
-        <Tabs.TabPane tab="Логин" key="1">
-          <Form
-            onFinish={(values) => actions.login(values)}
-          >
-            <Form.Item
-              label="Email"
-              name="email"
-              rules={[{ required: true, message: 'Введите e-mail!' }]}
+    <Card>
+      <Spin spinning={loading}>
+        <Tabs defaultActiveKey="1">
+          <Tabs.TabPane tab="Логин" key="1">
+            <Form
+              onFinish={(values) => actions.login(values)}
             >
-              <Input/>
-            </Form.Item>
-            <Form.Item
-              label="Password"
-              name="password"
-              rules={[{ required: true, message: 'Введите пароль!' }]}
-            >
-              <Input.Password/>
-            </Form.Item>
-            <Form.Item>
-              <Button
-                type="primary"
-                htmlType="submit"
+              <Form.Item
+                label="Email"
+                name="email"
+                rules={[{ required: true, message: 'Введите e-mail!' }]}
               >
-                Войти
-              </Button>
-            </Form.Item>
-          </Form>
-        </Tabs.TabPane>
-        <Tabs.TabPane tab="Регистрация" key="2">
-          <Form
-            onFinish={actions.register}
-          >
-            <Form.Item
-              label="Никнейм"
-              name="nickname"
-              rules={[{ required: true, message: 'Введите никнейм!' }]}
-            >
-              <Input/>
-            </Form.Item>
-            <Form.Item
-              label="Email"
-              name="email"
-              rules={[{ required: true, message: 'Введите e-mail!' }]}
-            >
-              <Input/>
-            </Form.Item>
-            <Form.Item
-              label="Password"
-              name="password"
-              rules={[{ required: true, message: 'Введите пароль!' }]}
-            >
-              <Input.Password/>
-            </Form.Item>
-            <Form.Item
-              label="Confirm Password"
-              name="passwordConfirm"
-              rules={[{ required: true, message: 'Подтвердите парол!' }]}
-            >
-              <Input.Password/>
-            </Form.Item>
-            <Form.Item>
-              <Button
-                type="primary"
-                htmlType="submit"
+                <Input/>
+              </Form.Item>
+              <Form.Item
+                label="Password"
+                name="password"
+                rules={[{ required: true, message: 'Введите пароль!' }]}
               >
-                Зарегистрировать
-              </Button>
-            </Form.Item>
-          </Form>
-        </Tabs.TabPane>
-        <Tabs.TabPane tab="Восстановить" key="3">
-          <Form
-            onFinish={(values) => actions.resetPassword(values)}
-          >
-            <Form.Item
-              label="Email"
-              name="email"
-              rules={[{ required: true, message: 'Введите e-mail!' }]}
+                <Input.Password/>
+              </Form.Item>
+              <Form.Item>
+                <Button
+                  type="primary"
+                  htmlType="submit"
+                >
+                  Войти
+                </Button>
+              </Form.Item>
+            </Form>
+          </Tabs.TabPane>
+          <Tabs.TabPane tab="Регистрация" key="2">
+            <Form
+              onFinish={actions.register}
             >
-              <Input/>
-            </Form.Item>
-            <Form.Item>
-              <Button
-                type="primary"
-                htmlType="submit"
+              <Form.Item
+                label="Никнейм"
+                name="nickname"
+                rules={[{ required: true, message: 'Введите никнейм!' }]}
               >
-                Отправить E-mail
-              </Button>
-            </Form.Item>
-          </Form>
-        </Tabs.TabPane>
-      </Tabs>
-      {error && (
-        <Alert
-          type="error"
-          message={error.message}
-        />
-      )}
+                <Input/>
+              </Form.Item>
+              <Form.Item
+                label="Email"
+                name="email"
+                rules={[{ required: true, message: 'Введите e-mail!' }]}
+              >
+                <Input/>
+              </Form.Item>
+              <Form.Item
+                label="Password"
+                name="password"
+                rules={[{ required: true, message: 'Введите пароль!' }]}
+              >
+                <Input.Password/>
+              </Form.Item>
+              <Form.Item
+                label="Confirm Password"
+                name="passwordConfirm"
+                rules={[{ required: true, message: 'Подтвердите парол!' }]}
+              >
+                <Input.Password/>
+              </Form.Item>
+              <Form.Item>
+                <Button
+                  type="primary"
+                  htmlType="submit"
+                >
+                  Зарегистрировать
+                </Button>
+              </Form.Item>
+            </Form>
+          </Tabs.TabPane>
+          <Tabs.TabPane tab="Восстановить" key="3">
+            <Form
+              onFinish={(values) => actions.resetPassword(values)}
+            >
+              <Form.Item
+                label="Email"
+                name="email"
+                rules={[{ required: true, message: 'Введите e-mail!' }]}
+              >
+                <Input/>
+              </Form.Item>
+              <Form.Item>
+                <Button
+                  type="primary"
+                  htmlType="submit"
+                >
+                  Отправить E-mail
+                </Button>
+              </Form.Item>
+            </Form>
+          </Tabs.TabPane>
+        </Tabs>
+        {error && (
+          <Alert
+            type="error"
+            message={error.message}
+          />
+        )}
+      </Spin>
     </Card>
   );
 };

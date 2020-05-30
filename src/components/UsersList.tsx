@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { Menu } from 'antd';
 import { connect } from 'react-redux';
-import moment from 'moment';
 
 import '../styles/active-users.scss';
 import { IUsers, IUser, IState } from '../reducers/interfaces';

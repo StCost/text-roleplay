@@ -18,7 +18,7 @@ const Logout = () => {
       <Button
         type="primary"
         size="large"
-        onClick={() => actions.logout({ })}
+        onClick={() => actions.logout({})}
         style={{ width: '100%' }}
       >
         Выйти

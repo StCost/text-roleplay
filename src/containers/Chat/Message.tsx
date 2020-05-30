@@ -1,10 +1,8 @@
 import React from 'react';
-import { Card, Tooltip } from 'antd';
-import { Link } from 'react-router-dom';
+import { Card } from 'antd';
 import moment from 'moment';
 
 import { IMessage, IUser } from '../../reducers/interfaces';
-import Avatar from '../../components/Avatar';
 import MessageBody from './MessageBody';
 import UserInfo from "../../components/UserInfo";
 
