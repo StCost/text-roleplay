@@ -1,6 +1,6 @@
 import React, { ChangeEvent } from 'react';
 import { connect } from 'react-redux';
-import { withRouter } from 'react-router';
+import { withRouter, Redirect } from 'react-router';
 import moment from 'moment';
 import {
   Card,
@@ -81,7 +81,7 @@ export class Settings extends React.Component<ISettingsProps> {
                 placeholder="Введите сообщение"
                 onChange={this.onChange(key)}
                 value={value}
-                disabled={disabled}
+                readOnly={disabled}
                 onUpload={(avatar: string) => {
                   actions.notify({ message: 'Файл успешно загружен!' });
                   this.rawOnChange(key, avatar);
@@ -179,7 +179,17 @@ export class Settings extends React.Component<ISettingsProps> {
   };
 
   render = () => {
-    const { user, loading } = this.props;
+    const { user, loading, currentUser, history } = this.props;
+
+    if (user && user.uid && currentUser && currentUser.uid === user.uid && history.location.pathname === '/text-roleplay/settings') {
+      return (
+        <Redirect
+          from="/text-roleplay/settings"
+          to={`/text-roleplay/${currentUser.uid}/settings`}
+          exact
+        />
+      )
+    }
 
     return (
       <Card
