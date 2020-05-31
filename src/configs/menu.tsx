@@ -8,6 +8,7 @@ import {
   QuestionCircleOutlined,
   LogoutOutlined,
   UsergroupAddOutlined,
+  IdcardOutlined,
 } from '@ant-design/icons';
 
 export interface IMenuItem {
@@ -18,20 +19,31 @@ export interface IMenuItem {
 
 const menu: IMenuItem[] = [
   {
-    "label": "Чат",
-    "path": "/chat",
+    "label": "Логи",
+    "path": "/logs",
     icon: <MessageOutlined/>,
   },
+  {
+    "label": "Выйти",
+    "path": "/logout",
+    icon: <LogoutOutlined/>
+  }
+];
+
+export const characterMenu: IMenuItem[] = [
   {
     "label": "Инвентарь",
     "path": "./inventory",
     icon: <DatabaseOutlined/>,
   },
   {
-    "label": "Персонаж",
-    "path": "./character",
-    icon: <UserOutlined/>
+    "label": "Характеристики",
+    "path": "./stats",
+    icon: <IdcardOutlined/>
   },
+];
+
+export const userMenu: IMenuItem[] = [
   {
     "label": "Настройки",
     "path": "./settings",
@@ -52,11 +64,6 @@ const menu: IMenuItem[] = [
     "path": "/help",
     icon: <QuestionCircleOutlined/>
   },
-  {
-    "label": "Выйти",
-    "path": "/logout",
-    icon: <LogoutOutlined/>
-  }
 ];
 
 export default menu;

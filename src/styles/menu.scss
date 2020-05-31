@@ -1,4 +1,11 @@
+@import "./colors";
+
 .menu {
+  display: flex;
+  align-items: center;
+  background-color: $background-color-light;
+  min-width: 200px;
+
   @media(max-width: 767px) {
     position: fixed;
     width: 100vw;
@@ -17,12 +24,21 @@
   }
 
   .ant-menu {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    position: sticky;
-    top: 0;
-    left: 0;
+    .ant-menu-submenu {
+      &.ant-menu-submenu-active {
+        .ant-menu-submenu-arrow {
+          &:before, &:after {
+            background: $background-color-selected;
+          }
+        }
+      }
+
+      .ant-menu-submenu-arrow {
+        &:before, &:after {
+          background: $background-color-lightest;
+        }
+      }
+    }
 
     .ant-menu-item.unread {
       a {
@@ -42,10 +58,6 @@
       z-index: 2;
       flex-direction: row;
       box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    }
-
-    &.ant-menu-inline {
-      height: 100vh;
     }
   }
 }
