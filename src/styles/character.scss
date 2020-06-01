@@ -17,6 +17,16 @@ div.ant-card.char {
       }
     }
   }
+  .ant-input {
+    &:disabled {
+      color: $text-color;
+    }
+  }
+  .ant-input-number {
+    input:disabled {
+      color: $text-color;
+    }
+  }
 
   .ant-card {
     width: fit-content;
