@@ -1,10 +1,11 @@
 import React from 'react';
 import { message as notify } from 'antd';
 
-import { IItem, IMessage, IUser } from '../reducers/interfaces';
+import { IItem, IMessage, IState, IUser } from '../reducers/interfaces';
 import { diceRegex, exportRolls, hasDice } from './dice';
 import Image from "../components/Image";
 import YoutubeEmbed from "../components/YoutubeEmbed";
+import { RouteComponentProps } from "react-router";
 
 export const camelize = (str: string) => {
   return str
@@ -226,3 +227,22 @@ export const getUserStatus = (user: IUser) => {
       return 'offline';
   }
 };
+
+export const getStateUser = (state: IState, props: RouteComponentProps) => {
+  const { users, currentUser, loading } = state;
+
+  const uid = new URLSearchParams(props.match.params).get('uid') || state.uid || localStorage.getItem('uid') || '0';
+  const user = users[uid];
+  if (user && !user.uid && uid) {
+    user.uid = uid;
+  }
+
+  return {
+    loading,
+    user,
+    uid,
+    hasRight: (!!user && !!currentUser) && (currentUser.uid === user.uid || !!currentUser.isAdmin),
+    currentUser,
+  }
+};
+

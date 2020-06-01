@@ -3,6 +3,7 @@ import { all, takeLatest } from 'redux-saga/effects';
 import { auth } from '../helpers/firebase';
 import actions, { IPayload } from '../reducers/actions';
 import { defaultUser } from "../reducers/interfaces";
+import { listenForActivity } from "../helpers/activity";
 
 function* login(payload: IPayload) {
   const { email, password } = payload;
@@ -78,6 +79,7 @@ function* logout() {
 function loginSuccess() {
   actions.getMessages({});
   actions.subscribe({});
+  listenForActivity();
 }
 
 export default function* watchForActions() {

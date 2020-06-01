@@ -47,6 +47,12 @@ export interface IInventory {
   [key: string]: IInventoryItem;
 }
 
+export interface IPerk {
+  id: number;
+  label: string;
+  description: string;
+}
+
 export interface IUser {
   nickname: string;
   avatar: string;
@@ -57,6 +63,7 @@ export interface IUser {
   inventory: IInventory,
   character?: ICharacter,
   approved: boolean;
+  perks: IPerk[];
 }
 
 export interface IUsers {
@@ -72,6 +79,7 @@ export const defaultUser: IUser = {
   approved: false,
   uid: '',
   inventory: {},
+  perks: [],
   isAdmin: false,
 };
 

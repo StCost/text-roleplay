@@ -2,13 +2,13 @@ import React from 'react';
 import {
   MessageOutlined,
   DatabaseOutlined,
-  UserOutlined,
   SettingOutlined,
   AppstoreAddOutlined,
   QuestionCircleOutlined,
   LogoutOutlined,
-  UsergroupAddOutlined,
+  TeamOutlined,
   IdcardOutlined,
+  TrophyOutlined,
 } from '@ant-design/icons';
 
 export interface IMenuItem {
@@ -20,8 +20,8 @@ export interface IMenuItem {
 const menu: IMenuItem[] = [
   {
     "label": "Логи",
-    "path": "/logs",
-    icon: <MessageOutlined/>,
+    "path": "/chat",
+    icon: <MessageOutlined/>
   },
   {
     "label": "Выйти",
@@ -32,9 +32,14 @@ const menu: IMenuItem[] = [
 
 export const characterMenu: IMenuItem[] = [
   {
+    "label": "Перки",
+    "path": "./perks",
+    icon: <TrophyOutlined />
+  },
+  {
     "label": "Инвентарь",
     "path": "./inventory",
-    icon: <DatabaseOutlined/>,
+    icon: <DatabaseOutlined/>
   },
   {
     "label": "Характеристики",
@@ -57,7 +62,7 @@ export const userMenu: IMenuItem[] = [
   {
     "label": "Пользователи",
     "path": "/users",
-    icon: <UsergroupAddOutlined/>
+    icon: <TeamOutlined/>
   },
   {
     "label": "Помощь",

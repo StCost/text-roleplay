@@ -19,7 +19,7 @@ import { RouteComponentProps } from 'react-router';
 import { diff } from 'deep-object-diff';
 
 import '../../styles/character.scss';
-import { IState, IUser } from '../../reducers/interfaces';
+import { IUser } from '../../reducers/interfaces';
 import {
   initialCharacter,
   special as configSpecial,
@@ -34,6 +34,7 @@ import {
   ICharacterChanges,
 } from './config';
 import actions from '../../reducers/actions';
+import { getStateUser } from "../../helpers/utils";
 
 interface ICharacterProps extends RouteComponentProps {
   loading: boolean;
@@ -514,22 +515,4 @@ class Character extends Component<ICharacterProps, ICharacter> {
   }
 }
 
-const mapStateToProps = (state: IState, props: ICharacterProps) => {
-  const { loading, users, currentUser } = state;
-
-  const uid = new URLSearchParams(props.match.params).get('uid') || state.uid || localStorage.getItem('uid') || '0';
-  const user = users[uid];
-  if (user && !user.uid && uid) {
-    user.uid = uid;
-  }
-
-  return {
-    loading,
-    user,
-    uid,
-    hasRight: (!!user && !!currentUser) && user.approved && (currentUser.uid === user.uid || !!currentUser.isAdmin),
-    currentUser,
-  };
-};
-
-export default withRouter(connect(mapStateToProps)(Character));
+export default withRouter(connect(getStateUser)(Character));

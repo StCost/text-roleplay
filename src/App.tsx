@@ -12,7 +12,6 @@ import Router from './components/Router';
 import './App.css';
 import './styles/antd-dark.scss';
 import './styles/components.scss';
-import { listenForActivity } from './helpers/activity';
 import { IState } from './reducers/interfaces';
 import actions from './reducers/actions';
 
@@ -21,8 +20,6 @@ const buildDate = (<div className="build-date">build date {window.buildDate.repl
 moment().locale('ru');
 
 class App extends Component<{ redirect?: string; notify?: string }> {
-  componentDidMount = listenForActivity;
-
   componentDidUpdate = () => {
     const { notify, redirect } = this.props;
 

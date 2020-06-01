@@ -11,7 +11,11 @@ interface IMessageProps {
   user: IUser,
   uid: string;
   onDateClick?: () => void;
+  onUserClick?: () => void;
 }
+
+const noop = () => {
+};
 
 const Message = (props: IMessageProps) => {
   const {
@@ -23,11 +27,16 @@ const Message = (props: IMessageProps) => {
     },
     user,
     uid,
-    onDateClick = () => {
-    },
+    onDateClick = noop,
+    onUserClick = noop,
   } = props;
 
-  const title = user && <UserInfo user={user}/>;
+  const title = user && (
+    <UserInfo
+      user={user}
+      onClick={onUserClick}
+    />
+  );
 
   const className = [
     'chat-message',

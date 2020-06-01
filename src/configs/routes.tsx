@@ -6,7 +6,7 @@ export interface IRoute {
 
 const routes: IRoute[] = [
   {
-    path: '/logs',
+    path: '/chat',
     component: 'containers/Chat',
   },
   {
@@ -22,6 +22,16 @@ const routes: IRoute[] = [
   {
     path: '/inventory',
     component: 'containers/Inventory',
+    exact: true,
+  },
+  {
+    path: '/:uid/perks',
+    component: 'containers/Perks',
+    exact: true,
+  },
+  {
+    path: '/perks',
+    component: 'containers/Perks',
     exact: true,
   },
   {

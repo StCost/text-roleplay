@@ -12,6 +12,10 @@
     color: black;
     width: fit-content;
 
+    &.interactive {
+      cursor: pointer;
+    }
+
     &.online {
       .ant-avatar {
         border-color: $background-color-selected;

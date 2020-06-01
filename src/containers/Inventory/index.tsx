@@ -16,7 +16,7 @@ import ItemsList, { IControl } from '../ItemsTable/ItemsList';
 import ActiveUsersList from '../../components/UsersList';
 import ItemsTable, { IItemsTableProps, IItemsTableState } from '../ItemsTable';
 import amountModal from '../../components/AmountModal';
-import { getItemName } from '../../helpers/utils';
+import { getItemName, getStateUser } from '../../helpers/utils';
 
 interface IInventoryProps extends IItemsTableProps {
   inventory: IInventory;
@@ -243,26 +243,19 @@ class Inventory extends ItemsTable<IInventoryProps, IInventoryState> {
 }
 
 const mapStateToProps = (state: IState, props: IInventoryProps) => {
-  const { loading, users, currentUser, items, messages } = state;
+  const { users, items, messages } = state;
 
-  const uid = new URLSearchParams(props.match.params).get('uid') || state.uid || localStorage.getItem('uid') || '0';
-  const user = users[uid];
-  if (user && !user.uid && uid) {
-    user.uid = uid;
-  }
+  const userData = getStateUser(state, props);
+  const { user } = userData;
 
   const inventory = user ? user.inventory : {};
 
   return {
-    loading,
-    uid,
     items,
     inventory,
-    user,
-    currentUser,
     users,
     messages,
-    hasRight: (!!user && !!currentUser) && user.approved && (currentUser.uid === user.uid || !!currentUser.isAdmin),
+    ...userData,
   };
 };
 

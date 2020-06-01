@@ -16,6 +16,7 @@ import {
   message as notify,
   Spin,
 } from 'antd';
+import { RouteComponentProps, withRouter } from 'react-router';
 
 import '../../styles/chat.scss';
 import actions from '../../reducers/actions';
@@ -24,7 +25,7 @@ import Message from './Message';
 import { validateMessage } from '../../helpers/utils';
 import InputUpload from '../../components/InputUpload';
 
-interface IChatProps {
+interface IChatProps extends RouteComponentProps {
   messages: IMessage[],
   uid: string,
   loading: boolean,
@@ -176,7 +177,8 @@ class Chat extends Component<IChatProps, IChatState> {
   };
 
   getMessage = (m: IMessage) => {
-    const { users, uid, currentUser } = this.props;
+    const { users, uid, currentUser, history } = this.props;
+
     return (
       <Message
         key={m.time}
@@ -184,6 +186,7 @@ class Chat extends Component<IChatProps, IChatState> {
         user={users[m.author]}
         uid={uid}
         onDateClick={(currentUser && currentUser.isAdmin) ? this.onPinMessage(m) : undefined}
+        onUserClick={() => history.push(`/${m.author}/settings`)}
       />
     );
   };
@@ -251,4 +254,4 @@ const mapStateToProps = (state: IState) => {
   };
 };
 
-export default connect(mapStateToProps)(Chat);
+export default withRouter(connect(mapStateToProps)(Chat));

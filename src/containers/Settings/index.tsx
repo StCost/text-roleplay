@@ -14,10 +14,10 @@ import { ClearOutlined, SettingOutlined } from '@ant-design/icons';
 
 import '../../styles/settings.scss';
 import actions from '../../reducers/actions';
-import { IState, IUser, defaultUser } from '../../reducers/interfaces';
+import { IUser, defaultUser } from '../../reducers/interfaces';
 import Avatar from '../../components/Avatar';
 import Loader from '../../components/Loader/index';
-import { getFullTime } from '../../helpers/utils';
+import { getFullTime, getStateUser } from '../../helpers/utils';
 import InputUpload from "../../components/InputUpload";
 
 interface ISettingsProps extends RouteComponentProps {
@@ -225,22 +225,4 @@ export class Settings extends React.Component<ISettingsProps> {
   }
 }
 
-const mapStateToProps = (state: IState, props: ISettingsProps) => {
-  const { loading, users, currentUser } = state;
-
-  const uid = new URLSearchParams(props.match.params).get('uid') || state.uid || localStorage.getItem('uid') || '0';
-  const user = users[uid];
-  if (user && !user.uid && uid) {
-    user.uid = uid;
-  }
-
-  return {
-    loading,
-    user,
-    uid,
-    hasRight: (!!user && !!currentUser) && (currentUser.uid === user.uid || !!currentUser.isAdmin),
-    currentUser,
-  };
-};
-
-export default withRouter(connect(mapStateToProps)(Settings));
+export default withRouter(connect(getStateUser)(Settings));
