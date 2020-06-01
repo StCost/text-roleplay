@@ -6,16 +6,16 @@ import {
   Input,
   Spin,
   Button,
-  Popconfirm,
   message as notify,
 } from 'antd';
-import { SendOutlined, UpOutlined, CloseOutlined } from '@ant-design/icons';
+import { SendOutlined, UpOutlined } from '@ant-design/icons';
 import { Store } from 'rc-field-form/lib/interface';
 
-import '../styles/perks.scss';
-import { getStateUser } from '../helpers/utils';
-import actions from '../reducers/actions';
-import { IPerk, IUser } from '../reducers/interfaces';
+import '../../styles/perks.scss';
+import PerkItem from './PerkItem';
+import { getStateUser } from '../../helpers/utils';
+import actions from '../../reducers/actions';
+import { IPerk, IUser } from '../../reducers/interfaces';
 
 interface IPerksProps extends RouteComponentProps {
   loading: boolean;
@@ -30,7 +30,7 @@ interface IPerksState {
   description: string;
 }
 
-class Perks extends Component<IPerksProps, IPerksState> {
+class Index extends Component<IPerksProps, IPerksState> {
   state = {
     label: '',
     description: '',
@@ -83,6 +83,11 @@ class Perks extends Component<IPerksProps, IPerksState> {
     };
 
     actions.setUser({ uid, user: newUser });
+    actions.sendMessage({
+      uid,
+      message: '*получил перк',
+      data: { perk },
+    });
     this.setState({
       label: '',
       description: '',
@@ -95,16 +100,21 @@ class Perks extends Component<IPerksProps, IPerksState> {
       description: allValues.description || '',
     });
 
-  onDelete = (id: number) => () => {
+  onDelete = (perk: IPerk) => {
     const { uid, user } = this.props;
     if (!user) return;
 
     const newUser: IUser = {
       ...user,
-      perks: user.perks.filter((perk: IPerk) => perk.id !== id),
+      perks: user.perks.filter((p: IPerk) => perk.id !== p.id),
     };
 
     actions.setUser({ uid, user: newUser });
+    actions.sendMessage({
+      uid,
+      message: '*потерял перк',
+      data: { perk },
+    });
   };
 
   onChangeInput = (field: string) =>
@@ -147,27 +157,14 @@ class Perks extends Component<IPerksProps, IPerksState> {
             className="perks-body"
             ref={ref => this.bodyRef = ref}
           >
-            {(user.perks || []).map((perk: IPerk) => (
-              <div
-                className="perks-item"
+            {(user.perks || []).map((perk: IPerk) =>
+              <PerkItem
                 key={perk.id}
-              >
-                {hasRight && (
-                  <Popconfirm
-                    title="Вы уверены, что хотите удалить перк?"
-                    okText="Удалить"
-                    cancelText="Отмена"
-                    onConfirm={this.onDelete(perk.id)}
-                  >
-                    <Button className="perks-item-close">
-                      <CloseOutlined/>
-                    </Button>
-                  </Popconfirm>
-                )}
-                <div className="perks-item-label">{perk.label}</div>
-                <div className="perks-item-description">{perk.description}</div>
-              </div>
-            ))}
+                perk={perk}
+                onDelete={this.onDelete}
+                hasRight={hasRight}
+              />
+            )}
           </div>
           <div className="perks-controls">
             <Button onClick={this.scrollUp}>
@@ -202,4 +199,4 @@ class Perks extends Component<IPerksProps, IPerksState> {
   }
 }
 
-export default withRouter(connect(getStateUser)(Perks));
+export default withRouter(connect(getStateUser)(Index));

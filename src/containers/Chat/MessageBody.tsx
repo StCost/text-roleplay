@@ -14,6 +14,7 @@ import { importRolls } from '../../helpers/dice';
 import ItemById from '../../components/ItemById';
 import actions from '../../reducers/actions';
 import { ICharacterChanges, ICharacteristic } from '../Character/config';
+import PerkItem from "../Perks/PerkItem";
 
 interface IMessageBodyProps {
   message: IMessage;
@@ -30,7 +31,25 @@ const MessageBody = (props: IMessageBodyProps) => {
     } = message;
 
     if (data) {
-      const { itemId, taken, amount, type, characterChanges } = data;
+      const {
+        itemId,
+        taken,
+        amount,
+        type,
+        characterChanges,
+        perk
+      } = data;
+
+      if (perk) {
+        return (
+          <>
+            <i className="rp-message">
+              {body}
+              <PerkItem perk={perk}/>
+            </i>
+          </>
+        )
+      }
 
       if (characterChanges) {
         const changes: ICharacterChanges[] = Object.values(characterChanges);

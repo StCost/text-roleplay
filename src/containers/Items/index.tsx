@@ -38,11 +38,11 @@ export class Items extends ItemsTable<IItemsProps, IItemsState> {
     creatingItem: false,
     editingItem: null,
     itemsToLoad: 99,
+    ...JSON.parse(localStorage.getItem('items-state') || '{}')
   };
 
   componentDidMount = () => {
     actions.getItems({});
-    this.setState(JSON.parse(localStorage.getItem('items-state') || '{}'));
   };
 
   componentDidUpdate = (prevProps: IItemsProps,prevState: IItemsState) => {

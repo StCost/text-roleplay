@@ -37,6 +37,7 @@ class Inventory extends ItemsTable<IInventoryProps, IInventoryState> {
     ...this.defaultState,
     editingItem: null,
     passItem: null,
+    ...JSON.parse(localStorage.getItem('inventory-state') || '{}'),
   };
 
   componentDidMount = () => {
@@ -44,7 +45,6 @@ class Inventory extends ItemsTable<IInventoryProps, IInventoryState> {
     if (!user && uid) {
       actions.getUser({ uid });
     }
-    this.setState(JSON.parse(localStorage.getItem('inventory-state') || '{}'));
   };
 
   componentDidUpdate = (prevProps: IInventoryProps,prevState: IInventoryState) => {

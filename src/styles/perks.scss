@@ -14,57 +14,6 @@ div.ant-card.perks {
     min-height: 100%;
     overflow: auto;
     max-height: calc(100vh - 332px);
-
-    .perks-item {
-      width: 265px;
-      height: auto;
-      background: $background-color-lighter;
-      border: 1px solid $border-color;
-      margin: 6px;
-      border-radius: 4px;
-      position: relative;
-
-      .perks-item-close {
-        padding: 8px;
-        margin: 6px;
-        border-radius: 4px;
-        width: 14px;
-        height: 14px;
-        transition-duration: 0.3s;
-        position: absolute;
-        right: 0;
-        top: 0;
-        box-sizing: content-box;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        cursor: pointer;
-
-        > span {
-          height: 14px;
-          width: 14px;
-          line-height: 14px;
-          text-align: center;
-        }
-
-        &:hover {
-          svg {
-            fill: $background-color-selected;
-          }
-        }
-      }
-
-      .perks-item-label {
-        padding: 12px;
-        border-bottom: 1px solid $border-color;
-        font-weight: bolder;
-      }
-      .perks-item-description {
-        padding: 12px;
-        max-height: 264px;
-        overflow: auto;
-      }
-    }
   }
 
   .perks-controls {
@@ -96,5 +45,57 @@ div.ant-card.perks {
         margin-bottom: 24px;
       }
     }
+  }
+}
+
+.perks-item {
+  width: 265px;
+  height: auto;
+  background: $background-color-lighter;
+  border: 1px solid $border-color;
+  margin: 6px;
+  border-radius: 4px;
+  position: relative;
+
+  .perks-item-close {
+    padding: 8px;
+    margin: 6px;
+    border-radius: 4px;
+    width: 14px;
+    height: 14px;
+    transition-duration: 0.3s;
+    position: absolute;
+    right: 0;
+    top: 0;
+    box-sizing: content-box;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+
+    > span {
+      height: 14px;
+      width: 14px;
+      line-height: 14px;
+      text-align: center;
+    }
+
+    &:hover {
+      svg {
+        fill: $background-color-selected;
+      }
+    }
+  }
+
+  .perks-item-label {
+    padding: 12px;
+    border-bottom: 1px solid $border-color;
+    font-weight: bolder;
+  }
+  .perks-item-description {
+    padding: 12px;
+    max-height: 264px;
+    overflow: auto;
+    white-space: pre-wrap;
   }
 }

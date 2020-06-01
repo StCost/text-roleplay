@@ -8,15 +8,35 @@ import '../styles/menu.scss';
 import menu, { IMenuItem, characterMenu, userMenu } from '../configs/menu';
 import { IState } from '../reducers/interfaces';
 
+interface TitleEventEntity {
+  key: string;
+  domEvent: Event;
+}
+
 interface IMenuProps extends RouteComponentProps {
   isLoggedIn: boolean;
   unreadMessage: boolean;
 }
 
-class Menu extends Component<IMenuProps> {
+interface IMenuState {
+  openedKeys: string[],
+}
+
+class Menu extends Component<IMenuProps, IMenuState> {
+  state = {
+    openedKeys: ['char', 'user'],
+    ...JSON.parse(localStorage.getItem('menu-opened') || '{}'),
+  };
+
+  componentDidUpdate = (prevProps: IMenuProps, prevState: IMenuState) => {
+    if (prevState !== this.state) {
+      localStorage.setItem('menu-opened', JSON.stringify(this.state));
+    }
+  };
+
   getMenuItem = (value: IMenuItem, index: number = 0) => (
     <AntdMenu.Item
-      className={(index === 0 && this.props.unreadMessage) ? 'unread' : ''}
+      className={(value.path === '/chat' && this.props.unreadMessage) ? 'unread' : ''}
       key={value.path.split('/').pop()}
       disabled={value.path === this.props.location.pathname}
     >
@@ -27,8 +47,19 @@ class Menu extends Component<IMenuProps> {
     </AntdMenu.Item>
   );
 
+  onTitleClick = (event: TitleEventEntity) => {
+    const { openedKeys } = this.state;
+    const index = openedKeys.indexOf(event.key) > -1;
+    if (index) {
+      this.setState({ openedKeys: openedKeys.filter((key: string) => key !== event.key) })
+    } else {
+      this.setState({ openedKeys: [...openedKeys, event.key] })
+    }
+  };
+
   render = () => {
     const { isLoggedIn, location } = this.props;
+    const { openedKeys } = this.state;
 
     if (!isLoggedIn) {
       return <React.Fragment/>;
@@ -41,7 +72,9 @@ class Menu extends Component<IMenuProps> {
     const userSubMenu = (
       <AntdMenu.SubMenu
         title="Пользователь"
+        key="user"
         icon={<RobotOutlined/>}
+        onTitleClick={this.onTitleClick}
       >
         {userMenu.map(this.getMenuItem)}
       </AntdMenu.SubMenu>
@@ -50,7 +83,9 @@ class Menu extends Component<IMenuProps> {
     const characterSubMenu = (
       <AntdMenu.SubMenu
         title="Персонаж"
+        key="char"
         icon={<UserOutlined/>}
+        onTitleClick={this.onTitleClick}
       >
         {characterMenu.map(this.getMenuItem)}
       </AntdMenu.SubMenu>
@@ -63,6 +98,7 @@ class Menu extends Component<IMenuProps> {
         <AntdMenu
           mode={mode}
           selectedKeys={[location.pathname.split('/').pop() || '']}
+          openKeys={openedKeys}
         >
           {characterSubMenu}
           {userSubMenu}
