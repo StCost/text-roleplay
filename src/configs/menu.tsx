@@ -1,9 +1,9 @@
 import React from 'react';
 import {
   MessageOutlined,
-  DatabaseOutlined,
+  // DatabaseOutlined,
   SettingOutlined,
-  AppstoreAddOutlined,
+  // AppstoreAddOutlined,
   QuestionCircleOutlined,
   LogoutOutlined,
   TeamOutlined,
@@ -36,11 +36,11 @@ export const characterMenu: IMenuItem[] = [
     "path": "./perks",
     icon: <TrophyOutlined />
   },
-  {
-    "label": "Инвентарь",
-    "path": "./inventory",
-    icon: <DatabaseOutlined/>
-  },
+  // {
+  //   "label": "Инвентарь",
+  //   "path": "./inventory",
+  //   icon: <DatabaseOutlined/>
+  // },
   {
     "label": "Характеристики",
     "path": "./stats",
@@ -54,11 +54,11 @@ export const userMenu: IMenuItem[] = [
     "path": "./settings",
     icon: <SettingOutlined/>
   },
-  {
-    "label": "Предметы",
-    "path": "/items",
-    icon: <AppstoreAddOutlined/>
-  },
+  // {
+  //   "label": "Предметы",
+  //   "path": "/items",
+  //   icon: <AppstoreAddOutlined/>
+  // },
   {
     "label": "Пользователи",
     "path": "/users",

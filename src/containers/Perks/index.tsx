@@ -16,9 +16,11 @@ import PerkItem from './PerkItem';
 import { getStateUser } from '../../helpers/utils';
 import actions from '../../reducers/actions';
 import { IPerk, IUser } from '../../reducers/interfaces';
+import { ICharacter } from "../Character/config";
 
 interface IPerksProps extends RouteComponentProps {
   loading: boolean;
+  character: ICharacter;
   user: IUser | null;
   hasRight: boolean;
   uid: string;
@@ -37,9 +39,9 @@ class Index extends Component<IPerksProps, IPerksState> {
   };
 
   componentDidMount = () => {
-    const { user, uid } = this.props;
-    if (!user) {
-      actions.getUser({ uid });
+    const { character, uid } = this.props;
+    if (!character) {
+      actions.getCharacter({ uid });
     }
   };
 
@@ -51,10 +53,10 @@ class Index extends Component<IPerksProps, IPerksState> {
     });
 
   onSend = () => {
-    const { uid, user } = this.props;
+    const { uid, character } = this.props;
     const { description, label } = this.state;
 
-    if (!user) return;
+    if (!character) return;
     if (!label) {
       notify.error('Необходимо заполнить название перка!');
       return;
@@ -74,15 +76,15 @@ class Index extends Component<IPerksProps, IPerksState> {
       description,
     };
 
-    const newUser: IUser = {
-      ...user,
+    const newCharacter: ICharacter = {
+      ...character,
       perks: [
-        ...(user.perks || []),
+        ...(character.perks || []),
         perk,
       ],
     };
 
-    actions.setUser({ uid, user: newUser });
+    actions.setCharacter({ uid, character: newCharacter });
     actions.sendMessage({
       uid,
       message: '*получил перк',
@@ -101,15 +103,15 @@ class Index extends Component<IPerksProps, IPerksState> {
     });
 
   onDelete = (perk: IPerk) => {
-    const { uid, user } = this.props;
-    if (!user) return;
+    const { uid, character } = this.props;
+    if (!character) return;
 
-    const newUser: IUser = {
-      ...user,
-      perks: user.perks.filter((p: IPerk) => perk.id !== p.id),
+    const newCharacter: ICharacter = {
+      ...character,
+      perks: character.perks.filter((p: IPerk) => perk.id !== p.id),
     };
 
-    actions.setUser({ uid, user: newUser });
+    actions.setCharacter({ uid, character: newCharacter });
     actions.sendMessage({
       uid,
       message: '*потерял перк',
@@ -132,7 +134,7 @@ class Index extends Component<IPerksProps, IPerksState> {
 
   bodyRef: HTMLDivElement | null = null;
   render = () => {
-    const { currentUser, user, history, loading, hasRight } = this.props;
+    const { currentUser, character, user, history, loading, hasRight } = this.props;
     const { label, description } = this.state;
 
     if (user && user.uid && currentUser && currentUser.uid === user.uid && history.location.pathname === '/perks') {
@@ -145,7 +147,7 @@ class Index extends Component<IPerksProps, IPerksState> {
       )
     }
 
-    if (!user) return false;
+    if (!user || !character) return false;
 
     return (
       <Card
@@ -157,7 +159,7 @@ class Index extends Component<IPerksProps, IPerksState> {
             className="perks-body"
             ref={ref => this.bodyRef = ref}
           >
-            {(user.perks || []).map((perk: IPerk) =>
+            {(character.perks || []).map((perk: IPerk) =>
               <PerkItem
                 key={perk.id}
                 perk={perk}

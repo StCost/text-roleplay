@@ -1,3 +1,5 @@
+import { IInventory, IPerk } from "../../reducers/interfaces";
+
 export interface IField {
   label: string;
   full: string;
@@ -34,6 +36,7 @@ export interface ICharacteristic {
 }
 
 export interface ICharacter {
+  uid: string;
   special: {
     strength: ICharacteristic;
     perception: ICharacteristic;
@@ -62,6 +65,8 @@ export interface ICharacter {
   };
   stats: IStats;
   bio: string;
+  inventory: IInventory,
+  perks: IPerk[],
 }
 
 export const initialCharacteristic = {
@@ -71,6 +76,7 @@ export const initialCharacteristic = {
 };
 
 export const initialCharacter: ICharacter = {
+  uid: localStorage.getItem('uid') || '',
   special: {
     strength: initialCharacteristic,
     perception: initialCharacteristic,
@@ -117,6 +123,8 @@ export const initialCharacter: ICharacter = {
     spentSkillPoints: 0,
   },
   bio: '',
+  inventory: {},
+  perks: [],
 };
 
 export const special: IField[] = [

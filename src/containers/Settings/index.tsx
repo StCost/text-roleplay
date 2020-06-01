@@ -6,7 +6,9 @@ import {
   Card,
   Input,
   Button,
-  Popconfirm, Switch,
+  Popconfirm,
+  Switch,
+  Modal,
 } from 'antd';
 import { RouteComponentProps } from 'react-router';
 
@@ -178,6 +180,35 @@ export class Settings extends React.Component<ISettingsProps> {
     'approved': 'Активирован',
   };
 
+  getDeleteUser = () => {
+    const { currentUser, uid } = this.props;
+
+    const showModal = () =>
+      Modal.confirm({
+        title: 'Удалить?',
+        content: 'Вы точно уверены, что хотите удалить все данные о пользователе? Это нельзя будет отменить. Необходимо будет так же удалить данные об аутентификации в Firebase',
+        okText: '',
+        cancelText: '',
+        onOk: (close) => {
+          actions.fullDeleteUser({ uid });
+          close();
+        }
+      });
+
+    return currentUser && currentUser.isSuperAdmin && (
+      <Card title="Полное удаление пользователя">
+        <Popconfirm
+          title="Удалить все данные о пользователе. Вы уверены?"
+          onConfirm={showModal}
+          okText="Удалить"
+          cancelText="Отмена"
+        >
+          <Button>Удалить</Button>
+        </Popconfirm>
+      </Card>
+    );
+  };
+
   render = () => {
     const { user, loading, currentUser, history } = this.props;
 
@@ -220,6 +251,7 @@ export class Settings extends React.Component<ISettingsProps> {
             )
           })
         }
+        {this.getDeleteUser()}
       </Card>
     )
   }

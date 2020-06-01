@@ -70,7 +70,7 @@ function* passItem(payload: IPayload) {
 function* removeItem(payload: IPayload) {
   const { id, uid, amount = 1 } = payload;
   const ref = database
-    .ref(`users`)
+    .ref(`characters`)
     .child(uid)
     .child('inventory');
 
@@ -102,10 +102,11 @@ function* getInventoryItem(payload: IPayload) {
   const { id, uid } = payload;
 
   const rawItems = yield database
-    .ref('users')
+    .ref('characters')
     .child(uid)
     .child('inventory')
     .once('value');
+
   const items: IInventoryItem[] = Object.values(rawItems.val() || {});
   if (items.length) {
     const item: IInventoryItem | undefined = items.find(item => item.id === id);
@@ -136,7 +137,7 @@ function* giveItem(payload: IPayload) {
 
   const fullId = `${item.id}|${item.time}`;
   yield database
-    .ref('users')
+    .ref('characters')
     .child(uid)
     .child('inventory')
     .child(fullId)

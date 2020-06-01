@@ -34,7 +34,7 @@ import {
   ICharacterChanges,
 } from './config';
 import actions from '../../reducers/actions';
-import { getStateUser } from "../../helpers/utils";
+import { getStateUser } from '../../helpers/utils';
 
 interface ICharacterProps extends RouteComponentProps {
   loading: boolean;
@@ -42,6 +42,7 @@ interface ICharacterProps extends RouteComponentProps {
   hasRight: boolean;
   uid: string;
   currentUser: IUser | null;
+  character: ICharacter;
 }
 
 /**
@@ -52,9 +53,9 @@ class Character extends Component<ICharacterProps, ICharacter> {
   state = initialCharacter;
 
   componentDidMount = () => {
-    const { user, uid } = this.props;
-    if (!user) {
-      actions.getUser({ uid });
+    const { character, uid } = this.props;
+    if (!character) {
+      actions.getCharacter({ uid });
     }
   };
 
@@ -311,7 +312,7 @@ class Character extends Component<ICharacterProps, ICharacter> {
 
   // TODO Needs refactor for sure
   processChar = async (value: Store, char: Store) => {
-    const { special, skills, stats, bio } = char;
+    const { special, skills, stats } = char;
 
     if (!value.bio) {
       const specialTotal: { [key: string]: number } = {};
@@ -361,7 +362,6 @@ class Character extends Component<ICharacterProps, ICharacter> {
       special,
       skills,
       stats,
-      bio,
     };
   };
 
@@ -383,56 +383,54 @@ class Character extends Component<ICharacterProps, ICharacter> {
         return;
       }
 
-      Object.entries(characteristic).forEach(([field, value]: [string, ICharacteristic]) => {
-
-        const afterValue = after[name][field];
-        const config: IField | undefined = getConfigByField(field);
-        if (config) {
-          changes.push({
-            label: config.label,
-            full: config.full,
-            before: value,
-            after: afterValue,
-          });
-        }
-      })
+      if (typeof characteristic === 'object' && !Array.isArray(characteristic) && after[name])
+        Object.entries(characteristic).forEach(([field, value]: [string, ICharacteristic]) => {
+          const afterValue = after[name][field];
+          const config: IField | undefined = getConfigByField(field);
+          if (config) {
+            changes.push({
+              label: config.label,
+              full: config.full,
+              before: value,
+              after: afterValue,
+            });
+          }
+        })
     });
 
     return changes;
   };
 
   onSave = () => {
-    const { uid, user } = this.props;
-    const character = this.state;
+    const { uid, character } = this.props;
+    const stateCharacter = this.state;
 
-    if (!user) {
-      notify.error('Пользователь не загружен!');
+    if (!character) {
+      notify.error('Персонаж не загружен!');
       return;
     }
 
-    let changes = this.getChanges(initialCharacter, character);
+    let changes = this.getChanges(initialCharacter, stateCharacter);
     if (changes.length === 0) {
       notify.error('В персонаже ничего не изменилось');
       return;
     }
-    changes = this.getChanges(user.character || initialCharacter, character);
+    changes = this.getChanges(character || initialCharacter, stateCharacter);
     if (changes.length === 0) {
       notify.error('В персонаже ничего не изменилось');
       return;
     }
 
-    if (character.stats.skillPoints < 0) {
+    if (stateCharacter.stats.skillPoints < 0) {
       notify.error('Очки Навыков (ОН) не могут быть отрицательными!');
       return;
     }
 
     notify.success('Персонаж сохранён');
-    actions.setUser({
+    console.log(stateCharacter);
+    actions.setCharacter({
       uid,
-      user: {
-        ...user,
-        character,
-      }
+      character: stateCharacter
     });
     actions.sendMessage({
       uid,
@@ -443,7 +441,7 @@ class Character extends Component<ICharacterProps, ICharacter> {
 
 
   render = () => {
-    const { user, hasRight, currentUser, history } = this.props;
+    const { user, hasRight, currentUser, history, character } = this.props;
 
     if (!user) {
       return (
@@ -465,7 +463,7 @@ class Character extends Component<ICharacterProps, ICharacter> {
 
     return (
       <Form
-        initialValues={user.character || initialCharacter}
+        initialValues={character}
         onValuesChange={this.onChange}
       >
         <Card

@@ -34,6 +34,7 @@ export interface IState {
   redirect?: string;
   deletingItemData: IDeletedItemData;
   unreadMessage: boolean;
+  characters: ICharacters,
 }
 
 export interface IInventoryItem {
@@ -60,14 +61,16 @@ export interface IUser {
   lastOnline: number;
   status?: 'online' | 'offline' | 'afk';
   isAdmin?: boolean;
-  inventory: IInventory,
-  character?: ICharacter,
   approved: boolean;
-  perks: IPerk[];
+  isSuperAdmin?: boolean;
 }
 
 export interface IUsers {
   [key: string]: IUser;
+}
+
+export interface ICharacters {
+  [key: string]: ICharacter;
 }
 
 export const defaultUser: IUser = {
@@ -78,8 +81,6 @@ export const defaultUser: IUser = {
 
   approved: false,
   uid: '',
-  inventory: {},
-  perks: [],
   isAdmin: false,
 };
 

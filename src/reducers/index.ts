@@ -4,7 +4,7 @@ import {
   defaultUser,
   IAction,
   IItem,
-  IState, IUsers
+  IState,
 } from './interfaces';
 
 const user = JSON.parse(localStorage.getItem('user') || 'null');
@@ -22,6 +22,7 @@ export const initialState: IState = {
   error: false,
   deletingItemData: defaultDeletedItemData,
   unreadMessage: false,
+  characters: {},
 };
 
 const reducer = (state = initialState, action: IAction) => {
@@ -38,7 +39,6 @@ const reducer = (state = initialState, action: IAction) => {
     case 'GIVE_ITEM':
     case 'REMOVE_ITEM':
     case 'PASS_ITEM':
-    case 'GET_USERS_BASE':
     case 'REGISTER':
     case 'RESET_PASSWORD':
     case 'UPLOAD_FILE': {
@@ -57,7 +57,6 @@ const reducer = (state = initialState, action: IAction) => {
     case 'REMOVE_ITEM_FAIL':
     case 'PASS_ITEM_SUCCESS':
     case 'PASS_ITEM_FAIL':
-    case 'GET_USERS_BASE_FAIL':
     case 'DELETE_ITEM_FAIL':
     case 'RESET_PASSWORD_FAIL':
     case 'UPLOAD_FILE_SUCCESS':
@@ -133,22 +132,6 @@ const reducer = (state = initialState, action: IAction) => {
         },
       }
     }
-    case 'GET_USERS_BASE_SUCCESS': {
-      const users: IUsers = action.users;
-      const newUsers: IUsers = {};
-      Object.entries(users).forEach(([uid, user]) => {
-        newUsers[uid] = {
-          ...state.users[uid],
-          ...user,
-        }
-      });
-
-      return {
-        ...state,
-        loading: false,
-        users: newUsers,
-      }
-    }
     case 'GET_ITEMS_SUCCESS': {
       const items: { [key: string]: IItem } = {};
       [...state.items, ...action.items]
@@ -214,6 +197,31 @@ const reducer = (state = initialState, action: IAction) => {
       return {
         ...state,
         unreadMessage: !!action.unreadMessage,
+      }
+    }
+    case 'GET_ALL_USERS_SUCCESS': {
+      return {
+        ...state,
+        users: action.users,
+      }
+    }
+    case 'GET_CHARACTER_SUCCESS': {
+      const { uid, character, updatedData } = action;
+
+      const newCharacter = updatedData
+        ? ({
+          ...state.characters[uid],
+          ...updatedData,
+        }) : (
+          character
+        );
+
+      return {
+        ...state,
+        characters: {
+          ...state.characters,
+          [action.uid]: newCharacter,
+        },
       }
     }
     default:

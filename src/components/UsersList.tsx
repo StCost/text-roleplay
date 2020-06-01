@@ -17,7 +17,7 @@ interface IActiveUsersListProps {
 
 class UsersList extends Component<IActiveUsersListProps> {
   componentDidMount = () => {
-    actions.getUsersBase({});
+    actions.getAllUsers({});
   };
 
   render = () => {

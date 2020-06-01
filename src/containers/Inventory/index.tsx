@@ -17,6 +17,7 @@ import ActiveUsersList from '../../components/UsersList';
 import ItemsTable, { IItemsTableProps, IItemsTableState } from '../ItemsTable';
 import amountModal from '../../components/AmountModal';
 import { getItemName, getStateUser } from '../../helpers/utils';
+import { ICharacter } from '../Character/config';
 
 interface IInventoryProps extends IItemsTableProps {
   inventory: IInventory;
@@ -26,6 +27,7 @@ interface IInventoryProps extends IItemsTableProps {
   items: IItem[];
   currentUser: IUser | null;
   hasRight: boolean;
+  character: ICharacter;
 }
 
 interface IInventoryState extends IItemsTableState {
@@ -41,9 +43,9 @@ class Inventory extends ItemsTable<IInventoryProps, IInventoryState> {
   };
 
   componentDidMount = () => {
-    const { user, uid } = this.props;
-    if (!user && uid) {
-      actions.getUser({ uid });
+    const { character, uid } = this.props;
+    if (!character && uid) {
+      actions.getCharacter({ uid });
     }
   };
 
@@ -246,9 +248,9 @@ const mapStateToProps = (state: IState, props: IInventoryProps) => {
   const { users, items, messages } = state;
 
   const userData = getStateUser(state, props);
-  const { user } = userData;
+  const { character } = userData;
 
-  const inventory = user ? user.inventory : {};
+  const inventory = character ? character.inventory : {};
 
   return {
     items,

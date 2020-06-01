@@ -14,18 +14,6 @@ function* setUser(payload: IPayload) {
       uid,
     });
 
-  const { nickname = '', avatar = '', lastOnline = 0, status = 'offline' } = user;
-  yield database
-    .ref('users-base')
-    .child(uid)
-    .set({
-      uid,
-      nickname,
-      avatar,
-      lastOnline,
-      status,
-    });
-
   actions.setUserSuccess({});
 }
 
@@ -57,6 +45,26 @@ function getUser(payload: IPayload) {
   });
 }
 
+function* getAllUsers() {
+  const rawUsers = yield database.ref('users').once('value');
+  const users = rawUsers.val() || {};
+  actions.getAllUsersSuccess({ users });
+
+  Object.keys(users).forEach((uid: string) => {
+    database
+      .ref('users')
+      .child(uid)
+      .on('child_changed', (rawProperty) => {
+        requestedUsers[uid] = true;
+        const key: string | null = rawProperty.key;
+        if (!key) return;
+
+        const value = rawProperty.val();
+        actions.getUserSuccess({ uid, updatedData: { [key]: value } })
+      });
+  })
+}
+
 function* updateLastOnline() {
   const uid = localStorage.getItem('uid');
   if (!uid || uid === 'undefined') return;
@@ -75,21 +83,6 @@ function* updateLastOnline() {
   yield ref
     .child('status')
     .set('online');
-
-  yield database
-    .ref('users-base')
-    .child(`${uid}`)
-    .child('lastOnline')
-    .set(time);
-}
-
-function* getUsersBase() {
-  const rawUsers = yield database
-    .ref('users-base')
-    .once('value');
-
-  const users = rawUsers.val();
-  actions.getUsersBaseSuccess({ users });
 }
 
 export function* setUserStatus(payload: IPayload) {
@@ -104,12 +97,22 @@ export function* setUserStatus(payload: IPayload) {
     .set(status);
 }
 
+function* fullDeleteUser(payload: IPayload) {
+  const { uid } = payload;
+
+  yield database.ref('users').child(uid).set({});
+  yield database.ref('characters').child(uid).set({});
+  actions.redirect({ to: '/chat' });
+  actions.notify({ message: 'Пользователь успешно удалён' });
+}
+
 export default function* watchForActions() {
   yield all([
     takeLatest('GET_USER', getUser),
     takeLatest('SET_USER', setUser),
     takeLatest('UPDATE_LAST_ONLINE', updateLastOnline),
-    takeLatest('GET_USERS_BASE', getUsersBase),
     takeEvery('SET_USER_STATUS', setUserStatus),
+    takeEvery('GET_ALL_USERS', getAllUsers),
+    takeEvery('FULL_DELETE_USER', fullDeleteUser),
   ]);
 }

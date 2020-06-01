@@ -5,8 +5,9 @@ import { IPayload } from '../reducers/actions';
 import actions from '../reducers/actions';
 import { database } from '../helpers/firebase';
 import { generateID, getFailedItem } from '../helpers/utils';
-import { IInventoryItem, IMessage, IUser } from '../reducers/interfaces';
+import { IInventoryItem, IMessage } from '../reducers/interfaces';
 import { getRandomInt } from '../helpers/dice';
+import { ICharacter } from "../containers/Character/config";
 
 function* setItem(payload: IPayload) {
   const { item } = payload;
@@ -132,22 +133,22 @@ function* deleteItem(payload: IPayload) {
   yield checkMessages(0);
 
   // Delete item from all users
-  const users: IUser[] = Object.values((yield database.ref(`users`).once('value')).val() || {});
+  const chars: ICharacter[] = Object.values((yield database.ref(`characters`).once('value')).val() || {});
   let clearedUsers = 0;
 
   async function checkUsers(index: number) {
-    const user: IUser = users[index];
-    if (!user) return;
+    const char: ICharacter = chars[index];
+    if (!char) return;
     const randomWait = getWait();
 
     setTimeout(() => actions.deleteItemProgress({
       field: 'usersChecked',
       value: index + 1
     }), randomWait);
-    if (user.inventory) {
-      const item = Object.values(user.inventory).find((item: IInventoryItem) => item.id === id);
+    if (char.inventory) {
+      const item = Object.values(char.inventory).find((item: IInventoryItem) => item.id === id);
       if (item) {
-        await database.ref(`users/${user.uid}/inventory/${id}|${item.time}`).set({});
+        await database.ref(`character/${char.uid}/inventory/${id}|${item.time}`).set({});
         setTimeout(() => actions.deleteItemProgress({
           field: 'usersCleared',
           value: ++clearedUsers
