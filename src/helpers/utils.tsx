@@ -256,7 +256,7 @@ export const getStateUser = (state: IState, props: RouteComponentProps) => {
 
 
 // TODO Needs refactor for sure
-export const processCharacterChanges = async (value: Store, char: Store) => {
+export const processCharacterChanges = (value: Store, char: Store) => {
   const { special, skills, stats } = char;
 
   if (!value.bio) {
@@ -344,5 +344,42 @@ export const getCharacterChanges = (beforeChar: ICharacter, afterChar: ICharacte
   });
 
   return changes;
+};
+
+const deepCopyObject = (inObject: {[key: string]: any}) => {
+  let outObject, value, key;
+
+  if (typeof inObject !== "object" || inObject === null) {
+    return inObject // Return the value if inObject is not an object
+  }
+
+  // Create an array or object to hold the values
+  outObject = Array.isArray(inObject) ? [] : {};
+
+  for (key in inObject) {
+    value = inObject[key];
+
+    // Recursively (deep) copy for nested objects, including arrays
+    outObject[key] = deepCopyObject(value);
+  }
+
+  return outObject
+};
+
+export const set = (_obj: {[key: string]: any}, _path: string | string[], value: any) => {
+  const path = typeof _path === 'string' ? _path : _path.join('.');
+
+  const obj = deepCopyObject(_obj);
+  let schema = obj;  // a moving reference to internal objects within obj
+  const pList = path.split('.');
+  const len = pList.length;
+  for(let i = 0; i < len-1; i++) {
+    const elem = pList[i];
+    if( !schema[elem] ) schema[elem] = {};
+    schema = schema[elem];
+  }
+
+  schema[pList[len-1]] = value;
+  return obj;
 };
 

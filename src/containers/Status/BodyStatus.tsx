@@ -6,6 +6,7 @@ import { ILimbs, TLimb } from '../Character/config';
 interface IBodyStatusProps {
   limbs: ILimbs;
   onClick?: (limb: string, state: TLimb) => void;
+  hasRight?: boolean;
 }
 
 const isCrippled = (limb: TLimb) =>
@@ -14,7 +15,8 @@ const isCrippled = (limb: TLimb) =>
 // const labels
 
 const BodyStatus = (props: IBodyStatusProps) => {
-  const { limbs, onClick } = props;
+  const { limbs, onClick, hasRight } = props;
+
   const crippledLimbs = Object
     .values(props.limbs)
     .reduce((acc: number, limb: TLimb) => acc + (isCrippled(limb) ? 1 : 0), 0);
@@ -32,7 +34,7 @@ const BodyStatus = (props: IBodyStatusProps) => {
   };
 
   return (
-    <div className="body-status">
+    <div className={`body-status ${hasRight ? '' : 'disabled'}`}>
       <div>
         <div
           key={'head' + limbs.head}

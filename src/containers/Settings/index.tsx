@@ -163,7 +163,7 @@ export class Settings extends React.Component<ISettingsProps> {
       default:
         return (
           <Input
-            defaultValue={value}
+            value={value}
             onChange={this.onChange(key)}
             readOnly={disabled}
           />

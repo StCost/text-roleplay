@@ -6,6 +6,16 @@ $size: 64px;
   padding: 24px;
   position: relative;
 
+  &.disabled {
+    .limb {
+      cursor: default;
+
+      &:hover {
+        animation: none;
+      }
+    }
+  }
+
   > div {
     display: flex;
   }

@@ -181,7 +181,7 @@ div.ant-card.char {
         border: 1px solid $border-color-light;
         background: $background-color-lightest;
 
-        .ant-row, .ant-col, .ant-input-number {
+        .ant-input-number,input {
           width: 64px;
         }
       }

@@ -1,9 +1,8 @@
-import React, { Component } from 'react';
+import React, { ChangeEvent, Component } from 'react';
 import { Redirect, RouteComponentProps, withRouter } from 'react-router';
 import { connect } from 'react-redux';
 import {
   Card,
-  Form,
   InputNumber,
   Input,
   Tooltip,
@@ -13,7 +12,6 @@ import {
   Button,
   Popconfirm,
 } from 'antd';
-import { Callbacks } from 'rc-field-form/lib/interface';
 
 import '../../styles/status.scss';
 import {
@@ -24,7 +22,7 @@ import {
   TLimb
 } from '../Character/config';
 import { IUser } from '../../reducers/interfaces';
-import { getCharacterChanges, getStateUser, processCharacterChanges } from '../../helpers/utils';
+import { getCharacterChanges, getStateUser, processCharacterChanges, set } from '../../helpers/utils';
 import actions from "../../reducers/actions";
 import BodyStatus from "./BodyStatus";
 
@@ -56,27 +54,9 @@ class Status extends Component<IStatusProps, IStatusState> {
     }
   };
 
-  componentDidUpdate = (prevProps: IStatusProps, prevState: IStatusState) => {
+  componentDidUpdate = (prevProps: IStatusProps) => {
     if (prevProps.character !== this.props.character && this.state.character !== this.props.character)
       this.setState({ character: this.props.character });
-  };
-
-  onChange: Callbacks['onValuesChange'] = async (value, char) => {
-    if (value.bio) {
-      this.setState({
-        character: {
-          ...this.state.character,
-          bio: value.bio,
-        }
-      });
-    } else {
-      this.setState({
-        character: {
-          ...this.state.character,
-          ...await processCharacterChanges(value, char)
-        }
-      });
-    }
   };
 
 
@@ -93,10 +73,12 @@ class Status extends Component<IStatusProps, IStatusState> {
   };
 
   getStatus = (limbs: ILimbs) => {
+    const { hasRight } = this.props;
     return (
       <BodyStatus
         limbs={limbs}
-        onClick={this.onLimbClick}
+        onClick={hasRight ? this.onLimbClick : undefined}
+        hasRight={hasRight}
       />
     )
   };
@@ -146,101 +128,109 @@ class Status extends Component<IStatusProps, IStatusState> {
   componentWillUnmount = () =>
     this.onSave(true);
 
-  getMainStats = () => {
-    const { hasRight, character } = this.props;
+  onChange = (field: string | string[]) => (event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement> | number | undefined) => {
+    if (!event) return;
+
+    const value = typeof event === 'number' ? event : event.currentTarget.value;
+    const character = set(this.state.character, field, value);
+    const processedChar = processCharacterChanges({}, character);
+    this.setState({
+      character: {
+        ...this.state.character,
+        ...processedChar,
+      }
+    });
+  };
+
+  getMainStats = (character: ICharacter) => {
+    const { hasRight } = this.props;
+    const { stats } = character;
 
     return (
       <Card className="status-main-stats">
-        <Form
-          initialValues={character}
-          onValuesChange={this.onChange}
-        >
-          <div className="status-main-stats-health">
-            <div className="status-main-stats-hp">
-              <span className="status-main-stats-hp-label">Очки Здоровья (ОЗ)</span>
-              <div className="status-main-stats-hp-body">
-                <Form.Item name={['stats', 'healthPoints']}>
-                  <InputNumber
-                    max={this.state.character.stats.maxHealthPoints || undefined}
-                    min={-Math.floor(this.state.character.stats.maxHealthPoints / 2)}
-                    disabled={!hasRight}
-                  />
-                </Form.Item>
-                /
-                <Form.Item name={['stats', 'maxHealthPoints']}>
-                  <Input
-                    readOnly
-                    disabled={!hasRight}
-                  />
-                </Form.Item>
-              </div>
-            </div>
-            <div className="status-main-stats-ap-wrapper">
-              <div className="status-main-stats-ap">
-                <Tooltip title="Класс Брони (КБ)">
-                  <div className="status-main-stats-ap-total">
-                    КБ
-                  </div>
-                </Tooltip>
-                <div className="status-main-stats-ap-change">
-                  +/-
-                </div>
-                <div className="status-main-stats-ap-base">
-                  Base
-                </div>
-              </div>
-              <div className="status-main-stats-ap">
-                <Form.Item name={['stats', 'armorClass', 'total']}>
-                  <Input
-                    className="status-main-stats-ap-total"
-                    readOnly
-                    disabled={!hasRight}
-                  />
-                </Form.Item>
-                <Form.Item name={['stats', 'armorClass', 'change']}>
-                  <InputNumber
-                    className="status-main-stats-ap-change"
-                    min={1}
-                    max={95}
-                    disabled={!hasRight}
-                  />
-                </Form.Item>
-                <Form.Item name={['stats', 'armorClass', 'base']}>
-                  <Input
-                    className="status-main-stats-ap-base"
-                    readOnly
-                    disabled={!hasRight}
-                  />
-                </Form.Item>
-              </div>
+        <div className="status-main-stats-health">
+          <div className="status-main-stats-hp">
+            <span className="status-main-stats-hp-label">Очки Здоровья (ОЗ)</span>
+            <div className="status-main-stats-hp-body">
+              <InputNumber
+                max={stats.maxHealthPoints || undefined}
+                min={-Math.floor(stats.maxHealthPoints / 2)}
+                disabled={!hasRight}
+                value={stats.healthPoints}
+                onChange={this.onChange('stats.healthPoints')}
+              />
+              /
+              <Input
+                value={stats.maxHealthPoints}
+                readOnly
+                disabled={!hasRight}
+              />
             </div>
           </div>
-          <div className="status-main-stats-info">
-            {configSubStats.slice(3).map(({ label, full, field }) => (
-              <Tooltip
-                key={field} title={full}>
-                <div
-                  className="status-main-stats-item"
-                >
-                  <span className="status-main-stats-item-label">{label}</span>
-                  <Form.Item name={['stats', field]}>
-                    <Input
-                      className="status-main-stats-item-input"
-                      readOnly
-                      disabled={!hasRight}
-                    />
-                  </Form.Item>
+          <div className="status-main-stats-ap-wrapper">
+            <div className="status-main-stats-ap">
+              <Tooltip title="Класс Брони (КБ)">
+                <div className="status-main-stats-ap-total">
+                  КБ
                 </div>
               </Tooltip>
-            ))}
+              <div className="status-main-stats-ap-change">
+                +/-
+              </div>
+              <div className="status-main-stats-ap-base">
+                Base
+              </div>
+            </div>
+            <div className="status-main-stats-ap">
+              <Input
+                className="status-main-stats-ap-total"
+                readOnly
+                disabled={!hasRight}
+                value={stats.armorClass.total}
+              />
+              <InputNumber
+                className="status-main-stats-ap-change"
+                min={1}
+                max={95}
+                disabled={!hasRight}
+                value={stats.armorClass.change}
+                onChange={this.onChange('stats.armorClass.change')}
+              />
+              <Input
+                className="status-main-stats-ap-base"
+                readOnly
+                disabled={!hasRight}
+                value={stats.armorClass.base}
+              />
+            </div>
           </div>
-        </Form>
+        </div>
+        <div className="status-main-stats-info">
+          {configSubStats.slice(3).map(({ label, full, field }) => (
+            <Tooltip
+              key={field} title={full}>
+              <div
+                className="status-main-stats-item"
+              >
+                <span className="status-main-stats-item-label">{label}</span>
+                <Input
+                  className="status-main-stats-item-input"
+                  readOnly
+                  disabled={!hasRight}
+                  value={stats[field]}
+                  onChange={this.onChange(['stats', field])}
+                />
+              </div>
+            </Tooltip>
+          ))}
+        </div>
       </Card>
     )
   };
 
   render = () => {
     const { user, currentUser, history, character } = this.props;
+    const stateCharacter = this.state.character;
 
     if (user && user.uid && currentUser && currentUser.uid === user.uid && history.location.pathname === '/status') {
       return (
@@ -275,8 +265,8 @@ class Status extends Component<IStatusProps, IStatusState> {
           </Popconfirm>
         }
       >
-        {this.getStatus(this.state.character.limbs)}
-        {this.getMainStats()}
+        {this.getStatus(stateCharacter.limbs)}
+        {this.getMainStats(stateCharacter)}
       </Card>
     )
   }
