@@ -67,6 +67,8 @@ export interface ICharacter {
   bio: string;
   inventory: IInventory,
   perks: IPerk[],
+  static?: boolean;
+  notes: string;
 }
 
 export const initialCharacteristic = {
@@ -125,6 +127,7 @@ export const initialCharacter: ICharacter = {
   bio: '',
   inventory: {},
   perks: [],
+  notes: '',
 };
 
 export const special: IField[] = [

@@ -9,6 +9,7 @@ import {
   TeamOutlined,
   IdcardOutlined,
   TrophyOutlined,
+  BookOutlined,
 } from '@ant-design/icons';
 
 export interface IMenuItem {
@@ -18,6 +19,11 @@ export interface IMenuItem {
 }
 
 const menu: IMenuItem[] = [
+  {
+    "label": "Пользователи",
+    "path": "/users",
+    icon: <TeamOutlined/>
+  },
   {
     "label": "Логи",
     "path": "/chat",
@@ -34,7 +40,7 @@ export const characterMenu: IMenuItem[] = [
   {
     "label": "Перки",
     "path": "./perks",
-    icon: <TrophyOutlined />
+    icon: <TrophyOutlined/>
   },
   // {
   //   "label": "Инвентарь",
@@ -45,6 +51,11 @@ export const characterMenu: IMenuItem[] = [
     "label": "Характеристики",
     "path": "./stats",
     icon: <IdcardOutlined/>
+  },
+  {
+    "label": "Записи",
+    "path": "./notes",
+    icon: <BookOutlined/>
   },
 ];
 
@@ -59,11 +70,6 @@ export const userMenu: IMenuItem[] = [
   //   "path": "/items",
   //   icon: <AppstoreAddOutlined/>
   // },
-  {
-    "label": "Пользователи",
-    "path": "/users",
-    icon: <TeamOutlined/>
-  },
   {
     "label": "Помощь",
     "path": "/help",

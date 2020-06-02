@@ -55,6 +55,7 @@ const actions: IActions = {
   ...createAsyncAction('SET_CHARACTER'),
   ...createAsyncAction('GET_ALL_USERS'),
   ...createAsyncAction('FULL_DELETE_USER'),
+  ...createAsyncAction('SET_CHARACTER_NOTES'),
   setUnreadMessage: createAction('SET_UNREAD_MESSAGE'),
   deleteItemProgress: createAction('DELETE_ITEM_PROGRESS'),
   updateLastOnline: createAction('UPDATE_LAST_ONLINE'),

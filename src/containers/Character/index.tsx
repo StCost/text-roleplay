@@ -19,7 +19,7 @@ import { RouteComponentProps } from 'react-router';
 import { diff } from 'deep-object-diff';
 
 import '../../styles/character.scss';
-import { IUser } from '../../reducers/interfaces';
+import { IState, IUser } from '../../reducers/interfaces';
 import {
   initialCharacter,
   special as configSpecial,
@@ -513,4 +513,15 @@ class Character extends Component<ICharacterProps, ICharacter> {
   }
 }
 
-export default withRouter(connect(getStateUser)(Character));
+const mapStateToProps = (state: IState, props: RouteComponentProps) => {
+  const charState = getStateUser(state, props);
+  const { user, currentUser, character } = charState;
+  const newHasRight = (!!user && !!currentUser) && ((currentUser.uid === user.uid && (character && !character.static)) || !!currentUser.isSuperAdmin);
+
+  return {
+    ...charState,
+    hasRight: newHasRight,
+  }
+};
+
+export default withRouter(connect(mapStateToProps)(Character));

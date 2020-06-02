@@ -33,7 +33,6 @@ function* getCharacter(payload: IPayload) {
 function* setCharacter(payload: IPayload) {
   const { uid, character } = payload;
 
-  console.log(payload);
   yield database
     .ref('characters')
     .child(uid)
@@ -41,9 +40,22 @@ function* setCharacter(payload: IPayload) {
   actions.setCharacterSuccess({});
 }
 
+function* setCharacterNotes(payload: IPayload) {
+  const { uid, notes } = payload;
+
+  yield database
+    .ref('characters')
+    .child(uid)
+    .child('notes')
+    .set(notes);
+
+  actions.setCharacterNotesSuccess({});
+}
+
 export default function* watchForActions() {
   yield all([
     takeLatest('GET_CHARACTER', getCharacter),
     takeLatest('SET_CHARACTER', setCharacter),
+    takeLatest('SET_CHARACTER_NOTES', setCharacterNotes),
   ]);
 }

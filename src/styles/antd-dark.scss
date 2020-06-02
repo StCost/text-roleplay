@@ -386,3 +386,11 @@ div, span, pre, ul, li, h1 {
     background-color: $background-color-selected;
   }
 }
+
+.ant-switch {
+  background-color: $background-color-interactive;
+
+  &.ant-switch-checked {
+    background-color: $background-color-selected;
+  }
+}

@@ -63,6 +63,7 @@ export interface IUser {
   isAdmin?: boolean;
   approved: boolean;
   isSuperAdmin?: boolean;
+  notesAreVisible: boolean;
 }
 
 export interface IUsers {
@@ -82,6 +83,7 @@ export const defaultUser: IUser = {
   approved: false,
   uid: '',
   isAdmin: false,
+  notesAreVisible: false,
 };
 
 export type ItemType = 'weapon' | 'usable' | 'wearable' | 'junk' | 'ammo' | 'note' | 'key' | 'misc';

@@ -41,6 +41,7 @@ const reducer = (state = initialState, action: IAction) => {
     case 'PASS_ITEM':
     case 'REGISTER':
     case 'RESET_PASSWORD':
+    case 'SET_CHARACTER_NOTES':
     case 'UPLOAD_FILE': {
       return {
         ...state,
@@ -63,6 +64,8 @@ const reducer = (state = initialState, action: IAction) => {
     case 'UPLOAD_FILE_FAIL':
     case 'RESET_PASSWORD_SUCCESS':
     case 'GET_MORE_ITEMS_FAIL':
+    case 'SET_CHARACTER_NOTES_FAIL':
+    case 'SET_CHARACTER_NOTES_SUCCESS':
     case 'SEND_MESSAGE_FAIL': {
       return {
         ...state,

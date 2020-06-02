@@ -40,6 +40,16 @@ const routes: IRoute[] = [
     exact: true,
   },
   {
+    path: '/:uid/notes',
+    component: 'components/Notebook',
+    exact: true,
+  },
+  {
+    path: '/notes',
+    component: 'components/Notebook',
+    exact: true,
+  },
+  {
     path: '/stats',
     component: 'containers/Character',
     exact: true,
