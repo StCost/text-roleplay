@@ -4,61 +4,47 @@ export interface IRoute {
   exact?: boolean;
 }
 
+const getRouteWithUID = (route: IRoute) => ([
+  {
+    ...route,
+    exact: true,
+  },
+  {
+    path: `/:uid${route.path}`,
+    component: route.component,
+    exact: true,
+  },
+]);
+
 const routes: IRoute[] = [
   {
     path: '/chat',
     component: 'containers/Chat',
   },
-  {
-    path: '/:uid/settings',
-    component: 'containers/Settings',
-    exact: true,
-  },
-  {
-    path: '/:uid/inventory',
-    component: 'containers/Inventory',
-    exact: true,
-  },
-  {
+  ...getRouteWithUID({
     path: '/inventory',
     component: 'containers/Inventory',
-    exact: true,
-  },
-  {
-    path: '/:uid/perks',
-    component: 'containers/Perks',
-    exact: true,
-  },
-  {
+  }),
+  ...getRouteWithUID({
     path: '/perks',
     component: 'containers/Perks',
-    exact: true,
-  },
-  {
-    path: '/:uid/stats',
-    component: 'containers/Character',
-    exact: true,
-  },
-  {
-    path: '/:uid/notes',
-    component: 'components/Notebook',
-    exact: true,
-  },
-  {
-    path: '/notes',
-    component: 'components/Notebook',
-    exact: true,
-  },
-  {
+  }),
+  ...getRouteWithUID({
     path: '/stats',
     component: 'containers/Character',
-    exact: true,
-  },
-  {
+  }),
+  ...getRouteWithUID({
+    path: '/:uid/notes',
+    component: 'components/Notebook',
+  }),
+  ...getRouteWithUID({
     path: '/settings',
     component: 'containers/Settings',
-    exact: true,
-  },
+  }),
+  ...getRouteWithUID({
+    path: '/status',
+    component: 'containers/Status'
+  }),
   {
     path: '/items',
     component: 'containers/Items',

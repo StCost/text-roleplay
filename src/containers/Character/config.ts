@@ -35,6 +35,17 @@ export interface ICharacteristic {
   total: number;
 }
 
+export type TLimb = 'crippled' | 'fine';
+
+export interface ILimbs {
+  handR: TLimb;
+  handL: TLimb;
+  legR: TLimb;
+  legL: TLimb;
+  head: TLimb;
+  torso: TLimb;
+}
+
 export interface ICharacter {
   uid: string;
   special: {
@@ -63,6 +74,7 @@ export interface ICharacter {
     barter: ICharacteristic;
     survival: ICharacteristic;
   };
+  limbs: ILimbs;
   stats: IStats;
   bio: string;
   inventory: IInventory,
@@ -77,6 +89,15 @@ export const initialCharacteristic = {
   total: 0,
 };
 
+
+export const defaultLimbs: ILimbs = {
+  handR: 'fine',
+  head: 'fine',
+  handL: 'fine',
+  torso: 'fine',
+  legR: 'fine',
+  legL: 'fine',
+};
 export const initialCharacter: ICharacter = {
   uid: localStorage.getItem('uid') || '',
   special: {
@@ -124,6 +145,7 @@ export const initialCharacter: ICharacter = {
     skillPoints: 0,
     spentSkillPoints: 0,
   },
+  limbs: defaultLimbs,
   bio: '',
   inventory: {},
   perks: [],
@@ -376,7 +398,40 @@ export interface ICharacterChanges {
   after: number | string | ICharacteristic;
 }
 
-export const getConfigByField = (findField: string): IField | undefined  => {
-  return [...special, ...skills, ...stats, ...subStats].find(({ field }) => field === findField);
+export const limb: IField[] = [
+  {
+    label: 'Head',
+    field: 'head',
+    full: 'Голова',
+  },
+  {
+    label: 'Left Hand',
+    field: 'handL',
+    full: 'Лева рука',
+  },
+  {
+    label: 'Right Hand',
+    field: 'handR',
+    full: 'Правая рука',
+  },
+  {
+    label: 'Torso',
+    field: 'torso',
+    full: 'Торс',
+  },
+  {
+    label: 'Left Leg',
+    field: 'legL',
+    full: 'Левая нога',
+  },
+  {
+    label: 'Right Leg',
+    field: 'legR',
+    full: 'Правая нога',
+  },
+];
+
+export const getConfigByField = (findField: string): IField | undefined => {
+  return [...special, ...skills, ...stats, ...subStats, ...limb].find(({ field }) => field === findField);
 };
 

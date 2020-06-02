@@ -1,11 +1,20 @@
 import React from 'react';
 import { message as notify } from 'antd';
+import { Store } from 'rc-field-form/lib/interface';
 
 import { IItem, IMessage, IState, IUser } from '../reducers/interfaces';
 import { diceRegex, exportRolls, hasDice } from './dice';
 import Image from "../components/Image";
 import YoutubeEmbed from "../components/YoutubeEmbed";
 import { RouteComponentProps } from "react-router";
+import {
+  getConfigByField, ICharacter, ICharacterChanges,
+  ICharacteristic, IField, IStats,
+  skills as configSkills,
+  special as configSpecial,
+  stats as configStats, subStats as configSubStats
+} from "../containers/Character/config";
+import { diff } from "deep-object-diff";
 
 export const camelize = (str: string) => {
   return str
@@ -243,5 +252,97 @@ export const getStateUser = (state: IState, props: RouteComponentProps) => {
     currentUser,
     character,
   }
+};
+
+
+// TODO Needs refactor for sure
+export const processCharacterChanges = async (value: Store, char: Store) => {
+  const { special, skills, stats } = char;
+
+  if (!value.bio) {
+    const specialTotal: { [key: string]: number } = {};
+    configSpecial.forEach(({ field, label }) => {
+      const value: ICharacteristic = special[field];
+      const total = Math.max(0, Math.min(9, value.base + value.change));
+      special[field] = {
+        ...value,
+        total,
+      };
+      specialTotal[label.toLowerCase()] = total;
+    });
+
+    stats.spentSkillPoints = 0;
+    configSkills.forEach(({ field, getBase }) => {
+      const value: ICharacteristic = skills[field];
+      const change = Math.max(1, value.change);
+      const base = Math.max(1, getBase ? getBase(specialTotal, stats) : 1);
+      const total = Math.max(1, Math.min(95, base + change));
+
+      skills[field] = {
+        change,
+        base,
+        total,
+      };
+      stats.spentSkillPoints += (value.change - 1);
+    });
+
+    [...configStats, ...configSubStats].forEach(({ field, getBase }) => {
+      if (getBase) {
+        if (field === 'armorClass') {
+          const base = getBase(specialTotal, stats);
+          const change = stats[field].change;
+          stats[field] = {
+            change,
+            base,
+            total: change + base,
+          }
+        } else {
+          stats[field] = Math.floor(getBase(specialTotal, stats));
+        }
+      }
+    });
+  }
+
+  return {
+    special,
+    skills,
+    stats,
+  };
+};
+
+export const getCharacterChanges = (beforeChar: ICharacter, afterChar: ICharacter) => {
+  const before = diff(afterChar, beforeChar);
+  const after = diff(beforeChar, afterChar);
+
+  const changes: ICharacterChanges[] = [];
+
+  Object.entries(before).forEach(([name, characteristic]: [string, string | ICharacteristic | IStats]) => {
+    if (name === 'bio' && typeof characteristic === 'string') {
+      changes.push({
+        label: 'Bio',
+        full: 'Биография',
+        before: characteristic,
+
+        after: after[name],
+      });
+      return;
+    }
+
+    if (typeof characteristic === 'object' && !Array.isArray(characteristic) && after[name])
+      Object.entries(characteristic).forEach(([field, value]: [string, ICharacteristic]) => {
+        const afterValue = after[name][field];
+        const config: IField | undefined = getConfigByField(field);
+        if (config) {
+          changes.push({
+            label: config.label,
+            full: config.full,
+            before: value,
+            after: afterValue,
+          });
+        }
+      })
+  });
+
+  return changes;
 };
 

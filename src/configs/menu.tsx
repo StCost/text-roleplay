@@ -10,6 +10,7 @@ import {
   IdcardOutlined,
   TrophyOutlined,
   BookOutlined,
+  SolutionOutlined,
 } from '@ant-design/icons';
 
 export interface IMenuItem {
@@ -38,6 +39,11 @@ const menu: IMenuItem[] = [
 
 export const characterMenu: IMenuItem[] = [
   {
+    "label": "Статус",
+    "path": "./status",
+    icon: <IdcardOutlined/>
+  },
+  {
     "label": "Перки",
     "path": "./perks",
     icon: <TrophyOutlined/>
@@ -50,7 +56,7 @@ export const characterMenu: IMenuItem[] = [
   {
     "label": "Характеристики",
     "path": "./stats",
-    icon: <IdcardOutlined/>
+    icon: <SolutionOutlined/>
   },
   {
     "label": "Записи",

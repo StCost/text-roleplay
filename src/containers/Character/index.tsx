@@ -14,9 +14,8 @@ import {
   message as notify,
 } from 'antd';
 import { UserOutlined } from '@ant-design/icons';
-import { Callbacks, Store } from 'rc-field-form/lib/interface';
+import { Callbacks } from 'rc-field-form/lib/interface';
 import { RouteComponentProps } from 'react-router';
-import { diff } from 'deep-object-diff';
 
 import '../../styles/character.scss';
 import { IState, IUser } from '../../reducers/interfaces';
@@ -26,15 +25,10 @@ import {
   skills as configSkills,
   stats as configStats,
   subStats as configSubStats,
-  ICharacteristic,
   ICharacter,
-  IStats,
-  getConfigByField,
-  IField,
-  ICharacterChanges,
 } from './config';
 import actions from '../../reducers/actions';
-import { getStateUser } from '../../helpers/utils';
+import { getCharacterChanges, getStateUser, processCharacterChanges } from '../../helpers/utils';
 
 interface ICharacterProps extends RouteComponentProps {
   loading: boolean;
@@ -45,12 +39,16 @@ interface ICharacterProps extends RouteComponentProps {
   character: ICharacter;
 }
 
+interface ICharacterState{
+  character: ICharacter;
+}
+
 /**
  * This component is most complex one in whole project
  * Beware of complex methods and data types
  */
-class Character extends Component<ICharacterProps, ICharacter> {
-  state = initialCharacter;
+class Character extends Component<ICharacterProps, ICharacterState> {
+  state = { character: initialCharacter };
 
   componentDidMount = () => {
     const { character, uid, user } = this.props;
@@ -60,6 +58,11 @@ class Character extends Component<ICharacterProps, ICharacter> {
     if (!user) {
       actions.getUser({ uid });
     }
+  };
+
+  componentDidUpdate = (prevProps: ICharacterProps, prevState: ICharacterProps) => {
+    if (prevProps.character !== this.props.character && this.state.character !== this.props.character)
+      this.setState({ character: this.props.character });
   };
 
   getSpecial = () => {
@@ -227,9 +230,10 @@ class Character extends Component<ICharacterProps, ICharacter> {
             <span className="char-main-stats-hp-label">Очки Здоровья (ОЗ)</span>
             <div className="char-main-stats-hp-body">
               <Form.Item name={['stats', 'healthPoints']}>
-                <InputNumber
-                  max={this.state.stats.maxHealthPoints || undefined}
-                  min={-Math.floor(this.state.stats.maxHealthPoints / 2)}
+                <Input
+                  max={this.state.character.stats.maxHealthPoints || undefined}
+                  min={-Math.floor(this.state.character.stats.maxHealthPoints / 2)}
+                  readOnly
                   disabled={!hasRight}
                 />
               </Form.Item>
@@ -265,11 +269,12 @@ class Character extends Component<ICharacterProps, ICharacter> {
                 />
               </Form.Item>
               <Form.Item name={['stats', 'armorClass', 'change']}>
-                <InputNumber
+                <Input
                   className="char-main-stats-ap-change"
+                  readOnly
+                  disabled={!hasRight}
                   min={1}
                   max={95}
-                  disabled={!hasRight}
                 />
               </Form.Item>
               <Form.Item name={['stats', 'armorClass', 'base']}>
@@ -307,118 +312,37 @@ class Character extends Component<ICharacterProps, ICharacter> {
 
   onChange: Callbacks['onValuesChange'] = async (value, char) => {
     if (value.bio) {
-      this.setState({ bio: value.bio });
+      this.setState({
+        character: {
+          ...this.state.character,
+          bio: value.bio,
+        }
+      });
     } else {
-      this.setState(await this.processChar(value, char));
-    }
-  };
-
-  // TODO Needs refactor for sure
-  processChar = async (value: Store, char: Store) => {
-    const { special, skills, stats } = char;
-
-    if (!value.bio) {
-      const specialTotal: { [key: string]: number } = {};
-      configSpecial.forEach(({ field, label }) => {
-        const value: ICharacteristic = special[field];
-        const total = Math.max(0, Math.min(9, value.base + value.change));
-        special[field] = {
-          ...value,
-          total,
-        };
-        specialTotal[label.toLowerCase()] = total;
-      });
-
-      stats.spentSkillPoints = 0;
-      configSkills.forEach(({ field, getBase }) => {
-        const value: ICharacteristic = skills[field];
-        const change = Math.max(1, value.change);
-        const base = Math.max(1, getBase ? getBase(specialTotal, stats) : 1);
-        const total = Math.max(1, Math.min(95, base + change));
-
-        skills[field] = {
-          change,
-          base,
-          total,
-        };
-        stats.spentSkillPoints += (value.change - 1);
-      });
-
-      [...configStats, ...configSubStats].forEach(({ field, getBase }) => {
-        if (getBase) {
-          if (field === 'armorClass') {
-            const base = getBase(specialTotal, stats);
-            const change = stats[field].change;
-            stats[field] = {
-              change,
-              base,
-              total: change + base,
-            }
-          } else {
-            stats[field] = Math.floor(getBase(specialTotal, stats));
-          }
+      this.setState({
+        character: {
+          ...this.state.character,
+          ...await processCharacterChanges(value, char)
         }
       });
     }
-
-    return {
-      special,
-      skills,
-      stats,
-    };
-  };
-
-  getChanges = (beforeChar: ICharacter, afterChar: ICharacter) => {
-    const before = diff(afterChar, beforeChar);
-    const after = diff(beforeChar, afterChar);
-
-    const changes: ICharacterChanges[] = [];
-
-    Object.entries(before).forEach(([name, characteristic]: [string, string | ICharacteristic | IStats]) => {
-      if (name === 'bio' && typeof characteristic === 'string') {
-        changes.push({
-          label: 'Bio',
-          full: 'Биография',
-          before: characteristic,
-
-          after: after[name],
-        });
-        return;
-      }
-
-      if (typeof characteristic === 'object' && !Array.isArray(characteristic) && after[name])
-        Object.entries(characteristic).forEach(([field, value]: [string, ICharacteristic]) => {
-          const afterValue = after[name][field];
-          const config: IField | undefined = getConfigByField(field);
-          if (config) {
-            changes.push({
-              label: config.label,
-              full: config.full,
-              before: value,
-              after: afterValue,
-            });
-          }
-        })
-    });
-
-    return changes;
   };
 
   onSave = () => {
     const { uid, character } = this.props;
-    const stateCharacter = this.state;
+    const stateCharacter = this.state.character;
 
     if (!character) {
       notify.error('Персонаж не загружен!');
       return;
     }
 
-    let changes = this.getChanges(initialCharacter, stateCharacter);
+    let changes = getCharacterChanges(initialCharacter, stateCharacter);
     if (changes.length === 0) {
       notify.error('В персонаже ничего не изменилось');
       return;
     }
-    changes = this.getChanges(character || initialCharacter, stateCharacter);
+    changes = getCharacterChanges(character || initialCharacter, stateCharacter);
     if (changes.length === 0) {
       notify.error('В персонаже ничего не изменилось');
       return;
@@ -430,7 +354,6 @@ class Character extends Component<ICharacterProps, ICharacter> {
     }
 
     notify.success('Персонаж сохранён');
-    console.log(stateCharacter);
     actions.setCharacter({
       uid,
       character: stateCharacter
@@ -442,6 +365,12 @@ class Character extends Component<ICharacterProps, ICharacter> {
     });
   };
 
+  changeBio = (e: ChangeEvent<HTMLTextAreaElement>) => this.setState({
+    character: {
+      ...this.state.character,
+      bio: e.currentTarget.value
+    }
+  });
 
   render = () => {
     const { user, hasRight, currentUser, history, character } = this.props;
@@ -480,12 +409,12 @@ class Character extends Component<ICharacterProps, ICharacter> {
           )}
           extra={
             <Popconfirm
-              title="Применить изменения?"
+              title="Сохранить изменения?"
               okText="Да"
               cancelText="Отмена"
               onConfirm={this.onSave}
             >
-              <Button>Готово</Button>
+              <Button>Сохранить</Button>
             </Popconfirm>
           }
         >
@@ -494,8 +423,8 @@ class Character extends Component<ICharacterProps, ICharacter> {
               // This Input is not a part of form in order to optimize changes a bit
               disabled={!hasRight}
               minLength={3}
-              value={this.state.bio || character.bio}
-              onChange={(e: ChangeEvent<HTMLTextAreaElement>) => this.setState({ bio: e.currentTarget.value })}
+              value={this.state.character.bio}
+              onChange={this.changeBio}
             />
           </div>
           <div>

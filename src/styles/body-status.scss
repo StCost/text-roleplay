@@ -1,0 +1,72 @@
+$size: 64px;
+
+.body-status {
+  width: $size*5;
+  height: $size*5.34375;
+  padding: 24px;
+  position: relative;
+
+  > div {
+    display: flex;
+  }
+
+  .limb {
+    margin: -12px;
+    height: $size;
+    width: $size;
+    background-size: cover;
+    cursor: pointer;
+    position: relative;
+
+    &:hover {
+      animation: 1.5s blink infinite linear;
+    }
+
+    &.face {
+      position: absolute;
+      left: $size*0.375;
+      top: $size*0.65625;
+      pointer-events: none;
+    }
+
+    &.head {
+      transform: translate($size*1.625, $size*0.28125);
+      z-index: 1;
+    }
+    &.torso {
+      z-index: 2;
+    }
+    &.handL {
+      transform: translateY(-$size*0.0625);
+    }
+    &.legR, &.legL {
+      margin: -21px;
+      transform: translate($size*0.96875, -$size*0.15625);
+      z-index: 4;
+    }
+
+    &.handR, &.handL {
+      width: $size*2;
+      z-index: 3;
+    }
+
+    &.legR, &.legL, &.head, &.torso {
+      width: $size*2;
+      height: $size*2;
+    }
+  }
+}
+
+@keyframes blink {
+  0% {
+    opacity: 1;
+  }
+
+  50% {
+    opacity: 0.1;
+  }
+
+  100% {
+    opacity: 1;
+  }
+}
