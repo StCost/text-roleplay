@@ -19,7 +19,7 @@ function* setUser(payload: IPayload) {
 
 const requestedUsers: { [key: string]: true } = {};
 
-function getUser(payload: IPayload) {
+function* getUser(payload: IPayload) {
   const { uid, currentUser } = payload;
 
   if (requestedUsers[uid] && !currentUser) {
@@ -31,17 +31,21 @@ function getUser(payload: IPayload) {
     .ref('users')
     .child(uid);
 
-  ref.once('value', (rawUser) => {
-    const user = rawUser.val() || {};
+  yield ref.once('value', (rawUser) => {
+    const user = rawUser.val();
+    if (!user) {
+      actions.getUserFail({ ...payload, error: 'User does not exist' });
+      return;
+    }
     actions.getUserSuccess({ uid, user });
-  });
 
-  ref.on('child_changed', (rawProperty) => {
-    const key: string | null = rawProperty.key;
-    if (!key) return;
+    ref.on('child_changed', (rawProperty) => {
+      const key: string | null = rawProperty.key;
+      if (!key) return;
 
-    const value = rawProperty.val();
-    actions.getUserSuccess({ uid, updatedData: { [key]: value } })
+      const value = rawProperty.val();
+      actions.getUserSuccess({ uid, updatedData: { [key]: value } })
+    });
   });
 }
 

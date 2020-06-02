@@ -31,6 +31,9 @@ const Message = (props: IMessageProps) => {
     onUserClick = noop,
   } = props;
 
+  if (!user || !user.uid)
+    return <React.Fragment/>;
+
   const title = user && (
     <UserInfo
       user={user}
