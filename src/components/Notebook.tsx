@@ -26,6 +26,8 @@ class Notebook extends Component<INotebookProps, { notes?: string }> {
     const { character, user, uid } = this.props;
     if (!character)
       actions.getCharacter({ uid });
+    else
+      this.setState({ notes: character.notes });
 
     if (!user)
       actions.getUser({ uid });

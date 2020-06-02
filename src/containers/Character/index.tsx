@@ -53,9 +53,12 @@ class Character extends Component<ICharacterProps, ICharacter> {
   state = initialCharacter;
 
   componentDidMount = () => {
-    const { character, uid } = this.props;
+    const { character, uid, user } = this.props;
     if (!character) {
       actions.getCharacter({ uid });
+    }
+    if (!user) {
+      actions.getUser({ uid });
     }
   };
 
@@ -443,7 +446,7 @@ class Character extends Component<ICharacterProps, ICharacter> {
   render = () => {
     const { user, hasRight, currentUser, history, character } = this.props;
 
-    if (!user) {
+    if (!user || !character) {
       return (
         <Spin spinning>
           <Empty description="Пользователь не загружен"/>
@@ -451,11 +454,11 @@ class Character extends Component<ICharacterProps, ICharacter> {
       );
     }
 
-    if (user && user.uid && currentUser && currentUser.uid === user.uid && history.location.pathname === '/character') {
+    if (user && user.uid && currentUser && currentUser.uid === user.uid && history.location.pathname === '/stats') {
       return (
         <Redirect
-          from="/character"
-          to={`/${currentUser.uid}/character`}
+          from="/stats"
+          to={`/${currentUser.uid}/stats`}
           exact
         />
       )
