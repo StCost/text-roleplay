@@ -494,7 +494,7 @@ class Character extends Component<ICharacterProps, ICharacter> {
               // This Input is not a part of form in order to optimize changes a bit
               disabled={!hasRight}
               minLength={3}
-              value={this.state.bio}
+              value={this.state.bio || character.bio}
               onChange={(e: ChangeEvent<HTMLTextAreaElement>) => this.setState({ bio: e.currentTarget.value })}
             />
           </div>
