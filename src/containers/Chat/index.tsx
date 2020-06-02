@@ -186,7 +186,7 @@ class Chat extends Component<IChatProps, IChatState> {
         user={users[m.author]}
         uid={uid}
         onDateClick={(currentUser && currentUser.isAdmin) ? this.onPinMessage(m) : undefined}
-        onUserClick={() => history.push(`/${m.author}/settings`)}
+        onUserClick={() => history.push(`/${m.author}/status`)}
       />
     );
   };
@@ -200,7 +200,7 @@ class Chat extends Component<IChatProps, IChatState> {
 
   bodyRef: HTMLDivElement | null = null;
   render = () => {
-    const { messages, loading } = this.props;
+    const { messages, loading, currentUser } = this.props;
 
     return (
       <Spin spinning={loading}>
@@ -228,6 +228,7 @@ class Chat extends Component<IChatProps, IChatState> {
               onChange={this.onChangeMessage}
               onKeyDown={this.onKeyDown}
               value={this.state.message}
+              disabled={!currentUser || !currentUser.isAdmin}
               onUpload={(message: string) => {
                 this.changeMessage(`${this.state.message} ${message}`);
                 actions.notify({ message: 'Файл успешно загружен!' });
