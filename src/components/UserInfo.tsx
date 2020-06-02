@@ -2,7 +2,7 @@ import React from 'react';
 import { Tooltip } from 'antd';
 import moment from 'moment';
 
-import '../styles/use-info.scss';
+import '../styles/user-info.scss';
 import Avatar from './Avatar';
 import { IUser } from '../reducers/interfaces';
 import { getUserStatus } from '../helpers/utils';
