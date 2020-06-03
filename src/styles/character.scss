@@ -5,6 +5,10 @@ div.ant-card.char {
   max-width: initial;
   width: auto;
 
+  .char-controls > button:first-child {
+    margin-right: 16px;
+  }
+
   > .ant-card-body {
     display: flex;
     flex-direction: column;
@@ -181,7 +185,7 @@ div.ant-card.char {
         border: 1px solid $border-color-light;
         background: $background-color-lightest;
 
-        .ant-input-number,input {
+        .ant-input-number, input {
           width: 64px;
         }
       }

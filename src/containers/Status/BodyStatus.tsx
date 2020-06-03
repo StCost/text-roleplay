@@ -9,10 +9,9 @@ interface IBodyStatusProps {
   hasRight?: boolean;
 }
 
+const faceType = [0, 1, 2, 3, 3, 4, 4];
 const isCrippled = (limb: TLimb) =>
   limb === 'crippled';
-
-// const labels
 
 const BodyStatus = (props: IBodyStatusProps) => {
   const { limbs, onClick, hasRight } = props;
@@ -45,7 +44,7 @@ const BodyStatus = (props: IBodyStatusProps) => {
           <div
             key='face'
             className={`limb face`}
-            style={{ backgroundImage: `url(./assets/face_0${Math.min(4, crippledLimbs)}.png)` }}
+            style={{ backgroundImage: `url(./assets/face_0${faceType[crippledLimbs]}.png)` }}
           />
         </div>
       </div>

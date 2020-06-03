@@ -12,7 +12,7 @@ import {
   Popconfirm,
   message as notify,
 } from 'antd';
-import { UserOutlined } from '@ant-design/icons';
+import { UserOutlined, ExportOutlined } from '@ant-design/icons';
 import { RouteComponentProps } from 'react-router';
 
 import '../../styles/character.scss';
@@ -66,7 +66,7 @@ class Character extends Component<ICharacterProps, ICharacterState> {
 
   componentDidUpdate = (prevProps: ICharacterProps) => {
     if (prevProps.character !== this.props.character) {
-      this.setState({ character: {...this.props.character} });
+      this.setState({ character: { ...this.props.character } });
     }
   };
 
@@ -372,6 +372,47 @@ class Character extends Component<ICharacterProps, ICharacterState> {
     }
   });
 
+  downloadCharacter = () => {
+    const dataStr = 'data:text/json;charset=utf-8,' + encodeURIComponent(JSON.stringify(this.props.character));
+    const dlAnchorElem = document.createElement('a');
+    dlAnchorElem.setAttribute('href', dataStr);
+    dlAnchorElem.setAttribute('download', `character_${Date.now()}.json`);
+    dlAnchorElem.click();
+    dlAnchorElem.remove();
+  };
+
+  getControls = (character: ICharacter) => (
+    <div className="char-controls">
+      <Popconfirm
+        title="Экспортировать персонажа?"
+        okText="Да"
+        cancelText="Отмена"
+        onConfirm={this.downloadCharacter}
+        disabled={!character}
+      >
+        <Button disabled={!character}>
+          <ExportOutlined/>
+        </Button>
+      </Popconfirm>
+      <Popconfirm
+        title="Сохранить изменения?"
+        okText="Да"
+        cancelText="Отмена"
+        onConfirm={this.onSave}
+      >
+        <Button>Сохранить</Button>
+      </Popconfirm>
+    </div>
+  );
+
+  getTitle = (user: IUser) => (
+    <>
+      <UserOutlined/>
+      {' '}
+      Персонаж игрока {user.nickname || user.uid}
+    </>
+  );
+
   render = () => {
     const { user, hasRight, currentUser, history, character } = this.props;
     const stateCharacter = this.state.character;
@@ -397,23 +438,8 @@ class Character extends Component<ICharacterProps, ICharacterState> {
     return (
       <Card
         className="char"
-        title={(
-          <>
-            <UserOutlined/>
-            {' '}
-            Персонаж игрока {user.nickname || user.uid}
-          </>
-        )}
-        extra={
-          <Popconfirm
-            title="Сохранить изменения?"
-            okText="Да"
-            cancelText="Отмена"
-            onConfirm={this.onSave}
-          >
-            <Button>Сохранить</Button>
-          </Popconfirm>
-        }
+        title={this.getTitle(user)}
+        extra={this.getControls(character)}
       >
         <div className="char-bio">
           <Input.TextArea
