@@ -83,7 +83,7 @@ class Status extends Component<IStatusProps, IStatusState> {
 
   getStatus = (limbs: ILimbs) => {
     const { hasRight } = this.props;
-    return (
+    return limbs && (
       <BodyStatus
         limbs={limbs}
         onClick={hasRight ? this.onLimbClick : undefined}
@@ -153,16 +153,16 @@ class Status extends Component<IStatusProps, IStatusState> {
 
   getMainStats = (character: ICharacter) => {
     const { hasRight } = this.props;
-    const { stats } = character;
+    let { stats } = character;
 
-    return (
+    return stats && (
       <Card className="status-main-stats">
         <div className="status-main-stats-health">
           <div className="status-main-stats-hp">
             <span className="status-main-stats-hp-label">Очки Здоровья (ОЗ)</span>
             <div className="status-main-stats-hp-body">
               <InputNumber
-                max={stats.maxHealthPoints || undefined}
+                max={stats.maxHealthPoints || 1000}
                 min={-Math.floor(stats.maxHealthPoints / 2)}
                 disabled={!hasRight}
                 value={stats.healthPoints}

@@ -88,7 +88,7 @@ class Character extends Component<ICharacterProps, ICharacterState> {
     const { hasRight } = this.props;
     const { special } = character;
 
-    return (
+    return special && (
       <Card className="char-special">
         <div className="char-special-item">
           <span className="char-special-label"/>
@@ -166,7 +166,7 @@ class Character extends Component<ICharacterProps, ICharacterState> {
     const { hasRight } = this.props;
     const { skills, gifts } = character;
 
-    return (
+    return skills && (
       <Card className="char-skills">
         <div className="char-skills-item">
           <span className="char-skills-label"/>
@@ -226,7 +226,7 @@ class Character extends Component<ICharacterProps, ICharacterState> {
     const { hasRight } = this.props;
     const { stats } = character;
 
-    return (
+    return stats && (
       <Card className="char-stats">
         {configStats.map(({ label, full, field, getBase }) => (
           <div
@@ -274,7 +274,7 @@ class Character extends Component<ICharacterProps, ICharacterState> {
     const { hasRight } = this.props;
     const { stats } = character;
 
-    return (
+    return stats && (
       <Card className="char-main-stats">
         <div className="char-main-stats-health">
           <div className="char-main-stats-hp">
