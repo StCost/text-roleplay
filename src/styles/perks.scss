@@ -7,6 +7,16 @@ div.ant-card.perks {
   width: 100%;
   max-width: initial;
 
+  @media (max-width: 767px) {
+    margin: 48px 0 0 0;
+    border: none;
+
+    > .ant-card-body {
+      padding: 0;
+      display: block;
+    }
+  }
+
   .perks-body {
     display: flex;
     flex-wrap: wrap;

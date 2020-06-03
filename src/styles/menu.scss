@@ -15,10 +15,10 @@
     overflow: auto;
     z-index: 1000;
 
-    .ant-menu.ant-menu-horizontal {
-      width: fit-content;
+    ul.ant-menu.ant-menu-horizontal {
+      width: 1124px;
       justify-content: center;
-      min-width: 100vw;
+      min-width: 1124px;
       position: relative;
     }
   }

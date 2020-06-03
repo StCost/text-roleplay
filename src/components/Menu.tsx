@@ -57,17 +57,9 @@ class Menu extends Component<IMenuProps, IMenuState> {
     }
   };
 
-  render = () => {
-    const { isLoggedIn, location } = this.props;
+  getDesktopMenu = () => {
+    const { location } = this.props;
     const { openedKeys } = this.state;
-
-    if (!isLoggedIn) {
-      return <React.Fragment/>;
-    }
-
-    const mode = window.innerWidth < 767
-      ? 'horizontal'
-      : 'inline';
 
     const userSubMenu = (
       <AntdMenu.SubMenu
@@ -96,7 +88,7 @@ class Menu extends Component<IMenuProps, IMenuState> {
     return (
       <div className="menu">
         <AntdMenu
-          mode={mode}
+          mode="inline"
           selectedKeys={[location.pathname.split('/').pop() || '']}
           openKeys={openedKeys}
         >
@@ -106,6 +98,38 @@ class Menu extends Component<IMenuProps, IMenuState> {
         </AntdMenu>
       </div>
     );
+  };
+
+  getMobileMenu = () => {
+    const { location } = this.props;
+
+    return (
+      <div className="menu">
+        <AntdMenu
+          mode="horizontal"
+          selectedKeys={[location.pathname.split('/').pop() || '']}
+        >
+          {[...characterMenu, ...userMenu, ...menu].map(this.getMenuItem)}
+        </AntdMenu>
+      </div>
+    );
+  };
+
+  render = () => {
+    const { isLoggedIn } = this.props;
+
+    if (!isLoggedIn) {
+      return <React.Fragment/>;
+    }
+
+    const mode = window.innerWidth < 767
+      ? 'horizontal'
+      : 'inline';
+
+    if (mode === 'inline')
+      return this.getDesktopMenu();
+
+    return this.getMobileMenu();
   };
 }
 
