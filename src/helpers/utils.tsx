@@ -309,6 +309,7 @@ export const processCharacterChanges = (value: Store, char: Store) => {
     special,
     skills,
     stats,
+    gifts,
   };
 };
 

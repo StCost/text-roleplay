@@ -15,7 +15,7 @@ import '../../styles/perks.scss';
 import PerkItem from './PerkItem';
 import { getStateUser, redirectToUserPage } from '../../helpers/utils';
 import actions from '../../reducers/actions';
-import { IPerk, IUser } from '../../reducers/interfaces';
+import { IPerk, IState, IUser } from '../../reducers/interfaces';
 import { ICharacter } from "../Character/config";
 
 interface IPerksProps extends RouteComponentProps {
@@ -203,4 +203,15 @@ class Index extends Component<IPerksProps, IPerksState> {
   }
 }
 
-export default withRouter(connect(getStateUser)(Index));
+const mapStateToProps = (state: IState, props: RouteComponentProps) => {
+  const charState = getStateUser(state, props);
+  const { user, currentUser, character } = charState;
+  const newHasRight = (!!user && !!currentUser) && currentUser.approved && ((currentUser.uid === user.uid && (character && !character.static)) || currentUser.isAdmin);
+
+  return {
+    ...charState,
+    hasRight: newHasRight,
+  }
+};
+
+export default withRouter(connect(mapStateToProps)(Index));

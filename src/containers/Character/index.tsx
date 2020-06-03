@@ -141,7 +141,10 @@ class Character extends Component<ICharacterProps, ICharacterState> {
   };
 
   onGiftSelect = (field: string) => () => {
+    const { hasRight } = this.props;
     const { character } = this.state;
+    if (!hasRight) return;
+
     // Avoid mutations
     const gifts: TGifts = [...character.gifts];
     const index = gifts.indexOf(field);
@@ -508,7 +511,7 @@ class Character extends Component<ICharacterProps, ICharacterState> {
 const mapStateToProps = (state: IState, props: RouteComponentProps) => {
   const charState = getStateUser(state, props);
   const { user, currentUser, character } = charState;
-  const newHasRight = (!!user && !!currentUser) && currentUser.approved && ((currentUser.uid === user.uid && (character && !character.static)) || !currentUser.isSuperAdmin);
+  const newHasRight = (!!user && !!currentUser) && currentUser.approved && ((currentUser.uid === user.uid && (character && !character.static)) || currentUser.isAdmin);
 
   return {
     ...charState,

@@ -21,7 +21,8 @@ function getCharacter(payload: IPayload) {
   const onUpdate = (rawChar: firebase.database.DataSnapshot) => {
     const { key } = rawChar;
     if (!key) return;
-    const updatedData = {[key]: rawChar.val() || undefined};
+    const value = rawChar.val();
+    const updatedData = {[key]: value === undefined ? '' : value};
 
     actions.getCharacterSuccess({ uid, updatedData });
   };
