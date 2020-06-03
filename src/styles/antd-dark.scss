@@ -219,17 +219,6 @@ div, span, pre, ul, li, h1 {
   }
 }
 
-.ant-empty {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-
-  .ant-empty-img-default {
-    filter: invert(1);
-  }
-}
-
 .ant-select-single:not(.ant-select-customize-input) .ant-select-selector {
   background-color: $background-color-interactive;
   border-color: $border-color-interactive;

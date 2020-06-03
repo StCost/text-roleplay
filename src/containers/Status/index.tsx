@@ -238,12 +238,12 @@ class Status extends Component<IStatusProps, IStatusState> {
   };
 
   render = () => {
-    const { user, character } = this.props;
+    const { user, character, loading } = this.props;
     const stateCharacter = this.state.character;
 
-    if (!user || !character) {
+    if (!user || !character || loading) {
       return (
-        <Spin spinning>
+        <Spin spinning={loading}>
           <Empty description="Пользователь не загружен"/>
         </Spin>
       );
@@ -252,7 +252,7 @@ class Status extends Component<IStatusProps, IStatusState> {
     return (
       <Card
         className="status"
-        title={`Статус персонажа ${user.nickname}`}
+        // title={`Статус персонажа ${user.nickname}`}
         extra={
           <Popconfirm
             title="Сохранить изменения?"

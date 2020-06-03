@@ -41,6 +41,7 @@ const reducer = (state = initialState, action: IAction) => {
     case 'REGISTER':
     case 'RESET_PASSWORD':
     case 'SET_CHARACTER_NOTES':
+    case 'GET_CHARACTER':
     case 'REMOVE_MESSAGE':
     case 'UPLOAD_FILE': {
       return {
@@ -49,6 +50,7 @@ const reducer = (state = initialState, action: IAction) => {
       }
     }
     case 'SET_USER_SUCCESS':
+    case 'GET_CHARACTER_FAIL':
     case 'SET_USER_FAIL':
     case 'GET_MESSAGES_FAIL':
     case 'GET_MORE_MESSAGES_SUCCESS':
@@ -221,6 +223,7 @@ const reducer = (state = initialState, action: IAction) => {
 
       return {
         ...state,
+        loading: false,
         characters: {
           ...state.characters,
           [action.uid]: newCharacter,

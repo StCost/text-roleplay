@@ -462,12 +462,12 @@ class Character extends Component<ICharacterProps, ICharacterState> {
   );
 
   render = () => {
-    const { user, hasRight, character } = this.props;
+    const { user, hasRight, character, loading } = this.props;
     const stateCharacter = this.state.character;
 
-    if (!user || !character || stateCharacter === initialCharacter) {
+    if (!user || !character || stateCharacter === initialCharacter || loading) {
       return (
-        <Spin spinning>
+        <Spin spinning={loading}>
           <Empty description="Пользователь не загружен"/>
         </Spin>
       );

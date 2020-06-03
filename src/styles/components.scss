@@ -61,6 +61,22 @@ img.chat-image {
   }
 }
 
+.ant-empty {
+  position: fixed;
+  top: 50%;
+  left: calc(50% + 42px);
+  transform: translate(calc(-50% + 50px), -50%);
+
+  @media(max-width: 767px) {
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+
+  .ant-empty-img-default {
+    filter: invert(1);
+  }
+}
+
 .help pre {
   white-space: pre-line;
 }
