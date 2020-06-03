@@ -34,7 +34,7 @@ const routes: IRoute[] = [
     component: 'containers/Character',
   }),
   ...getRouteWithUID({
-    path: '/:uid/notes',
+    path: '/notes',
     component: 'components/Notebook',
   }),
   ...getRouteWithUID({

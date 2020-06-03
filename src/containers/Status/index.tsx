@@ -1,5 +1,5 @@
 import React, { ChangeEvent, Component } from 'react';
-import { Redirect, RouteComponentProps, withRouter } from 'react-router';
+import { RouteComponentProps, withRouter } from 'react-router';
 import { connect } from 'react-redux';
 import {
   Card,
@@ -22,7 +22,13 @@ import {
   TLimb
 } from '../Character/config';
 import { IUser } from '../../reducers/interfaces';
-import { getCharacterChanges, getStateUser, processCharacterChanges, set } from '../../helpers/utils';
+import {
+  getCharacterChanges,
+  getStateUser,
+  processCharacterChanges,
+  redirectToUserPage,
+  set
+} from '../../helpers/utils';
 import actions from "../../reducers/actions";
 import BodyStatus from "./BodyStatus";
 
@@ -43,7 +49,7 @@ class Status extends Component<IStatusProps, IStatusState> {
   state = { character: initialCharacter };
 
   componentDidMount = () => {
-    const { character, uid, user } = this.props;
+    const { character, uid, user, currentUser, history } = this.props;
     if (!character) {
       actions.getCharacter({ uid });
     } else {
@@ -52,11 +58,14 @@ class Status extends Component<IStatusProps, IStatusState> {
     if (!user) {
       actions.getUser({ uid });
     }
+    redirectToUserPage(user, currentUser, history);
   };
 
   componentDidUpdate = (prevProps: IStatusProps) => {
-    if (prevProps.character !== this.props.character && this.state.character !== this.props.character)
-      this.setState({ character: this.props.character });
+    const { user, currentUser, history, character } = this.props;
+    if (prevProps.character !== character && this.state.character !== character)
+      this.setState({ character });
+    redirectToUserPage(user, currentUser, history);
   };
 
 
@@ -229,18 +238,8 @@ class Status extends Component<IStatusProps, IStatusState> {
   };
 
   render = () => {
-    const { user, currentUser, history, character } = this.props;
+    const { user, character } = this.props;
     const stateCharacter = this.state.character;
-
-    if (user && user.uid && currentUser && currentUser.uid === user.uid && history.location.pathname === '/status') {
-      return (
-        <Redirect
-          from="/status"
-          to={`/${currentUser.uid}/status`}
-          exact
-        />
-      )
-    }
 
     if (!user || !character) {
       return (

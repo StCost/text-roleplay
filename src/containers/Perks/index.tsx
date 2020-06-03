@@ -1,6 +1,6 @@
 import React, { ChangeEvent, Component, KeyboardEvent } from 'react';
 import { connect } from 'react-redux';
-import { Redirect, RouteComponentProps, withRouter } from 'react-router';
+import { RouteComponentProps, withRouter } from 'react-router';
 import {
   Card,
   Input,
@@ -13,7 +13,7 @@ import { Store } from 'rc-field-form/lib/interface';
 
 import '../../styles/perks.scss';
 import PerkItem from './PerkItem';
-import { getStateUser } from '../../helpers/utils';
+import { getStateUser, redirectToUserPage } from '../../helpers/utils';
 import actions from '../../reducers/actions';
 import { IPerk, IUser } from '../../reducers/interfaces';
 import { ICharacter } from "../Character/config";
@@ -39,10 +39,16 @@ class Index extends Component<IPerksProps, IPerksState> {
   };
 
   componentDidMount = () => {
-    const { character, uid } = this.props;
+    const { character, uid, user, currentUser, history } = this.props;
     if (!character) {
       actions.getCharacter({ uid });
     }
+    redirectToUserPage(user, currentUser, history);
+  };
+
+  componentDidUpdate = () => {
+    const { user, currentUser, history } = this.props;
+    redirectToUserPage(user, currentUser, history);
   };
 
   scrollUp = () =>
@@ -134,18 +140,8 @@ class Index extends Component<IPerksProps, IPerksState> {
 
   bodyRef: HTMLDivElement | null = null;
   render = () => {
-    const { currentUser, character, user, history, loading, hasRight } = this.props;
+    const { character, user, loading, hasRight } = this.props;
     const { label, description } = this.state;
-
-    if (user && user.uid && currentUser && currentUser.uid === user.uid && history.location.pathname === '/perks') {
-      return (
-        <Redirect
-          from="/perks"
-          to={`/${currentUser.uid}/perks`}
-          exact
-        />
-      )
-    }
 
     if (!user || !character) return false;
 

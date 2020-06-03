@@ -1,5 +1,5 @@
 import React, { ChangeEvent } from 'react';
-import { withRouter, Redirect } from 'react-router';
+import { withRouter } from 'react-router';
 import { connect } from 'react-redux';
 import {
   Input,
@@ -16,7 +16,7 @@ import ItemsList, { IControl } from '../ItemsTable/ItemsList';
 import ActiveUsersList from '../../components/UsersList';
 import ItemsTable, { IItemsTableProps, IItemsTableState } from '../ItemsTable';
 import amountModal from '../../components/AmountModal';
-import { getItemName, getStateUser } from '../../helpers/utils';
+import { getItemName, getStateUser, redirectToUserPage } from '../../helpers/utils';
 import { ICharacter } from '../Character/config';
 
 interface IInventoryProps extends IItemsTableProps {
@@ -43,16 +43,19 @@ class Inventory extends ItemsTable<IInventoryProps, IInventoryState> {
   };
 
   componentDidMount = () => {
-    const { character, uid } = this.props;
+    const { character, uid, user, currentUser, history } = this.props;
     if (!character && uid) {
       actions.getCharacter({ uid });
     }
+    redirectToUserPage(user, currentUser, history);
   };
 
-  componentDidUpdate = (prevProps: IInventoryProps,prevState: IInventoryState) => {
+  componentDidUpdate = (prevProps: IInventoryProps, prevState: IInventoryState) => {
+    const { user, currentUser, history } = this.props;
     if (prevState !== this.state) {
       localStorage.setItem('inventory-state', JSON.stringify(this.state));
     }
+    redirectToUserPage(user, currentUser, history);
   };
 
   getPageControls = () => [
@@ -218,17 +221,7 @@ class Inventory extends ItemsTable<IInventoryProps, IInventoryState> {
     );
 
   getContent = (items: IItem[]) => {
-    const { currentUser, uid, hasRight, user, history } = this.props;
-
-    if (user && user.uid && currentUser && currentUser.uid === user.uid && history.location.pathname === '/inventory') {
-      return (
-        <Redirect
-          from="/inventory"
-          to={`/${currentUser.uid}/inventory`}
-          exact
-        />
-      )
-    }
+    const { currentUser, uid, hasRight } = this.props;
 
     return (
       <ItemsList

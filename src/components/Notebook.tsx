@@ -1,10 +1,10 @@
 import React, { ChangeEvent, Component } from 'react';
 import { connect } from 'react-redux';
-import { Redirect, RouteComponentProps, withRouter } from 'react-router';
+import { RouteComponentProps, withRouter } from 'react-router';
 import { Input, Card, Switch, Empty } from 'antd';
 
 import '../styles/notebook.scss';
-import { getStateUser } from '../helpers/utils';
+import { getStateUser, redirectToUserPage } from '../helpers/utils';
 import { ICharacter } from '../containers/Character/config';
 import { IUser } from '../reducers/interfaces';
 import actions from '../reducers/actions';
@@ -23,7 +23,7 @@ class Notebook extends Component<INotebookProps, { notes?: string }> {
   state = { notes: undefined };
 
   componentDidMount = () => {
-    const { character, user, uid } = this.props;
+    const { character, user, uid, currentUser, history } = this.props;
     if (!character)
       actions.getCharacter({ uid });
     else
@@ -31,12 +31,14 @@ class Notebook extends Component<INotebookProps, { notes?: string }> {
 
     if (!user)
       actions.getUser({ uid });
+    redirectToUserPage(user, currentUser, history);
   };
 
   componentDidUpdate = (prevProps: INotebookProps) => {
-    const { character } = this.props;
+    const { character, user, currentUser, history } = this.props;
     if (prevProps !== this.props && character && character.notes !== this.state.notes)
       this.setState({ notes: character.notes });
+    redirectToUserPage(user, currentUser, history);
   };
 
   onSave = () => {
@@ -54,21 +56,10 @@ class Notebook extends Component<INotebookProps, { notes?: string }> {
       loading,
       user,
       currentUser,
-      history,
       hasRight,
       character,
       uid,
     } = this.props;
-
-    if (user && user.uid && currentUser && currentUser.uid === user.uid && history.location.pathname === '/notes') {
-      return (
-        <Redirect
-          from="/notes"
-          to={`/${currentUser.uid}/notes`}
-          exact
-        />
-      )
-    }
 
     if (!user || !character) {
       return (

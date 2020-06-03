@@ -1,6 +1,6 @@
 import React, { ChangeEvent } from 'react';
 import { connect } from 'react-redux';
-import { withRouter, Redirect } from 'react-router';
+import { withRouter } from 'react-router';
 import moment from 'moment';
 import {
   Card,
@@ -19,7 +19,7 @@ import actions from '../../reducers/actions';
 import { IUser, defaultUser } from '../../reducers/interfaces';
 import Avatar from '../../components/Avatar';
 import Loader from '../../components/Loader/index';
-import { getFullTime, getStateUser } from '../../helpers/utils';
+import { getFullTime, getStateUser, redirectToUserPage } from '../../helpers/utils';
 import InputUpload from "../../components/InputUpload";
 
 interface ISettingsProps extends RouteComponentProps {
@@ -32,10 +32,16 @@ interface ISettingsProps extends RouteComponentProps {
 
 export class Settings extends React.Component<ISettingsProps> {
   componentDidMount = () => {
-    const { user, uid } = this.props;
+    const { user, uid, currentUser, history } = this.props;
     if (!user) {
       actions.getUser({ uid });
     }
+    redirectToUserPage(user, currentUser, history);
+  };
+
+  componentDidUpdate = () => {
+    const { user, currentUser, history } = this.props;
+    redirectToUserPage(user, currentUser, history);
   };
 
   rawOnChange = (field: string, value: string | boolean) => {
@@ -210,17 +216,7 @@ export class Settings extends React.Component<ISettingsProps> {
   };
 
   render = () => {
-    const { user, loading, currentUser, history } = this.props;
-
-    if (user && user.uid && currentUser && currentUser.uid === user.uid && history.location.pathname === '/settings') {
-      return (
-        <Redirect
-          from="/settings"
-          to={`/${currentUser.uid}/settings`}
-          exact
-        />
-      )
-    }
+    const { user, loading } = this.props;
 
     return (
       <Card

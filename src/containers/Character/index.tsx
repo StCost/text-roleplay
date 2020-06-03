@@ -1,5 +1,5 @@
 import React, { ChangeEvent, Component } from 'react';
-import { withRouter, Redirect } from 'react-router';
+import { withRouter } from 'react-router';
 import { connect } from 'react-redux';
 import {
   Card,
@@ -26,7 +26,13 @@ import {
   ICharacter,
 } from './config';
 import actions from '../../reducers/actions';
-import { getCharacterChanges, getStateUser, processCharacterChanges, set } from '../../helpers/utils';
+import {
+  getCharacterChanges,
+  getStateUser,
+  processCharacterChanges,
+  redirectToUserPage,
+  set
+} from '../../helpers/utils';
 
 interface ICharacterProps extends RouteComponentProps {
   loading: boolean;
@@ -53,7 +59,7 @@ class Character extends Component<ICharacterProps, ICharacterState> {
   };
 
   componentDidMount = () => {
-    const { character, uid, user } = this.props;
+    const { character, uid, user, currentUser, history } = this.props;
     if (!character) {
       actions.getCharacter({ uid });
     } else {
@@ -62,12 +68,15 @@ class Character extends Component<ICharacterProps, ICharacterState> {
     if (!user) {
       actions.getUser({ uid });
     }
+    redirectToUserPage(user, currentUser, history);
   };
 
   componentDidUpdate = (prevProps: ICharacterProps) => {
-    if (prevProps.character !== this.props.character) {
-      this.setState({ character: { ...this.props.character } });
+    const { character, user, currentUser, history } = this.props;
+    if (prevProps.character !== character) {
+      this.setState({ character });
     }
+    redirectToUserPage(user, currentUser, history);
   };
 
   getSpecial = (character: ICharacter) => {
@@ -229,6 +238,8 @@ class Character extends Component<ICharacterProps, ICharacterState> {
     )
   };
 
+  componentWillUnmount = () => this.onSave(true);
+
   getMainStats = (character: ICharacter) => {
     const { hasRight } = this.props;
     const { stats } = character;
@@ -328,7 +339,7 @@ class Character extends Component<ICharacterProps, ICharacterState> {
     });
   };
 
-  onSave = () => {
+  onSave = (hideErrors?: boolean) => {
     const { uid, character } = this.props;
     const stateCharacter = this.state.character;
 
@@ -339,17 +350,20 @@ class Character extends Component<ICharacterProps, ICharacterState> {
 
     let changes = getCharacterChanges(initialCharacter, stateCharacter);
     if (changes.length === 0) {
-      notify.error('В персонаже ничего не изменилось');
+      if (!hideErrors)
+        notify.error('В персонаже ничего не изменилось');
       return;
     }
     changes = getCharacterChanges(character, stateCharacter);
     if (changes.length === 0) {
-      notify.error('В персонаже ничего не изменилось');
+      if (!hideErrors)
+        notify.error('В персонаже ничего не изменилось');
       return;
     }
 
     if (stateCharacter.stats.skillPoints < 0) {
-      notify.error('Очки Навыков (ОН) не могут быть отрицательными!');
+      if (!hideErrors)
+        notify.error('Очки Навыков (ОН) не могут быть отрицательными!');
       return;
     }
 
@@ -398,7 +412,7 @@ class Character extends Component<ICharacterProps, ICharacterState> {
         title="Сохранить изменения?"
         okText="Да"
         cancelText="Отмена"
-        onConfirm={this.onSave}
+        onConfirm={() => this.onSave()}
       >
         <Button>Сохранить</Button>
       </Popconfirm>
@@ -414,7 +428,7 @@ class Character extends Component<ICharacterProps, ICharacterState> {
   );
 
   render = () => {
-    const { user, hasRight, currentUser, history, character } = this.props;
+    const { user, hasRight, character } = this.props;
     const stateCharacter = this.state.character;
 
     if (!user || !character || stateCharacter === initialCharacter) {
@@ -423,16 +437,6 @@ class Character extends Component<ICharacterProps, ICharacterState> {
           <Empty description="Пользователь не загружен"/>
         </Spin>
       );
-    }
-
-    if (user && user.uid && currentUser && currentUser.uid === user.uid && history.location.pathname === '/stats') {
-      return (
-        <Redirect
-          from="/stats"
-          to={`/${currentUser.uid}/stats`}
-          exact
-        />
-      )
     }
 
     return (

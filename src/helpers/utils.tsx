@@ -1,20 +1,21 @@
 import React from 'react';
 import { message as notify } from 'antd';
 import { Store } from 'rc-field-form/lib/interface';
+import { RouteComponentProps } from 'react-router';
+import { diff } from 'deep-object-diff';
+import { History } from 'history';
 
 import { IItem, IMessage, IState, IUser } from '../reducers/interfaces';
 import { diceRegex, exportRolls, hasDice } from './dice';
-import Image from "../components/Image";
-import YoutubeEmbed from "../components/YoutubeEmbed";
-import { RouteComponentProps } from "react-router";
+import Image from '../components/Image';
+import YoutubeEmbed from '../components/YoutubeEmbed';
 import {
   getConfigByField, ICharacter, ICharacterChanges,
   ICharacteristic, IField, IStats,
   skills as configSkills,
   special as configSpecial,
   stats as configStats, subStats as configSubStats
-} from "../containers/Character/config";
-import { diff } from "deep-object-diff";
+} from '../containers/Character/config';
 
 export const camelize = (str: string) => {
   return str
@@ -381,5 +382,17 @@ export const set = (_obj: {[key: string]: any}, _path: string | string[], value:
 
   schema[pList[len-1]] = value;
   return obj;
+};
+
+export const redirectToUserPage = (user: IUser | null, currentUser: IUser | null, history: History) => {
+  if (
+    user
+    && user.uid
+    && currentUser
+    && currentUser.uid === user.uid
+    && history.location.pathname.split('/').length === 2
+  ) {
+    history.push(`/${currentUser.uid}/${history.location.pathname.split('/').pop()}`);
+  }
 };
 
