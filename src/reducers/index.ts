@@ -6,7 +6,6 @@ import {
   IItem, IMessage,
   IState,
 } from './interfaces';
-import { message } from "antd";
 
 const user = JSON.parse(localStorage.getItem('user') || 'null');
 if (user) localStorage.setItem('uid', user.uid);
