@@ -1,8 +1,8 @@
 import { all, takeLatest } from 'redux-saga/effects';
+import firebase from 'firebase/app';
 
 import actions, { IPayload } from '../reducers/actions';
 import { database } from '../helpers/firebase';
-import { initialCharacter } from "../containers/Character/config";
 
 const fetchedCharacters: string[] = [];
 function* getCharacter(payload: IPayload) {
@@ -17,17 +17,17 @@ function* getCharacter(payload: IPayload) {
     .ref('characters')
     .child(uid);
 
-  const rawChar = yield ref.once('value');
-  const char = rawChar.val() || initialCharacter;
-
-  actions.getCharacterSuccess({ uid, character: char });
-  ref.on('child_changed', (rawChar) => {
+  const onUpdate = (rawChar: firebase.database.DataSnapshot) => {
     const { key } = rawChar;
     if (!key) return;
-    const updatedData = {[key]: rawChar.val()};
+    const updatedData = {[key]: rawChar.val() || undefined};
 
     actions.getCharacterSuccess({ uid, updatedData });
-  });
+  };
+
+  ref.on('child_changed', onUpdate);
+  ref.on('child_added', onUpdate);
+  ref.on('child_removed', onUpdate);
 }
 
 function* setCharacter(payload: IPayload) {

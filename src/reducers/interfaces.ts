@@ -59,10 +59,10 @@ export interface IUser {
   avatar: string;
   uid: string,
   lastOnline: number;
-  status?: 'online' | 'offline' | 'afk';
-  isAdmin?: boolean;
+  status: 'online' | 'offline' | 'afk';
+  isAdmin: boolean;
   approved: boolean;
-  isSuperAdmin?: boolean;
+  isSuperAdmin: boolean;
   notesAreVisible: boolean;
 }
 
@@ -84,6 +84,8 @@ export const defaultUser: IUser = {
   uid: '',
   isAdmin: false,
   notesAreVisible: false,
+  isSuperAdmin: false,
+  status: 'offline',
 };
 
 export type ItemType = 'weapon' | 'usable' | 'wearable' | 'junk' | 'ammo' | 'note' | 'key' | 'misc';
