@@ -60,6 +60,7 @@ const actions: IActions = {
   deleteItemProgress: createAction('DELETE_ITEM_PROGRESS'),
   updateLastOnline: createAction('UPDATE_LAST_ONLINE'),
   logout: createAction('LOGOUT'),
+  setError: createAction('SET_ERROR'),
 };
 
 export default actions;

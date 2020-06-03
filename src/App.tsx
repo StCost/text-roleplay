@@ -14,6 +14,7 @@ import './styles/antd-dark.scss';
 import './styles/components.scss';
 import { IState } from './reducers/interfaces';
 import actions from './reducers/actions';
+import ErrorBoundary from './components/ErrorBoundary';
 
 // @ts-ignore
 const buildDate = (<div className="build-date">build date {window.buildDate.replace('_', ' ')}</div>);
@@ -31,6 +32,15 @@ class App extends Component<{ redirect?: string; notify?: string }> {
       actions.redirectSuccess({});
     }
   };
+  static getDerivedStateFromError(error: Error) {
+    // Обновить состояние с тем, чтобы следующий рендер показал запасной UI.
+    console.log('getDerivedStateFromError', error);
+    return { hasError: true };
+  }
+
+  componentDidCatch = (error: Error) => {
+    console.log('componentDidCatch', error);
+  };
 
   getRedirect = () => {
     const { redirect } = this.props;
@@ -39,7 +49,7 @@ class App extends Component<{ redirect?: string; notify?: string }> {
 
   render = () => {
     return (
-      <>
+      <ErrorBoundary>
         {buildDate}
         <HashRouter>
           {this.getRedirect()}
@@ -48,7 +58,7 @@ class App extends Component<{ redirect?: string; notify?: string }> {
             <Router/>
           </div>
         </HashRouter>
-      </>
+      </ErrorBoundary>
     );
   }
 }

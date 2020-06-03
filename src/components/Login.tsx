@@ -5,7 +5,6 @@ import {
   Input,
   Button,
   Card,
-  Alert,
   Tabs,
   Spin,
 } from 'antd';
@@ -15,20 +14,17 @@ import { IState } from '../reducers/interfaces';
 
 interface ILoginProps {
   loading: boolean;
-  error: Error | false;
 }
 
 const Login = (props: ILoginProps) => {
-  const { error, loading } = props;
+  const { loading } = props;
 
   return (
     <Card>
       <Spin spinning={loading}>
         <Tabs defaultActiveKey="1">
           <Tabs.TabPane tab="Логин" key="1">
-            <Form
-              onFinish={(values) => actions.login(values)}
-            >
+            <Form onFinish={(values) => actions.login(values)}>
               <Form.Item
                 label="Email"
                 name="email"
@@ -117,21 +113,15 @@ const Login = (props: ILoginProps) => {
             </Form>
           </Tabs.TabPane>
         </Tabs>
-        {error && (
-          <Alert
-            type="error"
-            message={error.message}
-          />
-        )}
       </Spin>
     </Card>
   );
 };
 
 const mapStateToProps = (state: IState) => {
-  const { loading, error } = state;
+  const { loading } = state;
 
-  return { loading, error };
+  return { loading };
 };
 
 export default connect(mapStateToProps)(Login);

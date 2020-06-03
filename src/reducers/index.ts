@@ -19,7 +19,6 @@ export const initialState: IState = {
   uid: user ? user.uid : '',
   currentUser: null,
   items: [],
-  error: false,
   deletingItemData: defaultDeletedItemData,
   unreadMessage: false,
   characters: {},
@@ -225,6 +224,12 @@ const reducer = (state = initialState, action: IAction) => {
           ...state.characters,
           [action.uid]: newCharacter,
         },
+      }
+    }
+    case 'SET_ERROR': {
+      return {
+        ...state,
+        error: action.error,
       }
     }
     default:

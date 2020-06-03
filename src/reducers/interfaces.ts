@@ -29,7 +29,7 @@ export interface IState {
   uid: string;
   currentUser: IUser | null;
   items: IItem[];
-  error: Error | false;
+  error?: Error;
   notify?: string;
   redirect?: string;
   deletingItemData: IDeletedItemData;
