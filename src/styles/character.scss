@@ -93,8 +93,15 @@ div.ant-card.char {
       }
 
       .char-skills-label {
-        width: 84px;
+        width: 100px;
+        cursor: pointer;
         display: block;
+        padding: 6px;
+
+        &.gift {
+          color: $background-color-selected;
+          font-weight: bolder;
+        }
       }
 
       .char-skills-input {

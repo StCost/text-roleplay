@@ -46,6 +46,8 @@ export interface ILimbs {
   torso: TLimb;
 }
 
+export type TGifts = string[];
+
 export interface ICharacter {
   uid: string;
   special: {
@@ -74,6 +76,7 @@ export interface ICharacter {
     barter: ICharacteristic;
     survival: ICharacteristic;
   };
+  gifts: TGifts;
   limbs: ILimbs;
   stats: IStats;
   bio: string;
@@ -145,6 +148,7 @@ export const initialCharacter: ICharacter = {
     skillPoints: 0,
     spentSkillPoints: 0,
   },
+  gifts: [],
   limbs: defaultLimbs,
   bio: '',
   inventory: {},

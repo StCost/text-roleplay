@@ -14,7 +14,7 @@ import {
   ICharacteristic, IField, IStats,
   skills as configSkills,
   special as configSpecial,
-  stats as configStats, subStats as configSubStats
+  stats as configStats, subStats as configSubStats, TGifts
 } from '../containers/Character/config';
 
 export const camelize = (str: string) => {
@@ -249,7 +249,7 @@ export const getStateUser = (state: IState, props: RouteComponentProps) => {
     loading,
     user,
     uid,
-    hasRight: (!!user && !!currentUser) && (currentUser.uid === user.uid || !!currentUser.isAdmin),
+    hasRight: (!!user && !!currentUser) && (currentUser.uid === user.uid || currentUser.isAdmin),
     currentUser,
     character,
   }
@@ -258,7 +258,7 @@ export const getStateUser = (state: IState, props: RouteComponentProps) => {
 
 // TODO Needs refactor for sure
 export const processCharacterChanges = (value: Store, char: Store) => {
-  const { special, skills, stats } = char;
+  const { special, skills, stats, gifts } = char;
 
   if (!value.bio) {
     const specialTotal: { [key: string]: number } = {};
@@ -275,9 +275,10 @@ export const processCharacterChanges = (value: Store, char: Store) => {
     stats.spentSkillPoints = 0;
     configSkills.forEach(({ field, getBase }) => {
       const value: ICharacteristic = skills[field];
+      const isGift = gifts.indexOf(field) > -1;
       const change = Math.max(1, value.change);
       const base = Math.max(1, getBase ? getBase(specialTotal, stats) : 1);
-      const total = Math.max(1, Math.min(95, base + change));
+      const total = Math.max(1, Math.min(95, base + (isGift ? change * 2 : change)));
 
       skills[field] = {
         change,
@@ -317,7 +318,7 @@ export const getCharacterChanges = (beforeChar: ICharacter, afterChar: ICharacte
 
   const changes: ICharacterChanges[] = [];
 
-  Object.entries(before).forEach(([name, characteristic]: [string, string | ICharacteristic | IStats]) => {
+  Object.entries(before).forEach(([name, characteristic]: [string, TGifts | string | ICharacteristic | IStats]) => {
     if (name === 'bio' && typeof characteristic === 'string') {
       changes.push({
         label: 'Bio',
@@ -329,17 +330,52 @@ export const getCharacterChanges = (beforeChar: ICharacter, afterChar: ICharacte
       return;
     }
 
-    if (typeof characteristic === 'object' && !Array.isArray(characteristic) && after[name])
+    if (name === 'gifts') {
+      const beforeGifts = beforeChar.gifts;
+      const afterGifts = afterChar.gifts;
+      if (!arraysEqual(beforeGifts, afterGifts)) {
+        const beforeNames = beforeGifts.map((gift: string) => {
+          const skill = configSkills.find((skill: IField) => skill.field === gift);
+          return skill && skill.label
+        }).filter(Boolean);
+        const afterNames = afterGifts.map((gift: string) => {
+          const skill = configSkills.find((skill: IField) => skill.field === gift);
+          return skill && skill.label
+        }).filter(Boolean);
+
+        changes.push({
+          label: 'Gifted Skills',
+          full: 'Призовые навыки',
+          before: beforeNames.join(', '),
+          after: afterNames.join(', '),
+        });
+      }
+      return;
+    }
+
+    if (typeof characteristic === 'object' && after[name])
       Object.entries(characteristic).forEach(([field, value]: [string, ICharacteristic]) => {
-        const afterValue = after[name][field];
         const config: IField | undefined = getConfigByField(field);
         if (config) {
-          changes.push({
-            label: config.label,
-            full: config.full,
-            before: value,
-            after: afterValue,
-          });
+          if (name === 'limbs') {
+            const labels = {
+              'fine': 'Целое',
+              'crippled': 'Повреждено',
+            };
+            changes.push({
+              label: config.label,
+              full: config.full,
+              before: labels[before[name][field]],
+              after: labels[after[name][field]],
+            });
+          } else {
+            changes.push({
+              label: config.label,
+              full: config.full,
+              before: value,
+              after: after[name][field],
+            });
+          }
         }
       })
   });
@@ -347,7 +383,14 @@ export const getCharacterChanges = (beforeChar: ICharacter, afterChar: ICharacte
   return changes;
 };
 
-const deepCopyObject = (inObject: {[key: string]: any}) => {
+export const arraysEqual = (arr1: any[], arr2: any[]) => {
+  if (arr1.length !== arr2.length) return false;
+  for (let i = 0; i < arr1.length; i++)
+    if (arr1[i] !== arr2[i]) return false;
+  return true;
+};
+
+const deepCopyObject = (inObject: { [key: string]: any }) => {
   let outObject, value, key;
 
   if (typeof inObject !== "object" || inObject === null) {
@@ -367,20 +410,20 @@ const deepCopyObject = (inObject: {[key: string]: any}) => {
   return outObject
 };
 
-export const set = (_obj: {[key: string]: any}, _path: string | string[], value: any) => {
+export const set = (_obj: { [key: string]: any }, _path: string | string[], value: any) => {
   const path = typeof _path === 'string' ? _path : _path.join('.');
 
   const obj = deepCopyObject(_obj);
   let schema = obj;  // a moving reference to internal objects within obj
   const pList = path.split('.');
   const len = pList.length;
-  for(let i = 0; i < len-1; i++) {
+  for (let i = 0; i < len - 1; i++) {
     const elem = pList[i];
-    if( !schema[elem] ) schema[elem] = {};
+    if (!schema[elem]) schema[elem] = {};
     schema = schema[elem];
   }
 
-  schema[pList[len-1]] = value;
+  schema[pList[len - 1]] = value;
   return obj;
 };
 

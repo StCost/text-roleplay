@@ -23,7 +23,7 @@ import {
   skills as configSkills,
   stats as configStats,
   subStats as configSubStats,
-  ICharacter,
+  ICharacter, TGifts,
 } from './config';
 import actions from '../../reducers/actions';
 import {
@@ -52,6 +52,7 @@ interface ICharacterState {
  * Level is capped to 30 lvl
  */
 const maxExperience = 464999;
+
 /**
  * This component is most complex one in whole project
  * Beware of complex methods and data types
@@ -139,10 +140,31 @@ class Character extends Component<ICharacterProps, ICharacterState> {
     )
   };
 
+  onGiftSelect = (field: string) => () => {
+    const { character } = this.state;
+    // Avoid mutations
+    const gifts: TGifts = [...character.gifts];
+    const index = gifts.indexOf(field);
+    if (index > -1) {
+      gifts.splice(index, 1);
+    } else if (gifts.length <= 2) {
+      gifts.push(field);
+    } else {
+      return;
+    }
+
+    this.setState({
+      character: {
+        ...character,
+        ...processCharacterChanges({}, { ...character, gifts }),
+        gifts,
+      }
+    });
+  };
 
   getSkills = (character: ICharacter) => {
     const { hasRight } = this.props;
-    const { skills } = character;
+    const { skills, gifts } = character;
 
     return (
       <Card className="char-skills">
@@ -163,8 +185,13 @@ class Character extends Component<ICharacterProps, ICharacterState> {
             key={field}
             className="char-skills-item"
           >
-            <Tooltip title={full}>
-              <span className="char-skills-label">{label}</span>
+            <Tooltip title={full} placement="left">
+              <span
+                className={`char-skills-label ${gifts.indexOf(field) > -1 ? 'gift' : ''}`}
+                onClick={this.onGiftSelect(field)}
+              >
+                {label}
+                </span>
             </Tooltip>
             <Input
               className="char-skills-input"
@@ -350,7 +377,8 @@ class Character extends Component<ICharacterProps, ICharacterState> {
     const stateCharacter = this.state.character;
 
     if (!character) {
-      notify.error('Персонаж не загружен!');
+      if (!hideErrors)
+        notify.error('Персонаж не загружен!');
       return;
     }
 
