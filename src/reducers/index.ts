@@ -237,6 +237,7 @@ const reducer = (state = initialState, action: IAction) => {
     case 'REMOVE_MESSAGE_SUCCESS': {
       return {
         ...state,
+        loading: false,
         messages: state.messages.filter((m: IMessage) => m.time !== parseInt(action.id)),
       }
     }

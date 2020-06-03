@@ -1,9 +1,9 @@
 import React from 'react';
 import { Empty, Button } from 'antd';
+import { connect } from 'react-redux';
 
 import actions from '../reducers/actions';
-import { connect } from "react-redux";
-import { IState } from "../reducers/interfaces";
+import { IState } from '../reducers/interfaces';
 
 class ErrorBoundary extends React.Component<{ children: JSX.Element | JSX.Element[], error?: Error }, { hasError: boolean }> {
   componentDidCatch = (error: Error) => {

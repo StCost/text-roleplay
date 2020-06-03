@@ -4,6 +4,7 @@ import React, {
   KeyboardEvent,
 } from 'react';
 import { connect } from 'react-redux';
+import moment from 'moment';
 import {
   SendOutlined,
   DownOutlined,
@@ -13,8 +14,12 @@ import {
   SyncOutlined,
 } from '@ant-design/icons';
 import {
+  Dropdown,
   message as notify,
   Spin,
+  Menu,
+  Button,
+  Modal,
 } from 'antd';
 import { RouteComponentProps, withRouter } from 'react-router';
 
@@ -68,7 +73,7 @@ class Chat extends Component<IChatProps, IChatState> {
       }
     });
 
-    if(prevState !== this.state) {
+    if (prevState !== this.state) {
       localStorage.setItem('chat-state', JSON.stringify(this.state));
     }
   };
@@ -176,8 +181,52 @@ class Chat extends Component<IChatProps, IChatState> {
     )
   };
 
+  getMessageControlsOverlay = (m: IMessage) => {
+    const onDelete = () =>
+      Modal.confirm({
+        title: 'Удалить?',
+        content: 'Вы уверены, что хотите удалить сообщение? Это действите нельзя будет отменить',
+        okText: 'Удалить',
+        cancelText: 'Отмена',
+        onOk: (close) => {
+          actions.removeMessage({ id: m.time });
+          close();
+        },
+      });
+
+    return (
+      <Menu>
+        <Menu.Item>
+          <Button onClick={this.onPinMessage(m)}>
+            {m.pinned
+              ? 'Открепить'
+              : 'Прикрепить'
+            }
+          </Button>
+        </Menu.Item>
+        <Menu.Item>
+          <Button onClick={onDelete}>Удалить</Button>
+        </Menu.Item>
+      </Menu>
+    )
+  };
+
+  getMessageControls = (m: IMessage) => {
+    const { currentUser } = this.props;
+    if (!currentUser || !currentUser.isAdmin) return;
+
+    return (
+      <Dropdown
+        overlay={this.getMessageControlsOverlay(m)}
+        trigger={['click']}
+      >
+        <div className="chat-time">{moment(m.time).fromNow()}</div>
+      </Dropdown>
+    )
+  };
+
   getMessage = (m: IMessage) => {
-    const { users, uid, currentUser, history } = this.props;
+    const { users, uid, history } = this.props;
 
     return (
       <Message
@@ -185,7 +234,7 @@ class Chat extends Component<IChatProps, IChatState> {
         message={m}
         user={users[m.author]}
         uid={uid}
-        onDateClick={(currentUser && currentUser.isAdmin) ? this.onPinMessage(m) : undefined}
+        extra={this.getMessageControls(m)}
         onUserClick={() => history.push(`/${m.author}/status`)}
       />
     );

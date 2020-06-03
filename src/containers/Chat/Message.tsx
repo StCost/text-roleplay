@@ -10,7 +10,7 @@ interface IMessageProps {
   message: IMessage,
   user: IUser,
   uid: string;
-  onDateClick?: () => void;
+  extra?: JSX.Element;
   onUserClick?: () => void;
 }
 
@@ -27,7 +27,7 @@ const Message = (props: IMessageProps) => {
     },
     user,
     uid,
-    onDateClick = noop,
+    extra,
     onUserClick = noop,
   } = props;
 
@@ -53,12 +53,13 @@ const Message = (props: IMessageProps) => {
       title={grouped ? undefined : title}
       key={time}
     >
-      <div
-        className="chat-time"
-        onClick={() => onDateClick && onDateClick()}
-      >
-        {moment(time).fromNow()}
-      </div>
+      {
+        extra
+        ||
+        <div className="chat-time">
+          {moment(time).fromNow()}
+        </div>
+      }
       <MessageBody message={props.message} uid={uid}/>
     </Card>
   );

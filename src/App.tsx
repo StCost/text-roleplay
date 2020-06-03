@@ -32,15 +32,6 @@ class App extends Component<{ redirect?: string; notify?: string }> {
       actions.redirectSuccess({});
     }
   };
-  static getDerivedStateFromError(error: Error) {
-    // Обновить состояние с тем, чтобы следующий рендер показал запасной UI.
-    console.log('getDerivedStateFromError', error);
-    return { hasError: true };
-  }
-
-  componentDidCatch = (error: Error) => {
-    console.log('componentDidCatch', error);
-  };
 
   getRedirect = () => {
     const { redirect } = this.props;
