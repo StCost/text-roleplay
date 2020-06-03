@@ -3,9 +3,10 @@ import {
   defaultDeletedItemData,
   defaultUser,
   IAction,
-  IItem,
+  IItem, IMessage,
   IState,
 } from './interfaces';
+import { message } from "antd";
 
 const user = JSON.parse(localStorage.getItem('user') || 'null');
 if (user) localStorage.setItem('uid', user.uid);
@@ -41,6 +42,7 @@ const reducer = (state = initialState, action: IAction) => {
     case 'REGISTER':
     case 'RESET_PASSWORD':
     case 'SET_CHARACTER_NOTES':
+    case 'REMOVE_MESSAGE':
     case 'UPLOAD_FILE': {
       return {
         ...state,
@@ -230,6 +232,12 @@ const reducer = (state = initialState, action: IAction) => {
       return {
         ...state,
         error: action.error,
+      }
+    }
+    case 'REMOVE_MESSAGE_SUCCESS': {
+      return {
+        ...state,
+        messages: state.messages.filter((m: IMessage) => m.time !== parseInt(action.id)),
       }
     }
     default:

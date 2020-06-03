@@ -99,7 +99,7 @@ function* deleteItem(payload: IPayload) {
   const { id } = payload;
 
   // Delete items from items list
-  yield database.ref(`items/${id}`).set({});
+  yield database.ref(`items/${id}`).remove();
   actions.deleteItemProgress({ field: 'deleted', value: true });
   let waitCounter = 0;
   const getWait = () => {
@@ -121,7 +121,7 @@ function* deleteItem(payload: IPayload) {
       value: index + 1
     }), randomWait);
     if (message.data && message.data.itemId && message.data.itemId === id) {
-      await database.ref(`messages/${message.time}/data`).set({});
+      await database.ref(`messages/${message.time}/data`).remove();
       setTimeout(() => actions.deleteItemProgress({
         field: 'messagesCleared',
         value: ++clearedMessages
@@ -148,7 +148,7 @@ function* deleteItem(payload: IPayload) {
     if (char.inventory) {
       const item = Object.values(char.inventory).find((item: IInventoryItem) => item.id === id);
       if (item) {
-        await database.ref(`character/${char.uid}/inventory/${id}|${item.time}`).set({});
+        await database.ref(`character/${char.uid}/inventory/${id}|${item.time}`).remove();
         setTimeout(() => actions.deleteItemProgress({
           field: 'usersCleared',
           value: ++clearedUsers

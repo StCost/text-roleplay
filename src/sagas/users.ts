@@ -104,8 +104,8 @@ export function* setUserStatus(payload: IPayload) {
 function* fullDeleteUser(payload: IPayload) {
   const { uid } = payload;
 
-  yield database.ref('users').child(uid).set({});
-  yield database.ref('characters').child(uid).set({});
+  yield database.ref('users').child(uid).remove();
+  yield database.ref('characters').child(uid).remove();
   actions.redirect({ to: '/chat' });
   actions.notify({ message: 'Пользователь успешно удалён' });
 }

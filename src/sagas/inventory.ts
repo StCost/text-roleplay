@@ -87,7 +87,7 @@ function* removeItem(payload: IPayload) {
       return true;
     }
 
-    yield ref.child(`${id}|${sameItem.time}`).set({});
+    yield ref.child(`${id}|${sameItem.time}`).remove();
     actions.removeItemSuccess({ id, uid });
     return true;
   }

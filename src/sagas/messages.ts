@@ -45,6 +45,13 @@ function subscribe() {
       actions.setUnreadMessage({ unreadMessage: true });
   };
 
+  const removedMessage = (rawMessage: firebase.database.DataSnapshot) => {
+    const key = rawMessage.key;
+    if (!key) return;
+
+    actions.removeMessageSuccess({ id: key });
+  };
+
   database
     .ref('messages')
     .orderByKey()
@@ -54,6 +61,10 @@ function subscribe() {
   database
     .ref('messages')
     .on('child_changed', handleMessage);
+
+  database
+    .ref('messages')
+    .on('child_removed', removedMessage);
 }
 
 function unsubscribe() {
@@ -151,6 +162,12 @@ export function setUnreadMessage(payload: IPayload) {
   }, 1000);
 }
 
+function* removeMessage(payload: IPayload) {
+  const { id } = payload;
+
+  yield database.ref(`messages/${id}`).remove();
+}
+
 export default function* watchForActions() {
   yield all([
     takeLatest('SEND_MESSAGE', sendMessage),
@@ -161,5 +178,6 @@ export default function* watchForActions() {
     takeLatest('UPLOAD_FILE', uploadFile),
     takeLatest('CHANGE_MESSAGE', changeMessage),
     takeLatest('SET_UNREAD_MESSAGE', setUnreadMessage),
+    takeLatest('REMOVE_MESSAGE', removeMessage),
   ]);
 }
