@@ -85,7 +85,7 @@ export const defaultUser: IUser = {
   isAdmin: false,
   notesAreVisible: false,
   isSuperAdmin: false,
-  status: 'offline',
+  status: 'online',
 };
 
 export type ItemType = 'weapon' | 'usable' | 'wearable' | 'junk' | 'ammo' | 'note' | 'key' | 'misc';

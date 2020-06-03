@@ -74,11 +74,11 @@ function* logout() {
 
   localStorage.removeItem('user');
   localStorage.removeItem('uid');
-  localStorage.removeItem('loggedIn');
   yield auth.signOut();
 }
 
-function loginSuccess() {
+function loginSuccess(payload: IPayload) {
+  localStorage.setItem('user', JSON.stringify(payload.user));
   actions.getMessages({});
   actions.subscribe({});
   listenForActivity();

@@ -508,7 +508,7 @@ class Character extends Component<ICharacterProps, ICharacterState> {
 const mapStateToProps = (state: IState, props: RouteComponentProps) => {
   const charState = getStateUser(state, props);
   const { user, currentUser, character } = charState;
-  const newHasRight = (!!user && !!currentUser) && ((currentUser.uid === user.uid && (character && !character.static)) || !!currentUser.isSuperAdmin);
+  const newHasRight = (!!user && !!currentUser) && currentUser.approved && ((currentUser.uid === user.uid && (character && !character.static)) || !currentUser.isSuperAdmin);
 
   return {
     ...charState,

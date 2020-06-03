@@ -249,7 +249,7 @@ export const getStateUser = (state: IState, props: RouteComponentProps) => {
     loading,
     user,
     uid,
-    hasRight: (!!user && !!currentUser) && (currentUser.uid === user.uid || currentUser.isAdmin),
+    hasRight: (!!user && !!currentUser) && currentUser.approved && (currentUser.uid === user.uid || currentUser.isAdmin),
     currentUser,
     character,
   }
