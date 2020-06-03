@@ -49,6 +49,10 @@ interface ICharacterState {
 }
 
 /**
+ * Level is capped to 30 lvl
+ */
+const maxExperience = 464999;
+/**
  * This component is most complex one in whole project
  * Beware of complex methods and data types
  */
@@ -226,7 +230,6 @@ class Character extends Component<ICharacterProps, ICharacterState> {
                     <InputNumber
                       className="char-stats-input"
                       min={1}
-                      max={Number.MAX_SAFE_INTEGER}
                       disabled={!hasRight}
                       value={stats[field]}
                       onChange={this.onChange(['stats', field])}
@@ -282,9 +285,11 @@ class Character extends Component<ICharacterProps, ICharacterState> {
             <div className="char-main-stats-ap">
               <Input
                 className="char-main-stats-ap-total"
+                min={1}
+                max={95}
                 readOnly
                 disabled={!hasRight}
-                value={stats.armorClass.total}
+                value={Math.min(95, stats.armorClass.total)}
               />
               <Input
                 className="char-main-stats-ap-change"
@@ -326,9 +331,10 @@ class Character extends Component<ICharacterProps, ICharacterState> {
   };
 
   onChange = (field: string | string[]) => (event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement> | number | undefined) => {
-    if (!event) return;
+    if (!event || (typeof event !== 'number' && !event.target)) return;
 
-    const value = typeof event === 'number' ? event : event.currentTarget.value;
+    const rawValue = typeof event === 'number' ? event : (event.target.value || '');
+    const value = typeof rawValue === 'number' ? Math.min(maxExperience, rawValue) : (rawValue || '');
     const character = set(this.state.character, field, value);
     const processedChar = processCharacterChanges({}, character);
     this.setState({

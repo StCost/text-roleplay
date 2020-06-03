@@ -195,7 +195,7 @@ class Status extends Component<IStatusProps, IStatusState> {
                 className="status-main-stats-ap-total"
                 readOnly
                 disabled={!hasRight}
-                value={stats.armorClass.total}
+                value={Math.min(95, stats.armorClass.total)}
               />
               <InputNumber
                 className="status-main-stats-ap-change"
