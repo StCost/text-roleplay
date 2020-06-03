@@ -2,6 +2,7 @@ import React, { ChangeEvent, Component } from 'react';
 import { connect } from 'react-redux';
 import { RouteComponentProps, withRouter } from 'react-router';
 import { Input, Card, Switch, Empty } from 'antd';
+import { BookOutlined } from '@ant-design/icons';
 
 import '../styles/notebook.scss';
 import { getStateUser, redirectToUserPage } from '../helpers/utils';
@@ -72,13 +73,20 @@ class Notebook extends Component<INotebookProps, { notes?: string }> {
       ? (
         <Card
           className="notebook"
-          title={`Записи пользователя ${user.nickname}`}
+          title={(
+            <>
+              <BookOutlined/>
+              {' '}
+              Записи пользователя {user.nickname}
+            </>
+          )}
         >
           <Loader loading={loading}/>
           <div className="notebook-switch">
             <Switch
               checked={notesAreVisible}
               onChange={() => actions.setUser({ uid, user: { ...user, notesAreVisible: !notesAreVisible } })}
+              disabled={!hasRight}
             />
             <span>
             {notesAreVisible

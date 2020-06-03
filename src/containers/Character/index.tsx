@@ -429,16 +429,15 @@ class Character extends Component<ICharacterProps, ICharacterState> {
     dlAnchorElem.remove();
   };
 
-  getControls = (character: ICharacter) => (
+  getControls = (hasRight: boolean) => (
     <div className="char-controls">
       <Popconfirm
         title="Экспортировать персонажа?"
         okText="Да"
         cancelText="Отмена"
         onConfirm={this.downloadCharacter}
-        disabled={!character}
       >
-        <Button disabled={!character}>
+        <Button>
           <ExportOutlined/>
         </Button>
       </Popconfirm>
@@ -447,8 +446,9 @@ class Character extends Component<ICharacterProps, ICharacterState> {
         okText="Да"
         cancelText="Отмена"
         onConfirm={() => this.onSave()}
+        disabled={!hasRight}
       >
-        <Button>Сохранить</Button>
+        <Button disabled={!hasRight}>Сохранить</Button>
       </Popconfirm>
     </div>
   );
@@ -477,7 +477,7 @@ class Character extends Component<ICharacterProps, ICharacterState> {
       <Card
         className="char"
         title={this.getTitle(user)}
-        extra={this.getControls(character)}
+        extra={this.getControls(hasRight)}
       >
         <div className="char-bio">
           <Input.TextArea

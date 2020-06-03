@@ -8,7 +8,7 @@ import {
   Button,
   message as notify,
 } from 'antd';
-import { SendOutlined, UpOutlined } from '@ant-design/icons';
+import { SendOutlined, UpOutlined, TrophyOutlined } from '@ant-design/icons';
 import { Store } from 'rc-field-form/lib/interface';
 
 import '../../styles/perks.scss';
@@ -148,7 +148,13 @@ class Index extends Component<IPerksProps, IPerksState> {
     return (
       <Card
         className="perks"
-        title={`Перки персонажа ${user.nickname}`}
+        title={(
+          <>
+            <TrophyOutlined/>
+            {' '}
+            Перки персонажа {user.nickname}
+          </>
+        )}
       >
         <Spin spinning={loading}>
           <div

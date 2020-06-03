@@ -1,6 +1,7 @@
 import React, { ChangeEvent, Component } from 'react';
 import { RouteComponentProps, withRouter } from 'react-router';
 import { connect } from 'react-redux';
+import { IdcardOutlined } from '@ant-design/icons';
 import {
   Card,
   InputNumber,
@@ -30,7 +31,7 @@ import {
   set
 } from '../../helpers/utils';
 import actions from "../../reducers/actions";
-import BodyStatus from "./BodyStatus";
+import BodyStatus from './BodyStatus';
 
 interface IStatusProps extends RouteComponentProps {
   loading: boolean;
@@ -238,7 +239,7 @@ class Status extends Component<IStatusProps, IStatusState> {
   };
 
   render = () => {
-    const { user, character, loading } = this.props;
+    const { user, character, loading, hasRight } = this.props;
     const stateCharacter = this.state.character;
 
     if (!user || !character || loading) {
@@ -252,15 +253,22 @@ class Status extends Component<IStatusProps, IStatusState> {
     return (
       <Card
         className="status"
-        // title={`Статус персонажа ${user.nickname}`}
+        title={(
+          <>
+            <IdcardOutlined/>
+            {' '}
+            Статус персонажа {user.nickname}
+          </>
+        )}
         extra={
           <Popconfirm
             title="Сохранить изменения?"
             okText="Да"
             cancelText="Отмена"
             onConfirm={() => this.onSave()}
+            disabled={!hasRight}
           >
-            <Button>Сохранить</Button>
+            <Button disabled={!hasRight}>Сохранить</Button>
           </Popconfirm>
         }
       >
