@@ -36,7 +36,10 @@ function* setCharacter(payload: IPayload) {
   yield database
     .ref('characters')
     .child(uid)
-    .set(character);
+    .set({
+      ...character,
+      uid,
+    });
   actions.setCharacterSuccess({});
 }
 
