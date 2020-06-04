@@ -142,14 +142,22 @@ div, span, pre, ul, li, h1 {
   border-color: $border-color-interactive;
   color: $text-color;
 
-  * {
+  span {
     color: $text-color;
+    transition-duration: 0.3s;
   }
 
   &:hover {
     background-color: $border-color-interactive;
-    color: #40a9ff;
     border-color: $background-color-selected;
+
+    span {
+      color: $background-color-selected;
+    }
+
+    svg {
+      fill: $background-color-selected;
+    }
   }
 
   &:focus {

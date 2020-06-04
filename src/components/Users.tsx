@@ -8,7 +8,7 @@ import { IUser } from '../reducers/interfaces';
 const Users = (props: RouteComponentProps) => (
   <Card title="Список пользователей">
     <UsersList
-      onClick={(user: IUser) => props.history.push(`/${user.uid}/status`)}
+      onClick={(user: IUser) => props.history.push(`/${user.uid}/stats`)}
       displayOnline={true}
     />
   </Card>

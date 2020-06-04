@@ -34,7 +34,7 @@ function Router(props: IRouterProps) {
         const getComponent = () => (
           <Suspense
             key={value.path}
-            fallback={<Empty description="Страница грузится..."/>}
+            fallback={<Empty description="Страница загружается..."/>}
           >
             <C/>
           </Suspense>
@@ -49,7 +49,7 @@ function Router(props: IRouterProps) {
           />
         )
       })}
-      <Redirect to="/chat"/>
+      <Redirect to="/stats"/>
     </Switch>
   );
 }

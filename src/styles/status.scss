@@ -5,6 +5,24 @@ div.ant-card.status {
   max-width: initial;
   width: fit-content;
 
+  @media (max-width: 767px) {
+    margin: 48px 0 0 0;
+    border: none;
+
+    > .ant-card-body {
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .status-controls button {
+      span:not(.anticon) {
+        display: none !important;
+      }
+    }
+  }
+
   .ant-card-head {
     max-width: 100vw;
   }
@@ -24,13 +42,29 @@ div.ant-card.status {
     }
   }
 
-  @media (max-width: 767px) {
-    margin: 48px 0 0 0;
-    border: none;
+  .status-controls button {
+    overflow: hidden;
+    white-space: nowrap;
+    list-style: none;
+    width: fit-content;
+    margin-left: 12px;
 
-    > .ant-card-body {
-      padding: 0;
-      display: block;
+    span:not(.anticon) {
+      display: inline-block;
+      max-width: 0;
+      opacity: 0;
+      text-decoration: none;
+      transition: max-width .3s ease-out, margin-left 0s ease-out 0.3s, opacity .3s ease-out, color;
+      margin: 0;
+    }
+
+    &:hover {
+      span:not(.anticon) {
+        opacity: 1;
+        max-width: 150px;
+        transition: max-width .3s ease-out, opacity .3s ease-out, margin-left 0.3s ease-out, color .3s;
+        margin-left: 6px;
+      }
     }
   }
 

@@ -12,7 +12,13 @@ import {
   Popconfirm,
   message as notify,
 } from 'antd';
-import { UserOutlined, ExportOutlined } from '@ant-design/icons';
+import {
+  UserOutlined,
+  ExportOutlined,
+  SaveOutlined,
+  ClearOutlined,
+  RollbackOutlined,
+} from '@ant-design/icons';
 import { RouteComponentProps } from 'react-router';
 
 import '../../styles/character.scss';
@@ -266,7 +272,8 @@ class Character extends Component<ICharacterProps, ICharacterState> {
                     />
                   )
               )}
-          </div>))}
+          </div>
+        ))}
       </Card>
     )
   };
@@ -283,12 +290,12 @@ class Character extends Component<ICharacterProps, ICharacterState> {
           <div className="char-main-stats-hp">
             <span className="char-main-stats-hp-label">Очки Здоровья (ОЗ)</span>
             <div className="char-main-stats-hp-body">
-              <Input
-                max={stats.maxHealthPoints || undefined}
+              <InputNumber
+                max={stats.maxHealthPoints || 1000}
                 min={-Math.floor(stats.maxHealthPoints / 2)}
-                readOnly
                 disabled={!hasRight}
                 value={stats.healthPoints}
+                onChange={this.onChange('stats.healthPoints')}
               />
               /
               <Input
@@ -321,13 +328,13 @@ class Character extends Component<ICharacterProps, ICharacterState> {
                 disabled={!hasRight}
                 value={Math.min(95, stats.armorClass.total)}
               />
-              <Input
+              <InputNumber
                 className="char-main-stats-ap-change"
-                readOnly
-                disabled={!hasRight}
-                min={0}
+                min={1}
                 max={95}
+                disabled={!hasRight}
                 value={stats.armorClass.change}
+                onChange={this.onChange('stats.armorClass.change')}
               />
               <Input
                 className="char-main-stats-ap-base"
@@ -430,10 +437,39 @@ class Character extends Component<ICharacterProps, ICharacterState> {
     dlAnchorElem.setAttribute('download', `character_${Date.now()}.json`);
     dlAnchorElem.click();
     dlAnchorElem.remove();
+    notify.success('Персонаж успешно скачан!');
   };
 
-  getControls = (hasRight: boolean) => (
+  getControls = () => (
     <div className="char-controls">
+      <Popconfirm
+        title="Сбросить все свои характеристики? Сброс будет сохранён после первого изменения"
+        okText="Сбросить"
+        cancelText="Отмена"
+        onConfirm={() => {
+          this.setState({ character: {...initialCharacter} });
+          notify.success('Успешно сброшено!');
+        }}
+      >
+        <Button>
+          <ClearOutlined/>
+          Сбросить
+        </Button>
+      </Popconfirm>
+      <Popconfirm
+        title="Откатить не сохранённые изменения?"
+        okText="Откатить"
+        cancelText="Отмена"
+        onConfirm={() => {
+          this.setState({ character: {...this.props.character} });
+          notify.success('Успешно откачено!')
+        }}
+      >
+        <Button>
+          <RollbackOutlined />
+          Откатить
+        </Button>
+      </Popconfirm>
       <Popconfirm
         title="Экспортировать персонажа?"
         okText="Да"
@@ -442,6 +478,7 @@ class Character extends Component<ICharacterProps, ICharacterState> {
       >
         <Button>
           <ExportOutlined/>
+          Экспортировать
         </Button>
       </Popconfirm>
       <Popconfirm
@@ -449,9 +486,11 @@ class Character extends Component<ICharacterProps, ICharacterState> {
         okText="Да"
         cancelText="Отмена"
         onConfirm={() => this.onSave()}
-        disabled={!hasRight}
       >
-        <Button disabled={!hasRight}>Сохранить</Button>
+        <Button>
+          <SaveOutlined/>
+          Сохранить
+        </Button>
       </Popconfirm>
     </div>
   );
@@ -480,7 +519,7 @@ class Character extends Component<ICharacterProps, ICharacterState> {
       <Card
         className="char"
         title={this.getTitle(user)}
-        extra={this.getControls(hasRight)}
+        extra={hasRight && this.getControls()}
       >
         <div className="char-bio">
           <Input.TextArea

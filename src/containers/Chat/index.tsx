@@ -235,7 +235,7 @@ class Chat extends Component<IChatProps, IChatState> {
         user={users[m.author]}
         uid={uid}
         extra={this.getMessageControls(m)}
-        onUserClick={() => history.push(`/${m.author}/status`)}
+        onUserClick={() => history.push(`/${m.author}/stats`)}
       />
     );
   };

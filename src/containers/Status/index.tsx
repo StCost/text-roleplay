@@ -1,7 +1,7 @@
 import React, { ChangeEvent, Component } from 'react';
 import { RouteComponentProps, withRouter } from 'react-router';
 import { connect } from 'react-redux';
-import { IdcardOutlined } from '@ant-design/icons';
+import { IdcardOutlined, SaveOutlined, RollbackOutlined } from '@ant-design/icons';
 import {
   Card,
   InputNumber,
@@ -238,6 +238,36 @@ class Status extends Component<IStatusProps, IStatusState> {
     )
   };
 
+  getControls = () => (
+    <div className="status-controls">
+      <Popconfirm
+        title="Откатить не сохранённые изменения?"
+        okText="Откатить"
+        cancelText="Отмена"
+        onConfirm={() => {
+          this.setState({ character: {...this.props.character} });
+          notify.success('Успешно откачено!')
+        }}
+      >
+        <Button>
+          <RollbackOutlined />
+          Откатить
+        </Button>
+      </Popconfirm>
+      <Popconfirm
+        title="Сохранить изменения?"
+        okText="Да"
+        cancelText="Отмена"
+        onConfirm={() => this.onSave()}
+      >
+        <Button className="status-save-button">
+          <SaveOutlined/>
+          Сохранить
+        </Button>
+      </Popconfirm>
+    </div>
+  );
+
   render = () => {
     const { user, character, loading, hasRight } = this.props;
     const stateCharacter = this.state.character;
@@ -253,6 +283,7 @@ class Status extends Component<IStatusProps, IStatusState> {
     return (
       <Card
         className="status"
+        extra={hasRight && this.getControls()}
         title={(
           <>
             <IdcardOutlined/>
@@ -260,17 +291,6 @@ class Status extends Component<IStatusProps, IStatusState> {
             Статус персонажа {user.nickname}
           </>
         )}
-        extra={
-          <Popconfirm
-            title="Сохранить изменения?"
-            okText="Да"
-            cancelText="Отмена"
-            onConfirm={() => this.onSave()}
-            disabled={!hasRight}
-          >
-            <Button disabled={!hasRight}>Сохранить</Button>
-          </Popconfirm>
-        }
       >
         {this.getStatus(stateCharacter.limbs)}
         {this.getMainStats(stateCharacter)}
