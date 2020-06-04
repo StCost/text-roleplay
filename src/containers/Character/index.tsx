@@ -515,6 +515,7 @@ class Character extends Component<ICharacterProps, ICharacterState> {
       );
     }
 
+    console.log(hasRight);
     return (
       <Card
         className="char"

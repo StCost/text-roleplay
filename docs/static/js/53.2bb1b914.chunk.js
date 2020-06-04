@@ -1,2 +1,0 @@
-(this["webpackJsonptext-roleplay"]=this["webpackJsonptext-roleplay"]||[]).push([[53],{471:function(e,t,p){e.exports=p.p+"static/media/logo.5d5d9eef.svg"}}]);
-//# sourceMappingURL=53.2bb1b914.chunk.js.map
