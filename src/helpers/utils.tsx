@@ -276,16 +276,16 @@ export const processCharacterChanges = (value: Store, char: Store) => {
     configSkills.forEach(({ field, getBase }) => {
       const value: ICharacteristic = skills[field];
       const isGift = gifts.indexOf(field) > -1;
-      const change = Math.max(1, value.change);
-      const base = Math.max(1, getBase ? getBase(specialTotal, stats) : 1);
-      const total = Math.max(1, Math.min(95, base + (isGift ? change * 2 : change)));
+      const change = Math.max(0, value.change);
+      const base = Math.max(0, getBase ? getBase(specialTotal, stats) : 1);
+      const total = Math.max(0, Math.min(95, base + (isGift ? change * 2 : change)));
 
       skills[field] = {
         change,
         base,
         total,
       };
-      stats.spentSkillPoints += (value.change - 1);
+      stats.spentSkillPoints += value.change;
     });
 
     [...configStats, ...configSubStats].forEach(({ field, getBase }) => {

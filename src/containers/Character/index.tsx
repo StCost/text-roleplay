@@ -205,7 +205,7 @@ class Character extends Component<ICharacterProps, ICharacterState> {
             <InputNumber
               className="char-skills-input"
               disabled={!hasRight}
-              min={1}
+              min={0}
               max={95}
               value={skills[field].change}
               onChange={this.onChange(['skills', field, 'change'])}
@@ -259,7 +259,7 @@ class Character extends Component<ICharacterProps, ICharacterState> {
                   ) : (
                     <InputNumber
                       className="char-stats-input"
-                      min={1}
+                      min={0}
                       disabled={!hasRight}
                       value={stats[field]}
                       onChange={this.onChange(['stats', field])}
@@ -315,7 +315,7 @@ class Character extends Component<ICharacterProps, ICharacterState> {
             <div className="char-main-stats-ap">
               <Input
                 className="char-main-stats-ap-total"
-                min={1}
+                min={0}
                 max={95}
                 readOnly
                 disabled={!hasRight}
@@ -325,7 +325,7 @@ class Character extends Component<ICharacterProps, ICharacterState> {
                 className="char-main-stats-ap-change"
                 readOnly
                 disabled={!hasRight}
-                min={1}
+                min={0}
                 max={95}
                 value={stats.armorClass.change}
               />
@@ -361,7 +361,7 @@ class Character extends Component<ICharacterProps, ICharacterState> {
   };
 
   onChange = (field: string | string[]) => (event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement> | number | undefined) => {
-    if (!event || (typeof event !== 'number' && !event.target)) return;
+    if (event === undefined || (typeof event !== 'number' && !event.target)) return;
 
     const rawValue = typeof event === 'number' ? event : (event.target.value || '');
     const value = typeof rawValue === 'number' ? Math.min(maxExperience, rawValue) : (rawValue || '');
