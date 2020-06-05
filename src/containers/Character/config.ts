@@ -1,4 +1,4 @@
-import { IInventory, IPerk } from "../../reducers/interfaces";
+import { IInventory, IPerk } from '../../reducers/interfaces';
 
 export interface IField {
   label: string;

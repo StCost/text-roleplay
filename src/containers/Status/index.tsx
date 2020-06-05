@@ -7,7 +7,6 @@ import {
   InputNumber,
   Input,
   Tooltip,
-  Spin,
   Empty,
   message as notify,
   Button,
@@ -30,8 +29,9 @@ import {
   redirectToUserPage,
   set
 } from '../../helpers/utils';
-import actions from "../../reducers/actions";
+import actions from '../../reducers/actions';
 import BodyStatus from './BodyStatus';
+import { addStatusChangeListener, removeStatusChangeListener } from '../../helpers/activity';
 
 interface IStatusProps extends RouteComponentProps {
   loading: boolean;
@@ -60,6 +60,8 @@ class Status extends Component<IStatusProps, IStatusState> {
       actions.getUser({ uid });
     }
     redirectToUserPage(user, currentUser, history);
+    addStatusChangeListener('afk', this.onSave);
+    addStatusChangeListener('offline', this.onSave);
   };
 
   componentDidUpdate = (prevProps: IStatusProps) => {
@@ -69,6 +71,10 @@ class Status extends Component<IStatusProps, IStatusState> {
     redirectToUserPage(user, currentUser, history);
   };
 
+  componentWillUnmount = () => {
+    this.onSave();
+    removeStatusChangeListener('afk', this.onSave);
+  };
 
   onLimbClick = (name: string, state: TLimb) => {
     this.setState({
@@ -94,31 +100,31 @@ class Status extends Component<IStatusProps, IStatusState> {
   };
 
 
-  onSave = (hideErrors: boolean = false) => {
+  onSave = async (showError: boolean = false) => {
     const { uid, character } = this.props;
     const stateCharacter = this.state.character;
 
     if (!character) {
-      if (!hideErrors)
+      if (showError)
         notify.error('Персонаж не загружен!');
       return;
     }
 
     let changes = getCharacterChanges(initialCharacter, stateCharacter);
     if (changes.length === 0) {
-      if (!hideErrors)
+      if (showError)
         notify.error('В персонаже ничего не изменилось');
       return;
     }
     changes = getCharacterChanges(character || initialCharacter, stateCharacter);
     if (changes.length === 0) {
-      if (!hideErrors)
+      if (showError)
         notify.error('В персонаже ничего не изменилось');
       return;
     }
 
     if (stateCharacter.stats.skillPoints < 0) {
-      if (!hideErrors)
+      if (showError)
         notify.error('Очки Навыков (ОН) не могут быть отрицательными!');
       return;
     }
@@ -134,9 +140,6 @@ class Status extends Component<IStatusProps, IStatusState> {
       data: { characterChanges: changes }
     });
   };
-
-  componentWillUnmount = () =>
-    this.onSave(true);
 
   onChange = (field: string | string[]) => (event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement> | number | undefined) => {
     if (!event) return;
@@ -258,7 +261,7 @@ class Status extends Component<IStatusProps, IStatusState> {
         title="Сохранить изменения?"
         okText="Да"
         cancelText="Отмена"
-        onConfirm={() => this.onSave()}
+        onConfirm={() => this.onSave(true)}
       >
         <Button className="status-save-button">
           <SaveOutlined/>
@@ -274,9 +277,7 @@ class Status extends Component<IStatusProps, IStatusState> {
 
     if (!user || !character || loading) {
       return (
-        <Spin spinning={loading}>
           <Empty description="Пользователь не загружен"/>
-        </Spin>
       );
     }
 

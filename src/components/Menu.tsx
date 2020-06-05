@@ -36,7 +36,7 @@ class Menu extends Component<IMenuProps, IMenuState> {
 
   getMenuItem = (value: IMenuItem, index: number = 0) => (
     <AntdMenu.Item
-      className={(value.path === '/chat' && this.props.unreadMessage) ? 'unread' : ''}
+      // className={(value.path === '/chat' && this.props.unreadMessage) ? 'unread' : ''}
       key={value.path.split('/').pop()}
       disabled={value.path === this.props.location.pathname}
     >

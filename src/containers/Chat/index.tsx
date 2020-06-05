@@ -16,7 +16,6 @@ import {
 import {
   Dropdown,
   message as notify,
-  Spin,
   Menu,
   Button,
   Modal,
@@ -252,7 +251,7 @@ class Chat extends Component<IChatProps, IChatState> {
     const { messages, loading, currentUser } = this.props;
 
     return (
-      <Spin spinning={loading}>
+      <div>
         <div className="chat-wrapper">
           <div className="chat-reload">
             {loading
@@ -286,7 +285,7 @@ class Chat extends Component<IChatProps, IChatState> {
             <SendOutlined onClick={this.onSendMessage}/>
           </div>
         </div>
-      </Spin>
+      </div>
     )
   }
 }

@@ -18,9 +18,10 @@ import '../../styles/settings.scss';
 import actions from '../../reducers/actions';
 import { IUser, defaultUser } from '../../reducers/interfaces';
 import Avatar from '../../components/Avatar';
-import Loader from '../../components/Loader/index';
 import { getFullTime, getStateUser, redirectToUserPage } from '../../helpers/utils';
-import InputUpload from "../../components/InputUpload";
+import InputUpload from '../../components/InputUpload';
+import { addStatusChangeListener, removeStatusChangeListener } from '../../helpers/activity';
+import { diff } from "deep-object-diff";
 
 interface ISettingsProps extends RouteComponentProps {
   loading: boolean;
@@ -30,30 +31,49 @@ interface ISettingsProps extends RouteComponentProps {
   currentUser: IUser | null;
 }
 
-export class Settings extends React.Component<ISettingsProps> {
+export class Settings extends React.Component<ISettingsProps, IUser> {
+  state = defaultUser;
+
   componentDidMount = () => {
     const { user, uid, currentUser, history } = this.props;
-    if (!user) {
+    if (!user)
       actions.getUser({ uid });
-    }
+    else
+      this.setState(user);
     redirectToUserPage(user, currentUser, history);
+
+    addStatusChangeListener('afk', this.onSave);
+    addStatusChangeListener('offline', this.onSave);
   };
 
-  componentDidUpdate = () => {
+  componentDidUpdate = (prevProps: ISettingsProps) => {
     const { user, currentUser, history } = this.props;
     redirectToUserPage(user, currentUser, history);
+
+    if (this.props !== prevProps)
+      this.setState(user);
+  };
+
+  componentWillUnmount = () => {
+    removeStatusChangeListener('afk', this.onSave);
+    this.onSave();
   };
 
   rawOnChange = (field: string, value: string | boolean) => {
-    const { user } = this.props;
-    if (!user) return;
-
     const newSettings = {
-      ...user,
+      ...this.state,
       [field]: value,
     };
 
-    this.setSettings(newSettings);
+    this.setState(newSettings);
+  };
+
+  onSave = () => {
+    const stateUser = this.state;
+    const propsUser = this.props.user;
+
+    if (propsUser && stateUser !== defaultUser && Object.keys(diff(stateUser, propsUser)).length > 0)
+      this.setSettings(stateUser);
   };
 
   onChange = (field: string) =>
@@ -216,9 +236,9 @@ export class Settings extends React.Component<ISettingsProps> {
   };
 
   render = () => {
-    const { user, loading } = this.props;
+    const user = this.state;
 
-    return (
+    return user.uid && (
       <Card
         className="settings"
         bordered={false}
@@ -231,8 +251,7 @@ export class Settings extends React.Component<ISettingsProps> {
           </>
         )}
       >
-        <Loader loading={loading}/>
-        {user && Object
+        {Object
           .keys(defaultUser)
           .map((key: string) => {
             const label = this.labels[key];

@@ -4,7 +4,6 @@ import { RouteComponentProps, withRouter } from 'react-router';
 import {
   Card,
   Input,
-  Spin,
   Button,
   message as notify,
 } from 'antd';
@@ -16,10 +15,9 @@ import PerkItem from './PerkItem';
 import { getStateUser, redirectToUserPage } from '../../helpers/utils';
 import actions from '../../reducers/actions';
 import { IPerk, IState, IUser } from '../../reducers/interfaces';
-import { ICharacter } from "../Character/config";
+import { ICharacter } from '../Character/config';
 
 interface IPerksProps extends RouteComponentProps {
-  loading: boolean;
   character: ICharacter;
   user: IUser | null;
   hasRight: boolean;
@@ -140,7 +138,7 @@ class Index extends Component<IPerksProps, IPerksState> {
 
   bodyRef: HTMLDivElement | null = null;
   render = () => {
-    const { character, user, loading, hasRight } = this.props;
+    const { character, user, hasRight } = this.props;
     const { label, description } = this.state;
 
     if (!user || !character) return false;
@@ -156,48 +154,46 @@ class Index extends Component<IPerksProps, IPerksState> {
           </>
         )}
       >
-        <Spin spinning={loading}>
-          <div
-            className="perks-body"
-            ref={ref => this.bodyRef = ref}
-          >
-            {(character.perks || []).map((perk: IPerk) =>
-              <PerkItem
-                key={perk.id}
-                perk={perk}
-                onDelete={this.onDelete}
-                hasRight={hasRight}
-              />
-            )}
-          </div>
-          <div className="perks-controls">
-            <Button onClick={this.scrollUp}>
-              <UpOutlined/>
-            </Button>
-            <div className="perks-controls-form">
-              <Input
-                placeholder="Название перка"
-                disabled={!hasRight}
-                onChange={this.onChangeInput('label')}
-                onPressEnter={this.onSend}
-                value={label}
-              />
-              <Input.TextArea
-                placeholder="Описание перка"
-                onKeyDown={this.onKeyDown}
-                disabled={!hasRight}
-                onChange={this.onChangeInput('description')}
-                value={description}
-              />
-            </div>
-            <Button
+        <div
+          className="perks-body"
+          ref={ref => this.bodyRef = ref}
+        >
+          {(character.perks || []).map((perk: IPerk) =>
+            <PerkItem
+              key={perk.id}
+              perk={perk}
+              onDelete={this.onDelete}
+              hasRight={hasRight}
+            />
+          )}
+        </div>
+        <div className="perks-controls">
+          <Button onClick={this.scrollUp}>
+            <UpOutlined/>
+          </Button>
+          <div className="perks-controls-form">
+            <Input
+              placeholder="Название перка"
               disabled={!hasRight}
-              onClick={this.onSend}
-            >
-              <SendOutlined/>
-            </Button>
+              onChange={this.onChangeInput('label')}
+              onPressEnter={this.onSend}
+              value={label}
+            />
+            <Input.TextArea
+              placeholder="Описание перка"
+              onKeyDown={this.onKeyDown}
+              disabled={!hasRight}
+              onChange={this.onChangeInput('description')}
+              value={description}
+            />
           </div>
-        </Spin>
+          <Button
+            disabled={!hasRight}
+            onClick={this.onSend}
+          >
+            <SendOutlined/>
+          </Button>
+        </div>
       </Card>
     )
   }

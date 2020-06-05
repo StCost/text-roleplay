@@ -7,7 +7,7 @@ import { database } from '../helpers/firebase';
 import { generateID, getFailedItem } from '../helpers/utils';
 import { IInventoryItem, IMessage } from '../reducers/interfaces';
 import { getRandomInt } from '../helpers/dice';
-import { ICharacter } from "../containers/Character/config";
+import { ICharacter } from '../containers/Character/config';
 
 function* setItem(payload: IPayload) {
   const { item } = payload;

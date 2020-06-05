@@ -8,12 +8,10 @@ const Loader = (props: { loading: boolean }) => {
 
   return (
     <div className="loader">
-      {loading
-        ? (
-          <LoadIcon/>
-        ) : (
-          <CheckIcon/>
-        )
+      {
+        loading
+          ? <LoadIcon/>
+          : <CheckIcon/>
       }
     </div>
   )

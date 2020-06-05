@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 import '../styles/active-users.scss';
 import { IUsers, IUser, IState } from '../reducers/interfaces';
 import actions from '../reducers/actions';
-import UserInfo from "./UserInfo";
+import UserInfo from './UserInfo';
 
 interface IActiveUsersListProps {
   uid: string;

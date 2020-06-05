@@ -41,8 +41,8 @@ function subscribe() {
       concat: true
     });
 
-    if (document.hidden || !document.hasFocus() || window.location.hash !== '#/chat')
-      actions.setUnreadMessage({ unreadMessage: true });
+    // if (document.hidden || !document.hasFocus() || window.location.hash !== '#/chat')
+    //   actions.setUnreadMessage({ unreadMessage: true });
   };
 
   const removedMessage = (rawMessage: firebase.database.DataSnapshot) => {

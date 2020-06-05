@@ -6,7 +6,6 @@ import {
   Card,
 } from 'antd';
 
-import Loader from '../../components/Loader';
 import { IItem, ItemType } from '../../reducers/interfaces';
 
 export interface IItemsTableProps extends RouteComponentProps {
@@ -114,12 +113,10 @@ class ItemsTable<P extends IItemsTableProps, S extends IItemsTableState> extends
   getTitle: () => JSX.Element | string | undefined | false = () => undefined;
 
   render = () => {
-    const { loading } = this.props;
     const items = this.items;
 
     return (
       <Card className="items" title={this.getTitle()}>
-        <Loader loading={loading}/>
         {this.getHeader(items)}
         {this.getContent(items)}
         {this.getFooter(items)}

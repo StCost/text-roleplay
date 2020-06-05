@@ -7,7 +7,6 @@ import {
   InputNumber,
   Tooltip,
   Empty,
-  Spin,
   Button,
   Popconfirm,
   message as notify,
@@ -39,6 +38,7 @@ import {
   redirectToUserPage,
   set
 } from '../../helpers/utils';
+import { addStatusChangeListener, removeStatusChangeListener } from '../../helpers/activity';
 
 interface ICharacterProps extends RouteComponentProps {
   loading: boolean;
@@ -80,6 +80,8 @@ class Character extends Component<ICharacterProps, ICharacterState> {
       actions.getUser({ uid });
     }
     redirectToUserPage(user, currentUser, history);
+    addStatusChangeListener('afk', this.onSave);
+    addStatusChangeListener('offline', this.onSave);
   };
 
   componentDidUpdate = (prevProps: ICharacterProps) => {
@@ -88,6 +90,11 @@ class Character extends Component<ICharacterProps, ICharacterState> {
       this.setState({ character });
     }
     redirectToUserPage(user, currentUser, history);
+  };
+
+  componentWillMount = () => {
+    removeStatusChangeListener('afk', this.onSave);
+    this.onSave();
   };
 
   getSpecial = (character: ICharacter) => {
@@ -278,7 +285,10 @@ class Character extends Component<ICharacterProps, ICharacterState> {
     )
   };
 
-  componentWillUnmount = () => this.onSave(true);
+  componentWillUnmount = () => {
+    this.onSave();
+    removeStatusChangeListener('afk', this.onSave);
+  };
 
   getMainStats = (character: ICharacter) => {
     const { hasRight } = this.props;
@@ -382,31 +392,31 @@ class Character extends Component<ICharacterProps, ICharacterState> {
     });
   };
 
-  onSave = (hideErrors?: boolean) => {
+  onSave = async (showError: boolean = false) => {
     const { uid, character } = this.props;
     const stateCharacter = this.state.character;
 
     if (!character) {
-      if (!hideErrors)
+      if (showError)
         notify.error('Персонаж не загружен!');
       return;
     }
 
     let changes = getCharacterChanges(initialCharacter, stateCharacter);
     if (changes.length === 0) {
-      if (!hideErrors)
+      if (showError)
         notify.error('В персонаже ничего не изменилось');
       return;
     }
     changes = getCharacterChanges(character, stateCharacter);
     if (changes.length === 0) {
-      if (!hideErrors)
+      if (showError)
         notify.error('В персонаже ничего не изменилось');
       return;
     }
 
     if (stateCharacter.stats.skillPoints < 0) {
-      if (!hideErrors)
+      if (showError)
         notify.error('Очки Навыков (ОН) не могут быть отрицательными!');
       return;
     }
@@ -447,7 +457,7 @@ class Character extends Component<ICharacterProps, ICharacterState> {
         okText="Сбросить"
         cancelText="Отмена"
         onConfirm={() => {
-          this.setState({ character: {...initialCharacter} });
+          this.setState({ character: { ...initialCharacter } });
           notify.success('Успешно сброшено!');
         }}
       >
@@ -461,12 +471,12 @@ class Character extends Component<ICharacterProps, ICharacterState> {
         okText="Откатить"
         cancelText="Отмена"
         onConfirm={() => {
-          this.setState({ character: {...this.props.character} });
+          this.setState({ character: { ...this.props.character } });
           notify.success('Успешно откачено!')
         }}
       >
         <Button>
-          <RollbackOutlined />
+          <RollbackOutlined/>
           Откатить
         </Button>
       </Popconfirm>
@@ -485,7 +495,7 @@ class Character extends Component<ICharacterProps, ICharacterState> {
         title="Сохранить изменения?"
         okText="Да"
         cancelText="Отмена"
-        onConfirm={() => this.onSave()}
+        onConfirm={() => this.onSave(true)}
       >
         <Button>
           <SaveOutlined/>
@@ -509,13 +519,10 @@ class Character extends Component<ICharacterProps, ICharacterState> {
 
     if (!user || !character || stateCharacter === initialCharacter || loading) {
       return (
-        <Spin spinning={loading}>
-          <Empty description="Пользователь не загружен"/>
-        </Spin>
+        <Empty description="Пользователь не загружен"/>
       );
     }
 
-    console.log(hasRight);
     return (
       <Card
         className="char"

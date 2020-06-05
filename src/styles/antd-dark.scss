@@ -37,6 +37,8 @@ div, span, pre, ul, li, h1 {
   }
 
   .ant-card-body {
+    position: relative;
+
     .ant-card {
       background-color: $background-color-lighter;
       border-color: $border-color;
@@ -192,16 +194,6 @@ div, span, pre, ul, li, h1 {
 .anticon svg {
   fill: $text-color;
   transition-duration: 0.3s;
-}
-
-.ant-spin-nested-loading > div > .ant-spin {
-  left: 50%;
-  top: 50%;
-  transform: translate(-50%, -50%);
-}
-
-.ant-spin-blur::after {
-  opacity: 0;
 }
 
 .ant-radio-button-wrapper {

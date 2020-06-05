@@ -2,9 +2,9 @@ import { all, takeLatest } from 'redux-saga/effects';
 
 import { auth } from '../helpers/firebase';
 import actions, { IPayload } from '../reducers/actions';
-import { defaultUser } from "../reducers/interfaces";
-import { listenForActivity } from "../helpers/activity";
-import { initialCharacter } from "../containers/Character/config";
+import { defaultUser } from '../reducers/interfaces';
+import { listenForActivity } from '../helpers/activity';
+import { initialCharacter } from '../containers/Character/config';
 
 function* login(payload: IPayload) {
   const { email, password } = payload;

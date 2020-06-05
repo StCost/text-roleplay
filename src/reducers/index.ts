@@ -5,9 +5,10 @@ import {
   IAction,
   IItem, IMessage,
   IState,
+  IUser,
 } from './interfaces';
 
-const user = JSON.parse(localStorage.getItem('user') || 'null');
+const user: IUser = JSON.parse(localStorage.getItem('user') || 'null');
 if (user) localStorage.setItem('uid', user.uid);
 export const initialState: IState = {
   userData: user,
@@ -42,6 +43,8 @@ const reducer = (state = initialState, action: IAction) => {
     case 'RESET_PASSWORD':
     case 'SET_CHARACTER_NOTES':
     case 'GET_CHARACTER':
+    case 'SET_CHARACTER':
+    case 'GET_ALL_USERS':
     case 'REMOVE_MESSAGE':
     case 'UPLOAD_FILE': {
       return {
@@ -207,6 +210,7 @@ const reducer = (state = initialState, action: IAction) => {
     case 'GET_ALL_USERS_SUCCESS': {
       return {
         ...state,
+        loading: false,
         users: action.users,
       }
     }

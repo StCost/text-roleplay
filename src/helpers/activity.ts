@@ -1,83 +1,113 @@
 import { isOnline } from './utils';
 import actions from '../reducers/actions';
+import { TStatus } from '../reducers/interfaces';
 
-let uid = localStorage.getItem('uid');
-let prevStatus = '';
-let lastStatusUpdate = 0;
-const changeStatus = (status: 'online' | 'afk' | 'offline', force: boolean = false) => {
+type TListener = () => void;
+
+interface IListeners {
+  online: TListener[],
+  afk: TListener[],
+  offline: TListener[],
+}
+
+const listeners: IListeners = {
+  online: [],
+  afk: [],
+  offline: [],
+};
+
+const activityEvents = [
+  'mousedown',
+  'mousemove',
+  'keydown',
+  'scroll',
+  'touchstart'
+];
+
+let prevStatus: string = '';
+let lastStatusUpdate: number = 0;
+
+const changeStatus = (status: TStatus, force: boolean = false) => {
   if (!force && prevStatus === status) return;
+
   const time = Date.now();
   if (!force && time < lastStatusUpdate + 500) return;
-  if (!uid) {
-    uid = localStorage.getItem('uid');
-    return;
-  }
+
+  const uid = localStorage.getItem('uid');
+  if (!uid) return;
 
   prevStatus = status;
   lastStatusUpdate = time;
-
-  if (status === 'online') {
+  if (status === 'online')
     actions.updateLastOnline({});
-    return;
-  }
-  actions.setUserStatus({ uid, status });
+  else
+    actions.setUserStatus({ uid, status });
 };
 
 const listenForStatus = () => {
   document.onvisibilitychange = () =>
     document.hidden
-      ? changeStatus('afk')
-      : changeStatus('online');
+      ? onBlur()
+      : onFocus();
 
   window.onblur = () =>
-    setTimeout(() => {
-      if (!document.hasFocus()) {
-        changeStatus('afk');
-      }
-    }, 100);
+    setTimeout(() =>
+      !document.hasFocus() && onBlur()
+      , 100);
 
   window.onfocus = () =>
-    setTimeout(() => {
-      if (!document.hidden && document.hasFocus()) {
-        changeStatus('online');
-      }
-    }, 100);
+    setTimeout(() =>
+      !document.hidden && document.hasFocus() && onFocus()
+      , 100);
 
   window.onbeforeunload = () => {
-    changeStatus('offline', true);
+    onClose();
   }
 };
 
 const listenForOnline = () => {
   const callback = () => {
-    if (
-      !document.hidden
-      && (
-        !isOnline(parseInt(localStorage.getItem('lastActivity') || '0') - 60000)
-        ||
-        prevStatus !== 'online'
-      )
-    ) {
-      changeStatus('online', true);
-    }
+    !document.hidden
+    && document.hasFocus()
+    && (
+      !isOnline(parseInt(localStorage.getItem('lastActivity') || '0') - 60000)
+      ||
+      prevStatus !== 'online'
+    ) && onFocus(true);
   };
 
-  [
-    'mousedown',
-    'mousemove',
-    'keydown',
-    'scroll',
-    'touchstart'
-  ].forEach((eventName) => {
-    document.addEventListener(eventName, callback, true);
-  });
+  activityEvents.forEach((eventName) =>
+    document.addEventListener(eventName, callback, true)
+  );
+
   if (!document.hidden && document.hasFocus())
-    changeStatus('online', true);
+    onFocus(true);
   else
-    changeStatus('afk', true);
+    onBlur(true)
 };
 
 export const listenForActivity = () => {
   listenForOnline();
   listenForStatus();
+};
+
+export const addStatusChangeListener = (status: TStatus, callback: TListener) =>
+  listeners[status].push(callback);
+
+export const removeStatusChangeListener = (status: TStatus, callback: TListener) =>
+  listeners[status] = listeners[status].filter((cb: TListener) => cb !== callback);
+
+const onFocus = (force: boolean = false) => {
+  listeners.online.forEach((cb: TListener) => cb());
+  changeStatus('online', force);
+};
+
+const onBlur = (force: boolean = false) => {
+  listeners.afk.forEach((cb: TListener) => cb());
+  changeStatus('afk', force)
+};
+
+const onClose = () => {
+  listeners.offline.forEach((cb: TListener) => cb());
+  changeStatus('offline', true);
 };

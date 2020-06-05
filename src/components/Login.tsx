@@ -1,27 +1,17 @@
 import React from 'react';
-import { connect } from 'react-redux';
 import {
   Form,
   Input,
   Button,
   Card,
   Tabs,
-  Spin,
 } from 'antd';
 
 import actions from '../reducers/actions';
-import { IState } from '../reducers/interfaces';
 
-interface ILoginProps {
-  loading: boolean;
-}
-
-const Login = (props: ILoginProps) => {
-  const { loading } = props;
-
+const Login = () => {
   return (
     <Card>
-      <Spin spinning={loading}>
         <Tabs defaultActiveKey="1">
           <Tabs.TabPane tab="Логин" key="1">
             <Form onFinish={(values) => actions.login(values)}>
@@ -113,15 +103,8 @@ const Login = (props: ILoginProps) => {
             </Form>
           </Tabs.TabPane>
         </Tabs>
-      </Spin>
     </Card>
   );
 };
 
-const mapStateToProps = (state: IState) => {
-  const { loading } = state;
-
-  return { loading };
-};
-
-export default connect(mapStateToProps)(Login);
+export default Login;

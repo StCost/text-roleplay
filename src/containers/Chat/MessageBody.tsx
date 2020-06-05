@@ -14,7 +14,7 @@ import { importRolls } from '../../helpers/dice';
 import ItemById from '../../components/ItemById';
 import actions from '../../reducers/actions';
 import { ICharacterChanges, ICharacteristic } from '../Character/config';
-import PerkItem from "../Perks/PerkItem";
+import PerkItem from '../Perks/PerkItem';
 
 interface IMessageBodyProps {
   message: IMessage;

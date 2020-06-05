@@ -9,14 +9,12 @@ import { getStateUser, redirectToUserPage } from '../helpers/utils';
 import { ICharacter } from '../containers/Character/config';
 import { IUser } from '../reducers/interfaces';
 import actions from '../reducers/actions';
-import Loader from './Loader';
 
 interface INotebookProps extends RouteComponentProps {
   character: ICharacter;
   user: IUser | null;
   uid: string;
   currentUser: IUser | null;
-  loading: boolean;
   hasRight: boolean;
 }
 
@@ -52,9 +50,16 @@ class Notebook extends Component<INotebookProps, { notes?: string }> {
 
   componentWillUnmount = this.onSave;
 
+  getTitle = (user: IUser) => (
+    <>
+      <BookOutlined/>
+      {' '}
+      Записи пользователя {user.nickname}
+    </>
+  );
+
   render = () => {
     const {
-      loading,
       user,
       currentUser,
       hasRight,
@@ -73,15 +78,8 @@ class Notebook extends Component<INotebookProps, { notes?: string }> {
       ? (
         <Card
           className="notebook"
-          title={(
-            <>
-              <BookOutlined/>
-              {' '}
-              Записи пользователя {user.nickname}
-            </>
-          )}
+          title={this.getTitle(user)}
         >
-          <Loader loading={loading}/>
           <div className="notebook-switch">
             <Switch
               checked={notesAreVisible}

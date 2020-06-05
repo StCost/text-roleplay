@@ -4,7 +4,7 @@ import moment from 'moment';
 
 import { IMessage, IUser } from '../../reducers/interfaces';
 import MessageBody from './MessageBody';
-import UserInfo from "../../components/UserInfo";
+import UserInfo from '../../components/UserInfo';
 
 interface IMessageProps {
   message: IMessage,

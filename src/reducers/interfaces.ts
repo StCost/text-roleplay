@@ -54,12 +54,13 @@ export interface IPerk {
   description: string;
 }
 
+export type TStatus = 'online' | 'offline' | 'afk';
 export interface IUser {
   nickname: string;
   avatar: string;
   uid: string,
   lastOnline: number;
-  status: 'online' | 'offline' | 'afk';
+  status: TStatus;
   isAdmin: boolean;
   approved: boolean;
   isSuperAdmin: boolean;

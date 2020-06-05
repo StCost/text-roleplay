@@ -3,7 +3,7 @@ import { Input, message as notify, Modal } from 'antd';
 
 import Image from './Image';
 import { InputProps, TextAreaProps } from 'antd/lib/input';
-import actions from "../reducers/actions";
+import actions from '../reducers/actions';
 
 interface IInputUploadProps {
   textArea?: boolean;
