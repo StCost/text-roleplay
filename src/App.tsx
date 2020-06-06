@@ -66,7 +66,7 @@ class App extends Component<IAppProps> {
           <Spin spinning={loading}>
             <div
               className="app"
-              style={{ transform: `scale(${this.getZoom()/100})` }}
+              // style={{ transform: `scale(${this.getZoom()/100})` }}
             >
               <Router/>
             </div>
