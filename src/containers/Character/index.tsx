@@ -92,7 +92,7 @@ class Character extends Component<ICharacterProps, ICharacterState> {
     redirectToUserPage(user, currentUser, history);
   };
 
-  componentWillMount = () => {
+  componentWillUnmount = () => {
     removeStatusChangeListener('afk', this.onSave);
     this.onSave();
   };
@@ -283,11 +283,6 @@ class Character extends Component<ICharacterProps, ICharacterState> {
         ))}
       </Card>
     )
-  };
-
-  componentWillUnmount = () => {
-    this.onSave();
-    removeStatusChangeListener('afk', this.onSave);
   };
 
   getMainStats = (character: ICharacter) => {
@@ -529,18 +524,6 @@ class Character extends Component<ICharacterProps, ICharacterState> {
         title={this.getTitle(user)}
         extra={hasRight && this.getControls()}
       >
-        <div className="char-bio">
-          <Input.TextArea
-            // This Input is not a part of form in order to optimize changes a bit
-            disabled={!hasRight}
-            minLength={3}
-            value={stateCharacter.bio}
-            onChange={this.changeBio}
-          />
-        </div>
-        <div>
-          {this.getMainStats(stateCharacter)}
-        </div>
         <div>
           <div>
             {this.getSpecial(stateCharacter)}
@@ -549,6 +532,18 @@ class Character extends Component<ICharacterProps, ICharacterState> {
           <div>
             {this.getSkills(stateCharacter)}
           </div>
+        </div>
+        <div>
+          {this.getMainStats(stateCharacter)}
+        </div>
+        <div className="char-bio">
+          <Input.TextArea
+            // This Input is not a part of form in order to optimize changes a bit
+            disabled={!hasRight}
+            minLength={3}
+            value={stateCharacter.bio}
+            onChange={this.changeBio}
+          />
         </div>
       </Card>
     )

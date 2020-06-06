@@ -94,6 +94,11 @@ img.chat-image {
   flex-direction: column;
   align-items: center;
 
+  .error-boundary-message {
+    height: 256px;
+    overflow: scroll;
+  }
+
   button {
     margin-top: 24px;
     width: fit-content;
