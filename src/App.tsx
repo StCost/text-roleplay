@@ -12,7 +12,7 @@ import Router from './components/Router';
 import './App.css';
 import './styles/antd-dark.scss';
 import './styles/components.scss';
-import { IState } from './reducers/interfaces';
+import { IState, IUser } from './reducers/interfaces';
 import actions from './reducers/actions';
 import ErrorBoundary from './components/ErrorBoundary';
 import Loader from './components/Loader';
@@ -25,6 +25,7 @@ interface IAppProps {
   redirect?: string;
   notify?: string,
   loading: boolean
+  currentUser: IUser | null;
 }
 
 class App extends Component<IAppProps> {
@@ -45,6 +46,13 @@ class App extends Component<IAppProps> {
     return redirect && <Redirect to={redirect}/>;
   };
 
+  getZoom = () => {
+    const { currentUser } = this.props;
+    return (currentUser && currentUser.zoom)
+      ? currentUser.zoom
+      : 1;
+  };
+
   render = () => {
     const { loading } = this.props;
 
@@ -56,7 +64,10 @@ class App extends Component<IAppProps> {
           {this.getRedirect()}
           <Menu/>
           <Spin spinning={loading}>
-            <div className="app">
+            <div
+              className="app"
+              style={{ transform: `scale(${this.getZoom()/100})` }}
+            >
               <Router/>
             </div>
           </Spin>
@@ -66,5 +77,11 @@ class App extends Component<IAppProps> {
   }
 }
 
-const mapStateToProps = (state: IState) => ({ redirect: state.redirect, notify: state.notify, loading: state.loading });
+const mapStateToProps = (state: IState) => ({
+  redirect: state.redirect,
+  notify: state.notify,
+  loading: state.loading,
+  currentUser: state.currentUser,
+});
+
 export default connect(mapStateToProps)(App);

@@ -9,6 +9,7 @@ import {
   Popconfirm,
   Switch,
   Modal,
+  InputNumber,
 } from 'antd';
 import { RouteComponentProps } from 'react-router';
 
@@ -59,7 +60,7 @@ export class Settings extends React.Component<ISettingsProps, IUser> {
     this.onSave();
   };
 
-  rawOnChange = (field: string, value: string | boolean) => {
+  rawOnChange = (field: string, value: string | boolean | number) => {
     const newSettings = {
       ...this.state,
       [field]: value,
@@ -186,6 +187,18 @@ export class Settings extends React.Component<ISettingsProps, IUser> {
           {value ? 'Имеются' : 'Отсутствуют'}
         </>;
 
+      case 'zoom':
+        console.log('zoom', value);
+        return currentUser && currentUser.uid === uid && (
+          <InputNumber
+            max={200}
+            min={50}
+            value={parseInt(value)}
+            onChange={(value: number | undefined) => value !== undefined && this.rawOnChange(key, value)}
+            onBlur={() => this.onSave()}
+          />
+        );
+
       default:
         return (
           <Input
@@ -204,6 +217,7 @@ export class Settings extends React.Component<ISettingsProps, IUser> {
     'isAdmin': 'Права админа',
     'uid': 'UID',
     'approved': 'Активирован',
+    // 'zoom': 'Размер страницы %',
   };
 
   getDeleteUser = () => {
