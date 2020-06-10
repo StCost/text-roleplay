@@ -3,13 +3,11 @@
 div.ant-card.notebook {
   margin: 32px;
   max-width: initial;
-  width: calc(100vw - 64px);
-  min-height: calc(100vh - 64px);
+  min-height: calc(100vh - 200px);
   height: fit-content;
 
   @media (max-width: 500px) {
     margin: 0;
-    width: 100vw;
     min-height: 100vh;
   }
 
