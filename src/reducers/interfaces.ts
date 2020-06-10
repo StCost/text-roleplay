@@ -83,7 +83,7 @@ export const defaultUser: IUser = {
   nickname: '',
   avatar: '',
   zoom: 100,
-  enableDisabledFeatures: true,
+  enableDisabledFeatures: false,
 
   approved: false,
   uid: '',

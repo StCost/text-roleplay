@@ -13,6 +13,7 @@ import {
   Tooltip,
 } from 'antd';
 import { RouteComponentProps } from 'react-router';
+import { diff } from 'deep-object-diff';
 
 import { ClearOutlined, SettingOutlined } from '@ant-design/icons';
 
@@ -23,7 +24,6 @@ import Avatar from '../../components/Avatar';
 import { getFullTime, getStateUser, redirectToUserPage } from '../../helpers/utils';
 import InputUpload from '../../components/InputUpload';
 import { addStatusChangeListener, removeStatusChangeListener } from '../../helpers/activity';
-import { diff } from "deep-object-diff";
 
 interface ISettingsProps extends RouteComponentProps {
   loading: boolean;

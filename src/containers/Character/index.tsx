@@ -23,7 +23,7 @@ import { RouteComponentProps } from 'react-router';
 import '../../styles/character.scss';
 import { IState, IUser } from '../../reducers/interfaces';
 import {
-  initialCharacter,
+  getInitialCharacter,
   special as configSpecial,
   skills as configSkills,
   stats as configStats,
@@ -65,7 +65,7 @@ const maxExperience = 464999;
  */
 class Character extends Component<ICharacterProps, ICharacterState> {
   state = {
-    character: initialCharacter,
+    character: getInitialCharacter(),
     update: false,
   };
 
@@ -407,7 +407,7 @@ class Character extends Component<ICharacterProps, ICharacterState> {
       return;
     }
 
-    let changes = getCharacterChanges(initialCharacter, stateCharacter);
+    let changes = getCharacterChanges(getInitialCharacter(), stateCharacter);
     if (changes.length === 0) {
       if (showError)
         notify.error('В персонаже ничего не изменилось');
@@ -466,7 +466,7 @@ class Character extends Component<ICharacterProps, ICharacterState> {
           okText="Сбросить"
           cancelText="Отмена"
           onConfirm={() => {
-            this.setState({ character: { ...initialCharacter } });
+            this.setState({ character: getInitialCharacter() });
             notify.success('Успешно сброшено!');
           }}
         >
@@ -525,11 +525,22 @@ class Character extends Component<ICharacterProps, ICharacterState> {
     </>
   );
 
+  getBio = (stateCharacter: ICharacter) => (
+    <div className="char-bio">
+      <Input.TextArea
+        disabled={!this.props.hasRight}
+        minLength={3}
+        value={stateCharacter.bio}
+        onChange={this.changeBio}
+      />
+    </div>
+  );
+
   render = () => {
     const { user, hasRight, character, loading } = this.props;
     const stateCharacter = this.state.character;
 
-    if (!user || !character || stateCharacter === initialCharacter || loading) {
+    if (!user || !character || !character.uid || loading) {
       return (
         <Empty description="Пользователь не загружен"/>
       );
@@ -553,15 +564,7 @@ class Character extends Component<ICharacterProps, ICharacterState> {
         <div>
           {this.getMainStats(stateCharacter)}
         </div>
-        <div className="char-bio">
-          <Input.TextArea
-            // This Input is not a part of form in order to optimize changes a bit
-            disabled={!hasRight}
-            minLength={3}
-            value={stateCharacter.bio}
-            onChange={this.changeBio}
-          />
-        </div>
+        {this.getBio(stateCharacter)}
       </Card>
     )
   }

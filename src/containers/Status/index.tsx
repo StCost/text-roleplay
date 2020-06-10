@@ -17,7 +17,7 @@ import '../../styles/status.scss';
 import {
   ICharacter,
   ILimbs,
-  initialCharacter,
+  getInitialCharacter,
   subStats as configSubStats,
   TLimb
 } from '../Character/config';
@@ -47,7 +47,7 @@ interface IStatusState {
 }
 
 class Status extends Component<IStatusProps, IStatusState> {
-  state = { character: initialCharacter };
+  state = { character: getInitialCharacter() };
 
   componentDidMount = () => {
     const { character, uid, user, currentUser, history } = this.props;
@@ -110,13 +110,13 @@ class Status extends Component<IStatusProps, IStatusState> {
       return;
     }
 
-    let changes = getCharacterChanges(initialCharacter, stateCharacter);
+    let changes = getCharacterChanges(getInitialCharacter(), stateCharacter);
     if (changes.length === 0) {
       if (showError)
         notify.error('В персонаже ничего не изменилось');
       return;
     }
-    changes = getCharacterChanges(character || initialCharacter, stateCharacter);
+    changes = getCharacterChanges(character || getInitialCharacter(), stateCharacter);
     if (changes.length === 0) {
       if (showError)
         notify.error('В персонаже ничего не изменилось');

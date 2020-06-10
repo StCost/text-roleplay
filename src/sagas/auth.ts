@@ -4,7 +4,7 @@ import { auth } from '../helpers/firebase';
 import actions, { IPayload } from '../reducers/actions';
 import { defaultUser } from '../reducers/interfaces';
 import { listenForActivity } from '../helpers/activity';
-import { initialCharacter } from '../containers/Character/config';
+import { getInitialCharacter } from '../containers/Character/config';
 
 function* login(payload: IPayload) {
   const { email, password } = payload;
@@ -45,7 +45,7 @@ function* register(payload: IPayload) {
           status: 'online',
         }
       });
-      actions.setCharacter({ uid: uid, character: initialCharacter });
+      actions.setCharacter({ uid: uid, character: getInitialCharacter() });
       actions.getUser({ uid, currentUser: true });
       actions.sendMessage({ uid, message: '*[Новый пользователь зарегистрирован]*' });
     }

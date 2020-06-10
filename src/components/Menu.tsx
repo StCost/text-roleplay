@@ -38,7 +38,7 @@ class Menu extends Component<IMenuProps, IMenuState> {
 
     const { showDisabledMenus } = this.state;
     const { currentUser } = this.props;
-    const enableDisabledFeatures = !!currentUser && currentUser.enableDisabledFeatures;
+    const enableDisabledFeatures = (currentUser && currentUser.enableDisabledFeatures) || false;
     if (enableDisabledFeatures !== showDisabledMenus)
       this.setState({ showDisabledMenus: enableDisabledFeatures });
   };

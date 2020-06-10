@@ -3,7 +3,7 @@ import firebase from 'firebase/app';
 
 import actions, { IPayload } from '../reducers/actions';
 import { database } from '../helpers/firebase';
-import { initialCharacter } from '../containers/Character/config';
+import { getInitialCharacter } from '../containers/Character/config';
 
 const fetchedCharacters: string[] = [];
 function getCharacter(payload: IPayload) {
@@ -27,7 +27,7 @@ function getCharacter(payload: IPayload) {
     actions.getCharacterSuccess({ uid, updatedData });
   };
 
-  actions.getCharacterSuccess({ uid, updatedData: JSON.parse(JSON.stringify(initialCharacter)) });
+  actions.getCharacterSuccess({ uid, updatedData: getInitialCharacter() });
   ref.on('child_changed', onUpdate);
   ref.on('child_added', onUpdate);
   ref.on('child_removed', onUpdate);

@@ -101,8 +101,8 @@ export const defaultLimbs: ILimbs = {
   legR: 'fine',
   legL: 'fine',
 };
-export const initialCharacter: ICharacter = {
-  uid: localStorage.getItem('uid') || '',
+export const getInitialCharacter: (() => ICharacter) = () => ({
+  uid: '',
   special: {
     strength: initialCharacteristic,
     perception: initialCharacteristic,
@@ -154,7 +154,7 @@ export const initialCharacter: ICharacter = {
   inventory: {},
   perks: [],
   notes: '',
-};
+});
 
 export const special: IField[] = [
   {
