@@ -7,7 +7,7 @@ import {
   QuestionCircleOutlined,
   LogoutOutlined,
   TeamOutlined,
-  IdcardOutlined,
+  // IdcardOutlined,
   TrophyOutlined,
   BookOutlined,
   SolutionOutlined,
@@ -38,11 +38,11 @@ const menu: IMenuItem[] = [
 ];
 
 export const characterMenu: IMenuItem[] = [
-  {
-    "label": "Статус",
-    "path": "./status",
-    icon: <IdcardOutlined/>
-  },
+  // {
+  //   "label": "Статус",
+  //   "path": "./status",
+  //   icon: <IdcardOutlined/>
+  // },
   // {
   //   "label": "Инвентарь",
   //   "path": "./inventory",
