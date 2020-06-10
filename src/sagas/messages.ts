@@ -138,29 +138,29 @@ export function* changeMessage(payload: IPayload) {
   return newMessage;
 }
 
-let blinking = false;
-
-export function setUnreadMessage(payload: IPayload) {
-  const { unreadMessage } = payload;
-  if (unreadMessage === false) return;
-
-  if (blinking) return;
-  blinking = true;
-
-  const interval = setInterval(() => {
-    const title = document.head.querySelector('title');
-    if (title) {
-      title.innerText = title.innerText === 'TRP' ? '(!) TRP' : 'TRP';
-
-      if (!blinking || (document.visibilityState === 'visible' && window.location.hash === '#/chat')) {
-        title.innerText = 'TRP';
-        clearInterval(interval);
-        blinking = false;
-        actions.setUnreadMessage({ unreadMessage: false });
-      }
-    }
-  }, 1000);
-}
+// let blinking = false;
+//
+// export function setUnreadMessage(payload: IPayload) {
+//   const { unreadMessage } = payload;
+//   if (unreadMessage === false) return;
+//
+//   if (blinking) return;
+//   blinking = true;
+//
+//   const interval = setInterval(() => {
+//     const title = document.head.querySelector('title');
+//     if (title) {
+//       title.innerText = title.innerText === 'TRP' ? '(!) TRP' : 'TRP';
+//
+//       if (!blinking || (document.visibilityState === 'visible' && window.location.hash === '#/chat')) {
+//         title.innerText = 'TRP';
+//         clearInterval(interval);
+//         blinking = false;
+//         actions.setUnreadMessage({ unreadMessage: false });
+//       }
+//     }
+//   }, 1000);
+// }
 
 function* removeMessage(payload: IPayload) {
   const { id } = payload;
@@ -177,7 +177,7 @@ export default function* watchForActions() {
     takeLatest('UNSUBSCRIBE', unsubscribe),
     takeLatest('UPLOAD_FILE', uploadFile),
     takeLatest('CHANGE_MESSAGE', changeMessage),
-    takeLatest('SET_UNREAD_MESSAGE', setUnreadMessage),
+    // takeLatest('SET_UNREAD_MESSAGE', setUnreadMessage),
     takeLatest('REMOVE_MESSAGE', removeMessage),
   ]);
 }

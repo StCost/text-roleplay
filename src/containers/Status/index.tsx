@@ -31,7 +31,6 @@ import {
 } from '../../helpers/utils';
 import actions from '../../reducers/actions';
 import BodyStatus from './BodyStatus';
-import { addStatusChangeListener, removeStatusChangeListener } from '../../helpers/activity';
 
 interface IStatusProps extends RouteComponentProps {
   loading: boolean;
@@ -60,20 +59,24 @@ class Status extends Component<IStatusProps, IStatusState> {
       actions.getUser({ uid });
     }
     redirectToUserPage(user, currentUser, history);
-    addStatusChangeListener('afk', this.onSave);
-    addStatusChangeListener('offline', this.onSave);
+
+    const state = JSON.parse(localStorage.getItem('character-state') || 'null');
+    if (state)
+      this.setState(state);
   };
+
+  saveState = () =>
+    localStorage.setItem('character-state', JSON.stringify(this.state));
 
   componentDidUpdate = (prevProps: IStatusProps) => {
     const { user, currentUser, history, character } = this.props;
     if (prevProps.character !== character && this.state.character !== character)
-      this.setState({ character });
+      this.setState({ character }, this.saveState);
     redirectToUserPage(user, currentUser, history);
   };
 
   componentWillUnmount = () => {
-    this.onSave();
-    removeStatusChangeListener('afk', this.onSave);
+    this.saveState();
   };
 
   onLimbClick = (name: string, state: TLimb) => {

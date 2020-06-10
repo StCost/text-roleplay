@@ -38,7 +38,6 @@ import {
   redirectToUserPage,
   set
 } from '../../helpers/utils';
-import { addStatusChangeListener, removeStatusChangeListener } from '../../helpers/activity';
 
 interface ICharacterProps extends RouteComponentProps {
   loading: boolean;
@@ -76,25 +75,28 @@ class Character extends Component<ICharacterProps, ICharacterState> {
     } else {
       this.setState({ character });
     }
-    if (!user) {
+    if (!user)
       actions.getUser({ uid });
-    }
+
     redirectToUserPage(user, currentUser, history);
-    addStatusChangeListener('afk', this.onSave);
-    addStatusChangeListener('offline', this.onSave);
+
+    const state = JSON.parse(localStorage.getItem('character-state') || 'null');
+    if (state)
+      this.setState(state);
   };
+
+  saveState = () =>
+    localStorage.setItem('character-state', JSON.stringify(this.state));
 
   componentDidUpdate = (prevProps: ICharacterProps) => {
     const { character, user, currentUser, history } = this.props;
-    if (prevProps.character !== character) {
-      this.setState({ character });
-    }
+    if (prevProps.character !== character)
+      this.setState({ character }, this.saveState);
     redirectToUserPage(user, currentUser, history);
   };
 
   componentWillUnmount = () => {
-    removeStatusChangeListener('afk', this.onSave);
-    this.onSave();
+    this.saveState();
   };
 
   getSpecial = (character: ICharacter) => {
@@ -462,7 +464,7 @@ class Character extends Component<ICharacterProps, ICharacterState> {
     return (
       <div className="char-controls">
         <Popconfirm
-          title="Сбросить все свои характеристики? Сброс будет сохранён после первого изменения"
+          title="Сбросить все свои характеристики?"
           okText="Сбросить"
           cancelText="Отмена"
           onConfirm={() => {
