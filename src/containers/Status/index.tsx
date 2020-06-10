@@ -241,35 +241,45 @@ class Status extends Component<IStatusProps, IStatusState> {
     )
   };
 
-  getControls = () => (
-    <div className="status-controls">
-      <Popconfirm
-        title="Откатить не сохранённые изменения?"
-        okText="Откатить"
-        cancelText="Отмена"
-        onConfirm={() => {
-          this.setState({ character: {...this.props.character} });
-          notify.success('Успешно откачено!')
-        }}
-      >
-        <Button>
-          <RollbackOutlined />
-          Откатить
-        </Button>
-      </Popconfirm>
-      <Popconfirm
-        title="Сохранить изменения?"
-        okText="Да"
-        cancelText="Отмена"
-        onConfirm={() => this.onSave(true)}
-      >
-        <Button className="status-save-button">
-          <SaveOutlined/>
-          Сохранить
-        </Button>
-      </Popconfirm>
-    </div>
-  );
+  getControls = () => {
+    const propsChar = this.props.character;
+    const stateChar = this.state.character;
+
+    return (
+      <div className="status-controls">
+        <Popconfirm
+          title="Откатить не сохранённые изменения?"
+          okText="Откатить"
+          cancelText="Отмена"
+          disabled={propsChar === stateChar}
+          onConfirm={() => {
+            this.setState({ character: this.props.character });
+            notify.success('Успешно откачено!')
+          }}
+        >
+          <Button disabled={propsChar === stateChar}>
+            <RollbackOutlined/>
+            Откатить
+          </Button>
+        </Popconfirm>
+        <Popconfirm
+          title="Сохранить изменения?"
+          okText="Да"
+          cancelText="Отмена"
+          disabled={propsChar === stateChar}
+          onConfirm={() => this.onSave(true)}
+        >
+          <Button
+            className="status-save-button"
+            disabled={propsChar === stateChar}
+          >
+            <SaveOutlined/>
+            Сохранить
+          </Button>
+        </Popconfirm>
+      </div>
+    );
+  };
 
   render = () => {
     const { user, character, loading, hasRight } = this.props;
@@ -277,7 +287,7 @@ class Status extends Component<IStatusProps, IStatusState> {
 
     if (!user || !character || loading) {
       return (
-          <Empty description="Пользователь не загружен"/>
+        <Empty description="Пользователь не загружен"/>
       );
     }
 

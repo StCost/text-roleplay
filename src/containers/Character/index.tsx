@@ -445,60 +445,67 @@ class Character extends Component<ICharacterProps, ICharacterState> {
     notify.success('Персонаж успешно скачан!');
   };
 
-  getControls = () => (
-    <div className="char-controls">
-      <Popconfirm
-        title="Сбросить все свои характеристики? Сброс будет сохранён после первого изменения"
-        okText="Сбросить"
-        cancelText="Отмена"
-        onConfirm={() => {
-          this.setState({ character: { ...initialCharacter } });
-          notify.success('Успешно сброшено!');
-        }}
-      >
-        <Button>
-          <ClearOutlined/>
-          Сбросить
-        </Button>
-      </Popconfirm>
-      <Popconfirm
-        title="Откатить не сохранённые изменения?"
-        okText="Откатить"
-        cancelText="Отмена"
-        onConfirm={() => {
-          this.setState({ character: { ...this.props.character } });
-          notify.success('Успешно откачено!')
-        }}
-      >
-        <Button>
-          <RollbackOutlined/>
-          Откатить
-        </Button>
-      </Popconfirm>
-      <Popconfirm
-        title="Экспортировать персонажа?"
-        okText="Да"
-        cancelText="Отмена"
-        onConfirm={this.downloadCharacter}
-      >
-        <Button>
-          <ExportOutlined/>
-          Экспортировать
-        </Button>
-      </Popconfirm>
-      <Popconfirm
-        title="Сохранить изменения?"
-        okText="Да"
-        cancelText="Отмена"
-        onConfirm={() => this.onSave(true)}
-      >
-        <Button>
-          <SaveOutlined/>
-          Сохранить
-        </Button>
-      </Popconfirm>
-    </div>
-  );
+  getControls = () => {
+    const propsChar = this.props.character;
+    const stateChar = this.state.character;
+
+    return (
+      <div className="char-controls">
+        <Popconfirm
+          title="Сбросить все свои характеристики? Сброс будет сохранён после первого изменения"
+          okText="Сбросить"
+          cancelText="Отмена"
+          onConfirm={() => {
+            this.setState({ character: { ...initialCharacter } });
+            notify.success('Успешно сброшено!');
+          }}
+        >
+          <Button>
+            <ClearOutlined/>
+            Сбросить
+          </Button>
+        </Popconfirm>
+        <Popconfirm
+          title="Откатить не сохранённые изменения?"
+          okText="Откатить"
+          cancelText="Отмена"
+          disabled={propsChar === stateChar}
+          onConfirm={() => {
+            this.setState({ character: this.props.character });
+            notify.success('Успешно откачено!')
+          }}
+        >
+          <Button disabled={propsChar === stateChar}>
+            <RollbackOutlined/>
+            Откатить
+          </Button>
+        </Popconfirm>
+        <Popconfirm
+          title="Экспортировать персонажа?"
+          okText="Да"
+          cancelText="Отмена"
+          onConfirm={this.downloadCharacter}
+        >
+          <Button>
+            <ExportOutlined/>
+            Экспортировать
+          </Button>
+        </Popconfirm>
+        <Popconfirm
+          title="Сохранить изменения?"
+          okText="Да"
+          cancelText="Отмена"
+          disabled={propsChar === stateChar}
+          onConfirm={() => this.onSave(true)}
+        >
+          <Button disabled={propsChar === stateChar}>
+            <SaveOutlined/>
+            Сохранить
+          </Button>
+        </Popconfirm>
+      </div>
+    );
+  };
 
   getTitle = (user: IUser) => (
     <>
