@@ -17,7 +17,7 @@ function* setUser(payload: IPayload) {
   actions.setUserSuccess({});
 }
 
-const requestedUsers: { [key: string]: true } = {};
+const requestedUsers: { [key: string]: boolean } = {};
 
 function* getUser(payload: IPayload) {
   const { uid, currentUser } = payload;
@@ -26,47 +26,58 @@ function* getUser(payload: IPayload) {
     actions.getUserFail({ uid, error: 'User is already listened', requestedUsers });
     return;
   }
-  requestedUsers[uid] = true;
   const ref = database
     .ref('users')
     .child(uid);
 
-  yield ref.once('value', (rawUser) => {
-    const user = rawUser.val();
-    if (!user) {
-      actions.getUserFail({ ...payload, error: 'User does not exist' });
-      return;
-    }
-    actions.getUserSuccess({ uid, user });
+  requestedUsers[uid] = true;
+  try {
+    yield ref.once('value', (rawUser) => {
+      const user = rawUser.val();
+      if (!user) {
+        actions.getUserFail({ ...payload, error: 'User does not exist' });
+        return;
+      }
+      actions.getUserSuccess({ uid, user });
 
-    ref.on('child_changed', (rawProperty) => {
-      const key: string | null = rawProperty.key;
-      if (!key) return;
-
-      const value = rawProperty.val();
-      actions.getUserSuccess({ uid, updatedData: { [key]: value } })
-    });
-  });
-}
-
-function* getAllUsers() {
-  const rawUsers = yield database.ref('users').once('value');
-  const users = rawUsers.val() || {};
-  actions.getAllUsersSuccess({ users });
-
-  Object.keys(users).forEach((uid: string) => {
-    database
-      .ref('users')
-      .child(uid)
-      .on('child_changed', (rawProperty) => {
-        requestedUsers[uid] = true;
+      ref.on('child_changed', (rawProperty) => {
         const key: string | null = rawProperty.key;
         if (!key) return;
 
         const value = rawProperty.val();
         actions.getUserSuccess({ uid, updatedData: { [key]: value } })
       });
-  })
+    });
+  } catch(error) {
+    console.error(error);
+    actions.getUserFail({ ...payload, error: 'Permission denied' });
+    requestedUsers[uid] = false;
+  }
+}
+
+function* getAllUsers() {
+  try {
+    const rawUsers = yield database.ref('users').once('value');
+    const users = rawUsers.val() || {};
+    actions.getAllUsersSuccess({ users });
+
+    Object.keys(users).forEach((uid: string) => {
+      database
+        .ref('users')
+        .child(uid)
+        .on('child_changed', (rawProperty) => {
+          requestedUsers[uid] = true;
+          const key: string | null = rawProperty.key;
+          if (!key) return;
+
+          const value = rawProperty.val();
+          actions.getUserSuccess({ uid, updatedData: { [key]: value } })
+        });
+    })
+  } catch(error) {
+    console.error(error);
+    actions.getAllUsersFail({ error: 'Permission denied' });
+  }
 }
 
 function* updateLastOnline() {
