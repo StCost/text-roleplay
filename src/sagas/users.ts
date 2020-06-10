@@ -38,17 +38,24 @@ function* getUser(payload: IPayload) {
         actions.getUserFail({ ...payload, error: 'User does not exist' });
         return;
       }
-      actions.getUserSuccess({ uid, user });
+      actions.getUserSuccess({ uid, user, currentUser });
+
+      if (currentUser)
+        actions.updateLastOnline({});
 
       ref.on('child_changed', (rawProperty) => {
         const key: string | null = rawProperty.key;
         if (!key) return;
 
         const value = rawProperty.val();
-        actions.getUserSuccess({ uid, updatedData: { [key]: value } })
+        actions.getUserSuccess({
+          uid,
+          updatedData: { [key]: value },
+          currentUser
+        });
       });
     });
-  } catch(error) {
+  } catch (error) {
     console.error(error);
     actions.getUserFail({ ...payload, error: 'Permission denied' });
     requestedUsers[uid] = false;
@@ -74,7 +81,7 @@ function* getAllUsers() {
           actions.getUserSuccess({ uid, updatedData: { [key]: value } })
         });
     })
-  } catch(error) {
+  } catch (error) {
     console.error(error);
     actions.getAllUsersFail({ error: 'Permission denied' });
   }

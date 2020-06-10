@@ -68,7 +68,6 @@ const listenForStatus = () => {
 const listenForOnline = () => {
   const callback = () => {
     !document.hidden
-    && document.hasFocus()
     && (
       !isOnline(parseInt(localStorage.getItem('lastActivity') || '0') - 60000)
       ||
