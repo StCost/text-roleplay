@@ -28,7 +28,8 @@ import {
   skills as configSkills,
   stats as configStats,
   subStats as configSubStats,
-  ICharacter, TGifts,
+  ICharacter,
+  TGifts,
 } from './config';
 import actions from '../../reducers/actions';
 import {
@@ -165,7 +166,7 @@ class Character extends Component<ICharacterProps, ICharacterState> {
     )
   };
 
-  onGiftSelect = (field: string) => () => {
+  onGiftSelect = (field: string) => {
     const { hasRight } = this.props;
     const { character } = this.state;
     if (!hasRight) return;
@@ -192,7 +193,9 @@ class Character extends Component<ICharacterProps, ICharacterState> {
 
   getSkills = (character: ICharacter) => {
     const { hasRight } = this.props;
-    const { skills, gifts } = character;
+    const { skills, gifts, stats } = character;
+
+    const interactiveLabel = stats.level <= 1;
 
     return skills && (
       <Card className="char-skills">
@@ -211,12 +214,12 @@ class Character extends Component<ICharacterProps, ICharacterState> {
         {configSkills.map(({ label, full, formula, field }) => (
           <div
             key={field}
-            className="char-skills-item"
+            className={`char-skills-item ${interactiveLabel ? '' : 'not-interactive'}`}
           >
             <Tooltip title={full} placement="left">
               <span
                 className={`char-skills-label ${gifts.indexOf(field) > -1 ? 'gift' : ''}`}
-                onClick={this.onGiftSelect(field)}
+                onClick={() => interactiveLabel && this.onGiftSelect(field)}
               >
                 {label}
                 </span>

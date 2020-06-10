@@ -114,6 +114,16 @@ div.ant-card.char {
         margin: 0;
       }
 
+      &.not-interactive {
+        .char-skills-label {
+          cursor: auto;
+
+          &.gift {
+            color: $selected;
+          }
+        }
+      }
+
       .char-skills-label {
         width: 100px;
         cursor: pointer;
