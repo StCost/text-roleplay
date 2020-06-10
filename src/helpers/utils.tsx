@@ -305,6 +305,8 @@ export const processCharacterChanges = (value: Store, char: Store) => {
     });
   }
 
+  stats.maxHealthPoints = Math.min(100, stats.maxHealthPoints);
+
   return {
     special,
     skills,

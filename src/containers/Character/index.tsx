@@ -99,7 +99,7 @@ class Character extends Component<ICharacterProps, ICharacterState> {
 
   getSpecial = (character: ICharacter) => {
     const { hasRight } = this.props;
-    const { special } = character;
+    const { special, stats } = character;
 
     return special && (
       <Card className="char-special">
@@ -139,14 +139,24 @@ class Character extends Component<ICharacterProps, ICharacterState> {
               value={special[field].change}
               onChange={this.onChange(['special', field, 'change'])}
             />
-            <InputNumber
-              className="char-special-input"
-              min={0}
-              max={9}
-              disabled={!hasRight}
-              value={special[field].base}
-              onChange={this.onChange(['special', field, 'base'])}
-            />
+            {stats.level > 1
+              ? (
+                <Input
+                  className="char-special-input"
+                  value={special[field].base}
+                  readOnly
+                />
+              ) : (
+                <InputNumber
+                  className="char-special-input"
+                  min={0}
+                  max={9}
+                  disabled={!hasRight}
+                  value={special[field].base}
+                  onChange={this.onChange(['special', field, 'base'])}
+                />
+              )
+            }
           </div>
         ))}
       </Card>
