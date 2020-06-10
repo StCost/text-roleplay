@@ -10,6 +10,7 @@ import {
   Switch,
   Modal,
   InputNumber,
+  Tooltip,
 } from 'antd';
 import { RouteComponentProps } from 'react-router';
 
@@ -190,13 +191,16 @@ export class Settings extends React.Component<ISettingsProps, IUser> {
       case 'zoom':
         console.log('zoom', value);
         return currentUser && currentUser.uid === uid && (
+          <Tooltip title="ВНИМАНИЕ! Изменяя размер, внешний вид страниц может кардинально измениться, а некоторые элементы станут перекрыты другими и будут не доступны. Изменяйте на свой страх и риск">
           <InputNumber
             max={200}
             min={50}
             value={parseInt(value)}
-            onChange={(value: number | undefined) => value !== undefined && this.rawOnChange(key, value)}
+            onChange={(value: number | undefined) => value !== undefined && this.rawOnChange(key, value || 0)}
             onBlur={() => this.onSave()}
+            onPressEnter={() => this.onSave()}
           />
+          </Tooltip>
         );
 
       default:
@@ -217,7 +221,7 @@ export class Settings extends React.Component<ISettingsProps, IUser> {
     'isAdmin': 'Права админа',
     'uid': 'UID',
     'approved': 'Активирован',
-    // 'zoom': 'Размер страницы %',
+    'zoom': 'Размер приложения %',
   };
 
   getDeleteUser = () => {
@@ -269,13 +273,14 @@ export class Settings extends React.Component<ISettingsProps, IUser> {
           .keys(defaultUser)
           .map((key: string) => {
             const label = this.labels[key];
-            return label && (
+            const field = this.getField(key, `${user[key] || ''}`, user);
+            return label && field && (
               <Card
                 className={key}
                 key={key}
                 title={label}
               >
-                {this.getField(key, `${user[key] || ''}`, user)}
+                {field}
               </Card>
             )
           })

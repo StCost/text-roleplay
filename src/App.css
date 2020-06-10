@@ -10,6 +10,7 @@
     opacity: 0.0;
     cursor: default;
 }
+
 .build-date:hover {
     opacity: 0.25;
 }
@@ -20,29 +21,11 @@
 
     width: 100%;
     margin: 0 auto;
-    height: 100vh;
+    height: 100%;
     overflow: auto;
 }
 
 .app > div {
-    width: 100%;
-}
-
-.app > .ant-card {
-    height: fit-content;
-    margin: auto 0;
-}
-
-div.ant-card {
-    max-width: 654px;
-    width: 100%;
-}
-
-.ant-card .ant-collapse-header {
-    min-height: 46px;
-}
-
-.ant-card img {
     width: 100%;
 }
 

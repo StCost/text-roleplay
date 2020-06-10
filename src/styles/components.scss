@@ -18,6 +18,24 @@
   }
 }
 
+.app > .ant-card {
+  height: fit-content;
+  margin: auto 0;
+}
+
+div.ant-card {
+  max-width: 654px;
+  width: 100%;
+}
+
+.ant-card .ant-collapse-header {
+  min-height: 46px;
+}
+
+.ant-card img {
+  width: 100%;
+}
+
 img.chat-image {
   max-height: 256px;
   width: auto;
@@ -112,6 +130,18 @@ img.chat-image {
     left: 50%;
     top: 50%;
     transform: translate(-50%, -50%);
+  }
+
+  .ant-spin-container {
+    overflow: hidden;
+    height: 100vh;
+    width: calc(100vw - 200px);
+
+    @media (max-width: 767px) {
+      height: 100vh;
+      width: 100vw;
+      padding-top: 48px;
+    }
   }
 }
 

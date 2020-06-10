@@ -12,7 +12,7 @@ import Router from './components/Router';
 import './App.css';
 import './styles/antd-dark.scss';
 import './styles/components.scss';
-import { IState, IUser } from './reducers/interfaces';
+import { defaultUser, IState, IUser } from './reducers/interfaces';
 import actions from './reducers/actions';
 import ErrorBoundary from './components/ErrorBoundary';
 import Loader from './components/Loader';
@@ -50,7 +50,7 @@ class App extends Component<IAppProps> {
     const { currentUser } = this.props;
     return (currentUser && currentUser.zoom)
       ? currentUser.zoom
-      : 1;
+      : defaultUser.zoom;
   };
 
   render = () => {
@@ -66,7 +66,7 @@ class App extends Component<IAppProps> {
           <Spin spinning={loading}>
             <div
               className="app"
-              // style={{ transform: `scale(${this.getZoom()/100})` }}
+              style={{ zoom: `${this.getZoom()/100}` }}
             >
               <Router/>
             </div>

@@ -251,39 +251,37 @@ class Chat extends Component<IChatProps, IChatState> {
     const { messages, loading, currentUser } = this.props;
 
     return (
-      <div>
-        <div className="chat-wrapper">
-          <div className="chat-reload">
-            {loading
-              ? <SyncOutlined spin/>
-              : <ReloadOutlined onClick={() => actions.getMessages({})}/>
-            }
-          </div>
-          {this.getPinnedMessage(messages)}
-          <div
-            className="chat-body"
-            ref={ref => this.bodyRef = ref}
-            onScroll={this.onScroll}
-          >
-            {messages.map(this.getMessage)}
-          </div>
-          <div className="chat-controls">
-            <DownOutlined onClick={this.scrollDown}/>
-            <InputUpload
-              textArea={true}
-              placeholder="Введите сообщение"
-              autoSize={{ minRows: 1, maxRows: 10 }}
-              onChange={this.onChangeMessage}
-              onKeyDown={this.onKeyDown}
-              value={this.state.message}
-              disabled={!currentUser || !currentUser.isAdmin}
-              onUpload={(message: string) => {
-                this.changeMessage(`${this.state.message} ${message}`);
-                actions.notify({ message: 'Файл успешно загружен!' });
-              }}
-            />
-            <SendOutlined onClick={this.onSendMessage}/>
-          </div>
+      <div className="chat-wrapper">
+        <div className="chat-reload">
+          {loading
+            ? <SyncOutlined spin/>
+            : <ReloadOutlined onClick={() => actions.getMessages({})}/>
+          }
+        </div>
+        {this.getPinnedMessage(messages)}
+        <div
+          className="chat-body"
+          ref={ref => this.bodyRef = ref}
+          onScroll={this.onScroll}
+        >
+          {messages.map(this.getMessage)}
+        </div>
+        <div className="chat-controls">
+          <DownOutlined onClick={this.scrollDown}/>
+          <InputUpload
+            textArea={true}
+            placeholder="Введите сообщение"
+            autoSize={{ minRows: 1, maxRows: 10 }}
+            onChange={this.onChangeMessage}
+            onKeyDown={this.onKeyDown}
+            value={this.state.message}
+            disabled={!currentUser || !currentUser.isAdmin}
+            onUpload={(message: string) => {
+              this.changeMessage(`${this.state.message} ${message}`);
+              actions.notify({ message: 'Файл успешно загружен!' });
+            }}
+          />
+          <SendOutlined onClick={this.onSendMessage}/>
         </div>
       </div>
     )

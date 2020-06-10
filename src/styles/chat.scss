@@ -3,8 +3,6 @@
 .chat-wrapper {
   display: flex;
   flex-direction: column;
-  height: 100vh;
-  width: 100%;
   justify-content: flex-end;
   align-items: center;
   padding: 0;
@@ -15,6 +13,7 @@
     top: 0;
     max-width: 654px;
     width: 100%;
+    z-index: 1001;
 
     @media(max-width: 767px) {
       top: 48px;
