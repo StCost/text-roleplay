@@ -43,11 +43,6 @@ export const characterMenu: IMenuItem[] = [
     "path": "./status",
     icon: <IdcardOutlined/>
   },
-  {
-    "label": "Перки",
-    "path": "./perks",
-    icon: <TrophyOutlined/>
-  },
   // {
   //   "label": "Инвентарь",
   //   "path": "./inventory",
@@ -57,6 +52,11 @@ export const characterMenu: IMenuItem[] = [
     "label": "Характеристики",
     "path": "./stats",
     icon: <SolutionOutlined/>
+  },
+  {
+    "label": "Перки",
+    "path": "./perks",
+    icon: <TrophyOutlined/>
   },
   {
     "label": "Записи",
