@@ -67,7 +67,7 @@ div, span, pre, ul, li, h1 {
   border-color: $background-color;
 
   .ant-menu-item > a {
-    color: $text-color !important;
+    color: $text-color;
   }
 
   .ant-menu-item-selected {

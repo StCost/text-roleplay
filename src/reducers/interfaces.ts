@@ -66,6 +66,7 @@ export interface IUser {
   isSuperAdmin: boolean;
   notesAreVisible: boolean;
   zoom: number;
+  enableDisabledFeatures: boolean;
 }
 
 export interface IUsers {
@@ -82,6 +83,7 @@ export const defaultUser: IUser = {
   nickname: '',
   avatar: '',
   zoom: 100,
+  enableDisabledFeatures: true,
 
   approved: false,
   uid: '',

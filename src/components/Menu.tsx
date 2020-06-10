@@ -6,7 +6,7 @@ import { UserOutlined, RobotOutlined } from '@ant-design/icons';
 
 import '../styles/menu.scss';
 import menu, { IMenuItem, characterMenu, userMenu } from '../configs/menu';
-import { IState } from '../reducers/interfaces';
+import { IState, IUser } from '../reducers/interfaces';
 
 interface TitleEventEntity {
   key: string;
@@ -16,15 +16,18 @@ interface TitleEventEntity {
 interface IMenuProps extends RouteComponentProps {
   isLoggedIn: boolean;
   unreadMessage: boolean;
+  currentUser: IUser | null;
 }
 
 interface IMenuState {
   openedKeys: string[],
+  showDisabledMenus: boolean;
 }
 
 class Menu extends Component<IMenuProps, IMenuState> {
   state = {
     openedKeys: ['char', 'user'],
+    showDisabledMenus: false,
     ...JSON.parse(localStorage.getItem('menu-opened') || '{}'),
   };
 
@@ -32,20 +35,30 @@ class Menu extends Component<IMenuProps, IMenuState> {
     if (prevState !== this.state) {
       localStorage.setItem('menu-opened', JSON.stringify(this.state));
     }
+
+    const { showDisabledMenus } = this.state;
+    const { currentUser } = this.props;
+    const enableDisabledFeatures = !!currentUser && currentUser.enableDisabledFeatures;
+    if (enableDisabledFeatures !== showDisabledMenus)
+      this.setState({ showDisabledMenus: enableDisabledFeatures });
   };
 
-  getMenuItem = (value: IMenuItem, index: number = 0) => (
-    <AntdMenu.Item
-      // className={(value.path === '/chat' && this.props.unreadMessage) ? 'unread' : ''}
-      key={value.path.split('/').pop()}
-      disabled={value.path === this.props.location.pathname}
-    >
-      <Link to={value.path}>
-        {value.icon}
-        {value.label}
-      </Link>
-    </AntdMenu.Item>
-  );
+  getMenuItem = (value: IMenuItem) => {
+    const { showDisabledMenus } = this.state;
+
+    return (!value.disabled || showDisabledMenus) && (
+      <AntdMenu.Item
+        className={(showDisabledMenus && value.path === '/chat' && this.props.unreadMessage) ? 'unread' : ''}
+        key={value.path.split('/').pop()}
+        disabled={value.path === this.props.location.pathname}
+      >
+        <Link to={value.path}>
+          {value.icon}
+          {value.label}
+        </Link>
+      </AntdMenu.Item>
+    );
+  };
 
   onTitleClick = (event: TitleEventEntity) => {
     const { openedKeys } = this.state;
@@ -136,6 +149,7 @@ class Menu extends Component<IMenuProps, IMenuState> {
 const mapStateToProps = (state: IState) => ({
   isLoggedIn: state.isLoggedIn,
   unreadMessage: state.unreadMessage,
+  currentUser: state.currentUser,
 });
 
 

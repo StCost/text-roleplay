@@ -61,13 +61,13 @@ export class Settings extends React.Component<ISettingsProps, IUser> {
     this.onSave();
   };
 
-  rawOnChange = (field: string, value: string | boolean | number) => {
+  rawOnChange = (field: string, value: string | boolean | number, update?: boolean) => {
     const newSettings = {
       ...this.state,
       [field]: value,
     };
 
-    this.setState(newSettings);
+    this.setState(newSettings, () => update && this.onSave());
   };
 
   onSave = () => {
@@ -189,18 +189,30 @@ export class Settings extends React.Component<ISettingsProps, IUser> {
         </>;
 
       case 'zoom':
-        console.log('zoom', value);
         return currentUser && currentUser.uid === uid && (
-          <Tooltip title="ВНИМАНИЕ! Изменяя размер, внешний вид страниц может кардинально измениться, а некоторые элементы станут перекрыты другими и будут не доступны. Изменяйте на свой страх и риск">
-          <InputNumber
-            max={200}
-            min={50}
-            value={parseInt(value)}
-            onChange={(value: number | undefined) => value !== undefined && this.rawOnChange(key, value || 0)}
-            onBlur={() => this.onSave()}
-            onPressEnter={() => this.onSave()}
-          />
+          <Tooltip
+            title="ВНИМАНИЕ! Изменяя размер, внешний вид страниц может кардинально измениться, а некоторые элементы станут перекрыты другими и будут не доступны. Изменяйте на свой страх и риск">
+            <InputNumber
+              max={200}
+              min={50}
+              value={parseInt(value)}
+              onChange={(value: number | undefined) => value !== undefined && this.rawOnChange(key, value || 0)}
+              onBlur={() => this.onSave()}
+              onPressEnter={() => this.onSave()}
+            />
           </Tooltip>
+        );
+
+      case 'enableDisabledFeatures':
+        return currentUser && currentUser.uid === uid && (
+          <>
+            <Switch
+              checked={!!value}
+              onChange={(enabled: boolean) => this.rawOnChange(key, enabled, true)}
+            />
+            {' '}
+            {value ? 'Активированы' : 'Деактивированы'}
+          </>
         );
 
       default:
@@ -222,6 +234,7 @@ export class Settings extends React.Component<ISettingsProps, IUser> {
     'uid': 'UID',
     'approved': 'Активирован',
     'zoom': 'Размер приложения %',
+    'enableDisabledFeatures': 'Дополнительные функции'
   };
 
   getDeleteUser = () => {

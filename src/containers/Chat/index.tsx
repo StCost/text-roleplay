@@ -275,7 +275,7 @@ class Chat extends Component<IChatProps, IChatState> {
             onChange={this.onChangeMessage}
             onKeyDown={this.onKeyDown}
             value={this.state.message}
-            disabled={!currentUser || !currentUser.isAdmin}
+            disabled={!currentUser || !currentUser.enableDisabledFeatures}
             onUpload={(message: string) => {
               this.changeMessage(`${this.state.message} ${message}`);
               actions.notify({ message: 'Файл успешно загружен!' });

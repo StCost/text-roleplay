@@ -1,13 +1,13 @@
 import React from 'react';
 import {
   MessageOutlined,
-  // DatabaseOutlined,
+  DatabaseOutlined,
   SettingOutlined,
-  // AppstoreAddOutlined,
+  AppstoreAddOutlined,
   QuestionCircleOutlined,
   LogoutOutlined,
   TeamOutlined,
-  // IdcardOutlined,
+  IdcardOutlined,
   TrophyOutlined,
   BookOutlined,
   SolutionOutlined,
@@ -17,6 +17,7 @@ export interface IMenuItem {
   label: string;
   path: string;
   icon: JSX.Element;
+  disabled?: boolean;
 }
 
 const menu: IMenuItem[] = [
@@ -38,16 +39,18 @@ const menu: IMenuItem[] = [
 ];
 
 export const characterMenu: IMenuItem[] = [
-  // {
-  //   "label": "Статус",
-  //   "path": "./status",
-  //   icon: <IdcardOutlined/>
-  // },
-  // {
-  //   "label": "Инвентарь",
-  //   "path": "./inventory",
-  //   icon: <DatabaseOutlined/>
-  // },
+  {
+    "label": "Статус",
+    "path": "./status",
+    icon: <IdcardOutlined/>,
+    disabled: true,
+  },
+  {
+    "label": "Инвентарь",
+    "path": "./inventory",
+    icon: <DatabaseOutlined/>,
+    disabled: true,
+  },
   {
     "label": "Характеристики",
     "path": "./stats",
@@ -71,11 +74,12 @@ export const userMenu: IMenuItem[] = [
     "path": "./settings",
     icon: <SettingOutlined/>
   },
-  // {
-  //   "label": "Предметы",
-  //   "path": "/items",
-  //   icon: <AppstoreAddOutlined/>
-  // },
+  {
+    "label": "Предметы",
+    "path": "/items",
+    icon: <AppstoreAddOutlined/>,
+    disabled: true,
+  },
   {
     "label": "Помощь",
     "path": "/help",
