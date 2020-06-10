@@ -466,6 +466,17 @@ class Character extends Component<ICharacterProps, ICharacterState> {
           </Button>
         </Popconfirm>
         <Popconfirm
+          title="Экспортировать персонажа?"
+          okText="Да"
+          cancelText="Отмена"
+          onConfirm={this.downloadCharacter}
+        >
+          <Button>
+            <ExportOutlined/>
+            Экспортировать
+          </Button>
+        </Popconfirm>
+        <Popconfirm
           title="Откатить не сохранённые изменения?"
           okText="Откатить"
           cancelText="Отмена"
@@ -478,17 +489,6 @@ class Character extends Component<ICharacterProps, ICharacterState> {
           <Button disabled={propsChar === stateChar}>
             <RollbackOutlined/>
             Откатить
-          </Button>
-        </Popconfirm>
-        <Popconfirm
-          title="Экспортировать персонажа?"
-          okText="Да"
-          cancelText="Отмена"
-          onConfirm={this.downloadCharacter}
-        >
-          <Button>
-            <ExportOutlined/>
-            Экспортировать
           </Button>
         </Popconfirm>
         <Popconfirm
