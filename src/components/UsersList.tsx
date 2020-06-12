@@ -7,7 +7,7 @@ import { IUsers, IUser, IState } from '../reducers/interfaces';
 import actions from '../reducers/actions';
 import UserInfo from './UserInfo';
 
-interface IActiveUsersListProps {
+interface IUsersListProps {
   uid: string;
   loading: boolean;
   users: IUsers;
@@ -15,7 +15,7 @@ interface IActiveUsersListProps {
   displayOnline?: boolean;
 }
 
-class UsersList extends Component<IActiveUsersListProps> {
+class UsersList extends Component<IUsersListProps> {
   componentDidMount = () => {
     actions.getAllUsers({});
   };
