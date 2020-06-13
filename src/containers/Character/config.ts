@@ -391,7 +391,7 @@ export const subStats: IField[] = [
     label: 'ОН',
     full: 'Очки Навыков',
     field: 'skillPoints',
-    getBase: (s, stats) => Math.floor((stats.level) * (10 + (s.in / 2)) - stats.spentSkillPoints),
+    getBase: (s, stats) => Math.floor((stats.level - 1) * (10 + (s.in / 2)) - stats.spentSkillPoints),
   },
 ];
 
