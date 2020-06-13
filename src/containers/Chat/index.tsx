@@ -34,7 +34,6 @@ interface IChatProps extends RouteComponentProps {
   uid: string,
   loading: boolean,
   users: IUsers;
-  user: IUser;
   currentUser: IUser | null;
 }
 
@@ -52,11 +51,12 @@ class Chat extends Component<IChatProps, IChatState> {
   };
 
   componentDidMount = () => {
+    actions.subscribe({});
     this.setState(JSON.parse(localStorage.getItem('chat-state') || '{}'));
   };
 
   componentDidUpdate = (prevProps: IChatProps, prevState: IChatState) => {
-    const { messages, users } = this.props;
+    const { messages, users, loading } = this.props;
 
     if (this.state.sending && prevProps.messages !== messages) {
       localStorage.setItem('message', '');
@@ -66,11 +66,26 @@ class Chat extends Component<IChatProps, IChatState> {
       });
     }
 
-    messages.forEach((m: IMessage) => {
-      if (!users[m.author]) {
-        actions.getUser({ uid: m.author });
+    if (!loading) {
+      const uniqueUsers = messages
+        .map((m: IMessage) => m.author)
+        .filter((item: string, pos: number, self: string[]) =>
+          self.findIndex((_i: string) => _i === item) === pos
+        );
+
+      if (uniqueUsers.length !== Object.keys(users).length) {
+        const notLoadedUser = uniqueUsers.find((uid: string) => !users[uid]);
+        if (notLoadedUser)
+          actions.getUser({ uid: notLoadedUser });
+
+        const emptyUser = uniqueUsers.find((uid: string) => !!users[uid] && !!users[uid].error);
+        if (emptyUser)
+          messages.forEach(({ author, time }) => {
+            author === emptyUser &&
+            actions.removeMessage({ id: time });
+          });
       }
-    });
+    }
 
     if (prevState !== this.state) {
       localStorage.setItem('chat-state', JSON.stringify(this.state));
@@ -111,23 +126,23 @@ class Chat extends Component<IChatProps, IChatState> {
 
   onSendMessage = () => {
     const { message } = this.state;
-    const { user, loading, uid } = this.props;
+    const { currentUser, loading, uid } = this.props;
 
     if (loading) {
       return;
     }
 
-    if (!user) {
+    if (!currentUser) {
       notify.error('Данные о пользователе отсутствуют');
       return;
     }
 
-    if (!user.nickname) {
+    if (!currentUser.nickname) {
       notify.error('Никнейм не установлен. Пройдите в настройки и назовите себя');
       return;
     }
 
-    if (!user.approved) {
+    if (!currentUser.approved) {
       notify.error('Админ пока что не активировал Ваш аккаунт');
       return;
     }
@@ -297,7 +312,6 @@ const mapStateToProps = (state: IState) => {
     loading,
     users,
     currentUser,
-    user: users[uid],
   };
 };
 

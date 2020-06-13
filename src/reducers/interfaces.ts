@@ -67,6 +67,10 @@ export interface IUser {
   notesAreVisible: boolean;
   zoom: number;
   enableDisabledFeatures: boolean;
+  error?: {
+    message: string,
+    code: string,
+  }
 }
 
 export interface IUsers {

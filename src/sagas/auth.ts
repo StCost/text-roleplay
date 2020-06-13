@@ -79,8 +79,7 @@ function* logout() {
 
 function loginSuccess(payload: IPayload) {
   localStorage.setItem('user', JSON.stringify(payload.user));
-  actions.getMessages({});
-  actions.subscribe({});
+  actions.updateLastOnline({});
   listenForActivity();
 }
 

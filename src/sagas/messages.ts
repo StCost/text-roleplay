@@ -31,7 +31,11 @@ function* sendMessage(payload: IPayload) {
   }
 }
 
+let subscribed = false;
 function subscribe() {
+  if (subscribed) return;
+
+  actions.getMessages({});
   const handleMessage = (rawMessage: firebase.database.DataSnapshot) => {
     const message = rawMessage.val();
     if (!message) return;
@@ -52,6 +56,7 @@ function subscribe() {
     actions.removeMessageSuccess({ id: key });
   };
 
+  subscribed = true;
   database
     .ref('messages')
     .orderByKey()
@@ -69,6 +74,7 @@ function subscribe() {
 
 function unsubscribe() {
   database.ref('messages').off();
+  subscribed = false;
 }
 
 function* getMessages() {

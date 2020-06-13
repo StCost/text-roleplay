@@ -23,7 +23,7 @@ function* getUser(payload: IPayload) {
   const { uid, currentUser } = payload;
 
   if (requestedUsers[uid] && !currentUser) {
-    actions.getUserFail({ uid, error: 'User is already listened', requestedUsers });
+    actions.getUserFail({ uid, error: 'User is already listened' });
     return;
   }
   const ref = database
@@ -35,13 +35,19 @@ function* getUser(payload: IPayload) {
     yield ref.once('value', (rawUser) => {
       const user = rawUser.val();
       if (!user) {
-        actions.getUserFail({ ...payload, error: 'User does not exist' });
+        actions.getUserFail({
+          uid,
+          user: {
+            uid,
+            error: {
+              message: 'User does not exist',
+              code: 'user/not-exist'
+            }
+          },
+        });
         return;
       }
       actions.getUserSuccess({ uid, user, currentUser });
-
-      if (currentUser)
-        actions.updateLastOnline({});
 
       ref.on('child_changed', (rawProperty) => {
         const key: string | null = rawProperty.key;
