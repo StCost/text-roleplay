@@ -6,6 +6,7 @@ import { database } from '../helpers/firebase';
 import { getInitialCharacter } from '../containers/Character/config';
 
 const fetchedCharacters: string[] = [];
+
 function getCharacter(payload: IPayload) {
   const { uid } = payload;
 
@@ -22,12 +23,18 @@ function getCharacter(payload: IPayload) {
     const { key } = rawChar;
     if (!key) return;
     const value = rawChar.val();
-    const updatedData = {[key]: value === undefined ? '' : value};
+    const updatedData = { [key]: value === undefined ? '' : value };
 
     actions.getCharacterSuccess({ uid, updatedData });
   };
 
-  actions.getCharacterSuccess({ uid, updatedData: getInitialCharacter() });
+  actions.getCharacterSuccess({
+    uid,
+    updatedData: {
+      ...getInitialCharacter(),
+      uid,
+    }
+  });
   ref.on('child_changed', onUpdate);
   ref.on('child_added', onUpdate);
   ref.on('child_removed', onUpdate);

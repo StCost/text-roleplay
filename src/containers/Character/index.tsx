@@ -545,6 +545,7 @@ class Character extends Component<ICharacterProps, ICharacterState> {
     const { user, hasRight, character, loading } = this.props;
     const stateCharacter = this.state.character;
 
+    console.log(!user, !character, character && !character.uid );
     if (!user || !character || !character.uid || loading) {
       return (
         <Empty description="Пользователь не загружен"/>
