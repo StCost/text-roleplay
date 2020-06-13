@@ -4,13 +4,34 @@ import { Card } from 'antd';
 export default () => (
   <Card className="help">
     Чат для текстовой ролевой игры. Инвентарь, управление чатом, настройки персонажа, профиля.
-    <br/>
+    <br/><br/>
     <a
       href="https://drive.google.com/file/d/0B-RDVZxCOJTPdDVXaERkZUQ5dWc/view?usp=sharing"
       target="_blank"
       rel="noopener noreferrer"
     >
       Правила игры
+    </a><br/>
+    <a
+      href="https://docs.google.com/document/d/1gg6IXRsLEW2Cbu6Wd_5FGKeVv-kcb1df9Y0t28l4cz8/edit?usp=sharing"
+      target="_blank"
+      rel="noopener noreferrer"
+    >
+      Список дополнительных правил (Home Rules)
+    </a><br/>
+    <a
+      href="https://docs.google.com/document/d/1oFnCN-DVfHT3zeZZzc6Tf6vMGz71lKTrtx1w5v9H4q4/edit?usp=sharing"
+      target="_blank"
+      rel="noopener noreferrer"
+    >
+      Важные сюжетные моменты мира
+    </a><br/>
+    <a
+      href="https://docs.google.com/document/d/13SQUeWbEEHbv0URoA822odHYv8wxtVtkvQNb59I8MDA/edit?usp=sharing"
+      target="_blank"
+      rel="noopener noreferrer"
+    >
+      Инструкция по созданию персонажа
     </a>
     <br/><br/>
     <h1>Возможности</h1>
