@@ -39,6 +39,7 @@ import {
   redirectToUserPage,
   set
 } from '../../helpers/utils';
+import { addStatusChangeListener, removeStatusChangeListener } from '../../helpers/activity';
 
 interface ICharacterProps extends RouteComponentProps {
   loading: boolean;
@@ -57,7 +58,7 @@ interface ICharacterState {
 /**
  * Level is capped to 30 lvl
  */
-const maxExperience = 464999;
+const maxExperience = 435000;
 
 /**
  * This component is most complex one in whole project
@@ -81,23 +82,22 @@ class Character extends Component<ICharacterProps, ICharacterState> {
 
     redirectToUserPage(user, currentUser, history);
 
-    const state = JSON.parse(localStorage.getItem('character-state') || 'null');
-    if (state)
-      this.setState(state);
+    addStatusChangeListener('afk', this.onSave);
+    addStatusChangeListener('offline', this.onSave);
   };
-
-  saveState = () =>
-    localStorage.setItem('character-state', JSON.stringify(this.state));
 
   componentDidUpdate = (prevProps: ICharacterProps) => {
     const { character, user, currentUser, history } = this.props;
     if (prevProps.character !== character)
-      this.setState({ character }, this.saveState);
+      this.setState({ character });
+
     redirectToUserPage(user, currentUser, history);
   };
 
   componentWillUnmount = () => {
-    this.saveState();
+    removeStatusChangeListener('afk', this.onSave);
+    removeStatusChangeListener('offline', this.onSave);
+    this.onSave();
   };
 
   getSpecial = (character: ICharacter) => {
