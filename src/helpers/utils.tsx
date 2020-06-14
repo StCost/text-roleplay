@@ -221,7 +221,9 @@ export const processLinks = (body: string) => {
   return null;
 };
 
-export const getUserStatus = (user: IUser) => {
+export const getUserStatus = (user: IUser | null) => {
+  if (!user) return 'offline';
+
   const { status, lastOnline } = user;
 
   switch (status) {
@@ -278,7 +280,7 @@ export const processCharacterChanges = (value: Store, char: Store) => {
       const isGift = gifts.indexOf(field) > -1;
       const change = Math.max(0, value.change);
       const base = Math.max(0, getBase ? getBase(specialTotal, stats) : 1);
-      const total = Math.max(0, Math.min(95, base + (isGift ? change * 2 : change)));
+      const total = Math.max(0, Math.min(95, base + (isGift ? ((change * 2) + 10) : change)));
 
       skills[field] = {
         change,
@@ -387,6 +389,8 @@ export const getCharacterChanges = (beforeChar: ICharacter, afterChar: ICharacte
 };
 
 export const arraysEqual = (arr1: any[], arr2: any[]) => {
+  if (!arr1 || !arr2) return false;
+
   if (arr1.length !== arr2.length) return false;
   for (let i = 0; i < arr1.length; i++)
     if (arr1[i] !== arr2[i]) return false;

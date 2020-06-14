@@ -8,7 +8,7 @@ import { IUser } from '../reducers/interfaces';
 import { getUserStatus } from '../helpers/utils';
 
 interface IUserInfoProps {
-  user: IUser;
+  user: IUser | null;
   displayOnline?: boolean;
   onClick?: (user: IUser) => void;
 }
@@ -19,25 +19,32 @@ const UserInfo = (props: IUserInfoProps) => {
   return (
     <div className="user-info">
       <Tooltip
-        title={user.lastOnline ? `Последняя активность: ${moment(user.lastOnline).fromNow()}` : undefined}
+        title={(user && user.lastOnline) ? `Последняя активность: ${moment(user.lastOnline).fromNow()}` : undefined}
         placement="left"
       >
         <div
-          className={`user-info-title ${getUserStatus(user)} ${onClick ? 'interactive' : ''}`}
-          onClick={() => onClick && onClick(user)}
+          className={`user-info-title ${getUserStatus(user)} ${(onClick && user) ? 'interactive' : ''}`}
+          onClick={() => onClick && user && onClick(user)}
         >
           <Avatar
-            avatar={user.avatar}
-            nickname={user.nickname || user.uid}
+            avatar={user ? user.avatar : ''}
+            // eslint-disable-next-line
+            nickname={user && (user.nickname || user.uid) || ''}
           />
           <div className="user-info-nickname">
-            {user.nickname || user.uid}
+            {
+              // eslint-disable-next-line
+              user && (user.nickname || user.uid) || '[Loading...]'
+            }
           </div>
         </div>
       </Tooltip>
       {displayOnline && (
         <span>
-          {!!user.lastOnline && `Последняя активность: ${moment(user.lastOnline).fromNow()}`}
+          {
+            // eslint-disable-next-line
+            !!(user && user.lastOnline) && `Последняя активность: ${moment(user.lastOnline).fromNow()}`
+          }
         </span>
       )}
     </div>

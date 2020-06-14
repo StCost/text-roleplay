@@ -71,6 +71,7 @@ const reducer = (state = initialState, action: IAction) => {
     case 'GET_MORE_ITEMS_FAIL':
     case 'SET_CHARACTER_NOTES_FAIL':
     case 'SET_CHARACTER_NOTES_SUCCESS':
+    case 'SEND_MESSAGE_SUCCESS':
     case 'SEND_MESSAGE_FAIL': {
       return {
         ...state,

@@ -8,7 +8,7 @@ import UserInfo from '../../components/UserInfo';
 
 interface IMessageProps {
   message: IMessage,
-  user: IUser,
+  user: IUser | null,
   uid: string;
   extra?: JSX.Element;
   onUserClick?: () => void;
@@ -31,10 +31,7 @@ const Message = (props: IMessageProps) => {
     onUserClick = noop,
   } = props;
 
-  if (!user || !user.uid)
-    return <React.Fragment/>;
-
-  const title = user && (
+  const title = (
     <UserInfo
       user={user}
       onClick={onUserClick}

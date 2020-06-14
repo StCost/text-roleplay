@@ -194,10 +194,11 @@ class Character extends Component<ICharacterProps, ICharacterState> {
   getSkills = (character: ICharacter) => {
     const { hasRight } = this.props;
     const { skills, gifts, stats } = character;
+    if (!skills || !stats) return false;
 
     const interactiveLabel = stats.level <= 1;
 
-    return skills && (
+    return (
       <Card className="char-skills">
         <div className="char-skills-item">
           <span className="char-skills-label"/>
@@ -218,7 +219,7 @@ class Character extends Component<ICharacterProps, ICharacterState> {
           >
             <Tooltip title={full} placement="left">
               <span
-                className={`char-skills-label ${gifts.indexOf(field) > -1 ? 'gift' : ''}`}
+                className={`char-skills-label ${gifts && gifts.indexOf(field) > -1 ? 'gift' : ''}`}
                 onClick={() => interactiveLabel && this.onGiftSelect(field)}
               >
                 {label}
@@ -403,8 +404,11 @@ class Character extends Component<ICharacterProps, ICharacterState> {
   };
 
   onSave = async (showError: boolean = false) => {
-    const { uid, character } = this.props;
+    const { uid, character, user } = this.props;
     const stateCharacter = this.state.character;
+
+    if (!user || !character || !character.uid)
+      return;
 
     if (!character) {
       if (showError)
@@ -412,6 +416,7 @@ class Character extends Component<ICharacterProps, ICharacterState> {
       return;
     }
 
+    console.log(stateCharacter);
     let changes = getCharacterChanges(getInitialCharacter(), stateCharacter);
     if (changes.length === 0) {
       if (showError)

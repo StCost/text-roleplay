@@ -7,7 +7,7 @@ import { getInitialCharacter } from '../containers/Character/config';
 
 const fetchedCharacters: string[] = [];
 
-function getCharacter(payload: IPayload) {
+function* getCharacter(payload: IPayload) {
   const { uid } = payload;
 
   if (fetchedCharacters.indexOf(uid) > -1) {
@@ -28,10 +28,12 @@ function getCharacter(payload: IPayload) {
     actions.getCharacterSuccess({ uid, updatedData });
   };
 
+  const rawChar = yield ref.once('value');
+  const char = rawChar.val() || getInitialCharacter();
   actions.getCharacterSuccess({
     uid,
     updatedData: {
-      ...getInitialCharacter(),
+      ...char,
       uid,
     }
   });
