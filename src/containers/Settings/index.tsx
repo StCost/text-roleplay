@@ -197,7 +197,7 @@ export class Settings extends React.Component<ISettingsProps, IUser> {
               max={200}
               min={50}
               value={parseInt(value)}
-              onChange={(value: number | undefined) => value !== undefined && this.rawOnChange(key, value || 0)}
+              onChange={(value: number | undefined) => value !== undefined && this.rawOnChange(key, Math.min(200, Math.max(50, value || 0)))}
               onBlur={() => this.onSave()}
               onPressEnter={() => this.onSave()}
             />

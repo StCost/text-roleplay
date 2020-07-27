@@ -120,6 +120,7 @@ const reducer = (state = initialState, action: IAction) => {
     case 'GET_USER_FAIL':
     case 'GET_USER_SUCCESS': {
       const { uid, user, updatedData } = action;
+      if (!user && !updatedData) return state;
 
       const newUser = updatedData
         ? ({

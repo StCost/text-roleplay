@@ -64,7 +64,8 @@ export const characterMenu: IMenuItem[] = [
   {
     "label": "Записи",
     "path": "./notes",
-    icon: <BookOutlined/>
+    icon: <BookOutlined/>,
+    disabled: true,
   },
 ];
 
