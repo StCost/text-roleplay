@@ -277,7 +277,7 @@ export const processCharacterChanges = (value: Store, char: Store) => {
     stats.spentSkillPoints = 0;
     configSkills.forEach(({ field, getBase }) => {
       const value: ICharacteristic = skills[field];
-      const isGift = gifts.indexOf(field) > -1;
+      const isGift = gifts && gifts.indexOf(field) > -1;
       const change = Math.max(0, value.change);
       const base = Math.max(0, getBase ? getBase(specialTotal, stats) : 1);
       const total = Math.max(0, Math.min(95, base + (isGift ? ((change * 2) + 10) : change)));
@@ -336,8 +336,8 @@ export const getCharacterChanges = (beforeChar: ICharacter, afterChar: ICharacte
     }
 
     if (name === 'gifts') {
-      const beforeGifts = beforeChar.gifts;
-      const afterGifts = afterChar.gifts;
+      const beforeGifts = beforeChar.gifts || [];
+      const afterGifts = afterChar.gifts || [];
       if (!arraysEqual(beforeGifts, afterGifts)) {
         const beforeNames = beforeGifts.map((gift: string) => {
           const skill = configSkills.find((skill: IField) => skill.field === gift);
@@ -370,15 +370,15 @@ export const getCharacterChanges = (beforeChar: ICharacter, afterChar: ICharacte
             changes.push({
               label: config.label,
               full: config.full,
-              before: labels[before[name][field]],
-              after: labels[after[name][field]],
+              before: labels[before[name][field]] || '',
+              after: labels[after[name][field]] || '',
             });
           } else {
             changes.push({
               label: config.label,
               full: config.full,
-              before: value,
-              after: after[name][field],
+              before: value || '',
+              after: after[name][field] || '',
             });
           }
         }

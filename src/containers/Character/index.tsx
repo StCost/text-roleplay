@@ -136,7 +136,7 @@ class Character extends Component<ICharacterProps, ICharacterState> {
             />
             <InputNumber
               className="char-special-input"
-              min={0}
+              min={-9}
               max={9}
               disabled={!hasRight}
               value={special[field].change}
@@ -172,7 +172,7 @@ class Character extends Component<ICharacterProps, ICharacterState> {
     if (!hasRight) return;
 
     // Avoid mutations
-    const gifts: TGifts = [...character.gifts];
+    const gifts: TGifts = [...(character.gifts || [])];
     const index = gifts.indexOf(field);
     if (index > -1) {
       gifts.splice(index, 1);
@@ -351,7 +351,7 @@ class Character extends Component<ICharacterProps, ICharacterState> {
               />
               <InputNumber
                 className="char-main-stats-ap-change"
-                min={1}
+                min={0}
                 max={95}
                 disabled={!hasRight}
                 value={stats.armorClass.change}
@@ -416,7 +416,6 @@ class Character extends Component<ICharacterProps, ICharacterState> {
       return;
     }
 
-    console.log(stateCharacter);
     let changes = getCharacterChanges(getInitialCharacter(), stateCharacter);
     if (changes.length === 0) {
       if (showError)

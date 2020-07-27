@@ -321,16 +321,26 @@ export const stats: IField[] = [
     field: 'exp',
   },
   {
-    label: 'Carry Weight',
-    full: 'Переносимый вес',
-    field: 'carryWeight',
-    getBase: (s) => 25 + (25 * s.st),
+    label: 'Next Level',
+    full: 'Следующий уровень',
+    field: 'nextLevel',
+    getBase: (_, stats) => {
+      const lvl = stats.level + 1;
+      console.log(lvl, (lvl*(lvl-1)/2) * 1000);
+      return (lvl*(lvl-1)/2) * 1000
+    }
   },
-  {
-    label: 'Wounds',
-    full: 'Раны',
-    field: 'wounds',
-  },
+  // {
+  //   label: 'Carry Weight',
+  //   full: 'Переносимый вес',
+  //   field: 'carryWeight',
+  //   getBase: (s) => 25 + (25 * s.st),
+  // },
+  // {
+  //   label: 'Wounds',
+  //   full: 'Раны',
+  //   field: 'wounds',
+  // },
 ];
 
 export const subStats: IField[] = [
