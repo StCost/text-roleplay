@@ -134,8 +134,7 @@ img.chat-image {
 
   .ant-spin-container {
     overflow: hidden;
-    height: 100vh;
-    width: calc(100vw - 200px);
+    height: 100%;
 
     @media (max-width: 767px) {
       height: 100vh;

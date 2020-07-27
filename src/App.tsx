@@ -39,6 +39,12 @@ class App extends Component<IAppProps> {
     if (redirect) {
       actions.redirectSuccess({});
     }
+
+    const root: Element | null = document.querySelector('html');
+    if (root) {
+      // @ts-ignore
+      root.style.zoom = `${this.getZoom()/100}`;
+    }
   };
 
   getRedirect = () => {
@@ -64,10 +70,7 @@ class App extends Component<IAppProps> {
           {this.getRedirect()}
           <Menu/>
           <Spin spinning={loading}>
-            <div
-              className="app"
-              style={{ zoom: `${this.getZoom()/100}` }}
-            >
+            <div className="app">
               <Router/>
             </div>
           </Spin>
