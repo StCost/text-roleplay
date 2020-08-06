@@ -16,14 +16,14 @@ const Login = () => {
           <Tabs.TabPane tab="Логин" key="1">
             <Form onFinish={(values) => actions.login(values)}>
               <Form.Item
-                label="Email"
+                label="E-Mail"
                 name="email"
                 rules={[{ required: true, message: 'Введите e-mail!' }]}
               >
                 <Input/>
               </Form.Item>
               <Form.Item
-                label="Password"
+                label="Пароль"
                 name="password"
                 rules={[{ required: true, message: 'Введите пароль!' }]}
               >
@@ -51,21 +51,21 @@ const Login = () => {
                 <Input/>
               </Form.Item>
               <Form.Item
-                label="Email"
+                label="E-Mail"
                 name="email"
                 rules={[{ required: true, message: 'Введите e-mail!' }]}
               >
                 <Input/>
               </Form.Item>
               <Form.Item
-                label="Password"
+                label="Пароль"
                 name="password"
                 rules={[{ required: true, message: 'Введите пароль!' }]}
               >
                 <Input.Password/>
               </Form.Item>
               <Form.Item
-                label="Confirm Password"
+                label="Подтвердите Пароль"
                 name="passwordConfirm"
                 rules={[{ required: true, message: 'Подтвердите парол!' }]}
               >
@@ -76,7 +76,7 @@ const Login = () => {
                   type="primary"
                   htmlType="submit"
                 >
-                  Зарегистрировать
+                  Зарегистрироваться
                 </Button>
               </Form.Item>
             </Form>
@@ -86,7 +86,7 @@ const Login = () => {
               onFinish={(values) => actions.resetPassword(values)}
             >
               <Form.Item
-                label="Email"
+                label="E-Mail"
                 name="email"
                 rules={[{ required: true, message: 'Введите e-mail!' }]}
               >
@@ -97,7 +97,7 @@ const Login = () => {
                   type="primary"
                   htmlType="submit"
                 >
-                  Отправить E-mail
+                  Отправить восстановление пароля на E-mail
                 </Button>
               </Form.Item>
             </Form>
