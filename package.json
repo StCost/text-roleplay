@@ -40,7 +40,7 @@
     "build-to-docs": "rm -r docs && mv build docs",
     "prepare-index": "sed -i '' s/href=\\\"/href=\\\"./g docs/index.html && sed -i '' s/src=\\\"/src=\\\"./g docs/index.html && sed -i '' s/\\\"static/\\\".\\\\/text-roleplay\\\\/static/g docs/index.html",
     "remove-maps": "find docs -name '*.map' -delete",
-    "publish": "yarn run build && git add . && git commit -m 'Update build' && git push origin master",
+    "deploy": "yarn run build && git add . && git commit -m 'Update build' && git push origin master",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {
