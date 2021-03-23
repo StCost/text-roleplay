@@ -163,7 +163,7 @@ class Chat extends Component<IChatProps, IChatState> {
   };
 
   onScroll = (event: React.UIEvent<HTMLDivElement, UIEvent>) => {
-    if (event.currentTarget.scrollTop <= 50) {
+    if (event.currentTarget.scrollHeight + event.currentTarget.scrollTop <= 1000) {
       event.preventDefault();
       this.getMoreMessages();
     }
