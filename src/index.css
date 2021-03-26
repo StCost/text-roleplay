@@ -17,6 +17,13 @@ code {
     monospace;
 }
 
+#notification {
+    position: absolute;
+    pointer-events: none;
+    right: -1000px;
+    opacity: 0;
+}
+
 #root {
     display: flex;
     height: 100%;

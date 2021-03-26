@@ -216,6 +216,18 @@ export class Settings extends React.Component<ISettingsProps, IUser> {
           </>
         );
 
+      case 'notificationVolume':
+        return currentUser && currentUser.uid === uid && (
+          <InputNumber
+            max={100}
+            min={0}
+            value={parseInt(value)}
+            onChange={(value: number | undefined) => value !== undefined && this.rawOnChange(key, Math.min(100, Math.max(0, value || 0)))}
+            onBlur={() => this.onSave()}
+            onPressEnter={() => this.onSave()}
+          />
+        );
+
       default:
         return (
           <Input
@@ -235,7 +247,8 @@ export class Settings extends React.Component<ISettingsProps, IUser> {
     'uid': 'UID',
     'approved': 'Активирован',
     'zoom': 'Размер приложения %',
-    'enableDisabledFeatures': 'Дополнительные функции'
+    'enableDisabledFeatures': 'Дополнительные функции',
+    'notificationVolume': 'Громкость оповещения о новом сообщении'
   };
 
   getDeleteUser = () => {

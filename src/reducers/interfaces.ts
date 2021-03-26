@@ -67,6 +67,7 @@ export interface IUser {
   notesAreVisible: boolean;
   zoom: number;
   enableDisabledFeatures: boolean;
+  notificationVolume: number;
   error?: {
     message: string,
     code: string,
@@ -88,6 +89,7 @@ export const defaultUser: IUser = {
   avatar: '',
   zoom: 100,
   enableDisabledFeatures: false,
+  notificationVolume: 50,
 
   approved: false,
   uid: '',

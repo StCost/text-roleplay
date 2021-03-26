@@ -150,19 +150,33 @@ export function setUnreadMessage(payload: IPayload) {
   const { unreadMessage } = payload;
   if (unreadMessage === false) return;
 
+  if (document.visibilityState !== 'visible' || window.location.hash !== '#/chat') {
+    const audio: HTMLAudioElement | null = document.body.querySelector('audio#notification');
+    if (audio) {
+      const volume = parseInt(localStorage.getItem('notificationVolume') || '50');
+      if (volume > 0) {
+        audio.volume = volume / 100;
+        audio.play();
+      }
+    }
+  }
+
   if (blinking) return;
   blinking = true;
 
   const interval = setInterval(() => {
     const title = document.head.querySelector('title');
-    if (title) {
-      title.innerText = title.innerText === 'TRP' ? '(!) TRP' : 'TRP';
+    const link: HTMLLinkElement | null = document.head.querySelector('link#favicon');
+    if (title && link) {
+      title.innerText = title.innerText === 'TRP' ? 'TRP New Message!' : 'TRP';
+      link.href = title.innerText === 'TRP' ? './regular.png' : './bright.png';
 
       if (!blinking || (document.visibilityState === 'visible' && window.location.hash === '#/chat')) {
-        title.innerText = 'TRP';
         clearInterval(interval);
         blinking = false;
         actions.setUnreadMessage({ unreadMessage: false });
+        title.innerText = 'TRP';
+        link.href = 'regular.png';
       }
     }
   }, 1000);

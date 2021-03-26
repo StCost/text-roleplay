@@ -326,7 +326,6 @@ export const stats: IField[] = [
     field: 'nextLevel',
     getBase: (_, stats) => {
       const lvl = stats.level + 1;
-      console.log(lvl, (lvl*(lvl-1)/2) * 1000);
       return (lvl*(lvl-1)/2) * 1000
     }
   },

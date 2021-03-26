@@ -134,6 +134,8 @@ const reducer = (state = initialState, action: IAction) => {
         ? newUser
         : state.currentUser;
 
+      localStorage.setItem('notificationVolume', currentUser.notificationVolume);
+
       return {
         ...state,
         currentUser,
