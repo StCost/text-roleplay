@@ -169,7 +169,7 @@ export function setUnreadMessage(payload: IPayload) {
     const link: HTMLLinkElement | null = document.head.querySelector('link#favicon');
     if (title && link) {
       title.innerText = title.innerText === 'TRP' ? 'TRP New Message!' : 'TRP';
-      link.href = title.innerText === 'TRP' ? './regular.png' : './bright.png';
+      link.href = title.innerText === 'TRP' ? 'regular.png' : 'bright.png';
 
       if (!blinking || (document.visibilityState === 'visible' && window.location.hash === '#/chat')) {
         clearInterval(interval);
