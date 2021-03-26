@@ -60,7 +60,7 @@ function subscribe() {
   database
     .ref('messages')
     .orderByKey()
-    .startAt(`${Date.now()}`)
+    .startAt(`${Date.now()-30000}`)// Without subtracting this time - you might not load messages. Probably because of time difference between different computers
     .on('child_added', handleMessage);
 
   database
