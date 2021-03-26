@@ -135,6 +135,8 @@ const reducer = (state = initialState, action: IAction) => {
         : state.currentUser;
 
       localStorage.setItem('notificationVolume', currentUser.notificationVolume);
+      localStorage.setItem('enableDisabledFeatures', currentUser.enableDisabledFeatures);
+      localStorage.setItem('zoom', currentUser.zoom);
 
       return {
         ...state,

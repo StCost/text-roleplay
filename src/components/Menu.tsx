@@ -38,7 +38,7 @@ class Menu extends Component<IMenuProps, IMenuState> {
 
     const { showDisabledMenus } = this.state;
     const { currentUser } = this.props;
-    const enableDisabledFeatures = (currentUser && currentUser.enableDisabledFeatures) || false;
+    const enableDisabledFeatures = localStorage.getItem('enableDisabledFeatures') === 'true' || (currentUser?.enableDisabledFeatures) || false;
     if (enableDisabledFeatures !== showDisabledMenus)
       this.setState({ showDisabledMenus: enableDisabledFeatures });
   };
@@ -54,7 +54,7 @@ class Menu extends Component<IMenuProps, IMenuState> {
       >
         <Link to={value.path}>
           {value.icon}
-          {value.label}
+          {typeof value.label === 'function' ? value.label() : value.label}
         </Link>
       </AntdMenu.Item>
     );

@@ -29,6 +29,15 @@ interface IAppProps {
 }
 
 class App extends Component<IAppProps> {
+  applyZoom = () => {
+    const root: HTMLElement | null = document.querySelector('html');
+    if (root) {
+      root.style.zoom = `${this.getZoom()/100}`;
+    }
+  }
+
+  componentWillMount = this.applyZoom;
+
   componentDidUpdate = () => {
     const { notify, redirect } = this.props;
 
@@ -40,11 +49,7 @@ class App extends Component<IAppProps> {
       actions.redirectSuccess({});
     }
 
-    const root: Element | null = document.querySelector('html');
-    if (root) {
-      // @ts-ignore
-      root.style.zoom = `${this.getZoom()/100}`;
-    }
+    this.applyZoom();
   };
 
   getRedirect = () => {
@@ -53,10 +58,7 @@ class App extends Component<IAppProps> {
   };
 
   getZoom = () => {
-    const { currentUser } = this.props;
-    return (currentUser && currentUser.zoom)
-      ? currentUser.zoom
-      : defaultUser.zoom;
+    return parseInt(localStorage.getItem('zoom') || `${defaultUser.zoom}`);
   };
 
   render = () => {

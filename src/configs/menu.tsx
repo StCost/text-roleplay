@@ -14,7 +14,7 @@ import {
 } from '@ant-design/icons';
 
 export interface IMenuItem {
-  label: string;
+  label: string | (() => string);
   path: string;
   icon: JSX.Element;
   disabled?: boolean;
@@ -27,7 +27,7 @@ const menu: IMenuItem[] = [
     icon: <TeamOutlined/>
   },
   {
-    "label": "Логи",
+    "label": () => (localStorage.getItem('enableDisabledFeatures') === 'true' && 'Чат') || 'Логи',
     "path": "/chat",
     icon: <MessageOutlined/>
   },
