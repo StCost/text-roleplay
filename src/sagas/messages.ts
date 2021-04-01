@@ -37,7 +37,11 @@ function subscribe() {
   if (subscribed) return;
 
   messaging.usePublicVapidKey(publickVapidKey);
-  messaging.getToken().then((token) => console.log('token', token));
+  messaging.getToken().then((token) => {
+    const uid = localStorage.getItem('uid');
+    const name = uid + "___" + navigator.userAgent.replace(/[\.\$\[\]\/]/g, '_');
+    database.ref('tokens').child(name).set(token);
+  });
   actions.getMessages({});
   const handleMessage = (rawMessage: firebase.database.DataSnapshot) => {
     const message = rawMessage.val();

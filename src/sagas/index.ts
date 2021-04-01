@@ -8,7 +8,6 @@ import messages from './messages';
 import items from './items';
 import inventory from './inventory';
 import character from './character';
-import notifications from './notifications';
 
 export default function* watchAll() {
   try {
@@ -19,7 +18,6 @@ export default function* watchAll() {
       items(),
       inventory(),
       character(),
-      notifications(),
     ]);
   } catch(error) {
     console.error(error);
