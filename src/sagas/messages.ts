@@ -39,7 +39,7 @@ const handleNotifications = async () => {
     const token = await messaging.getToken();
     const uid = localStorage.getItem('uid');
 
-    const name = uid + '___' + navigator.userAgent.replace(/[.$\[\]\/]/g, '_');
+    const name = uid + '___' + navigator.userAgent.replace(/[.$[\]/]/g, '_');
 
     await database.ref('tokens').child(name).set(token);
   }

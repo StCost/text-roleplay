@@ -36,7 +36,7 @@ class App extends Component<IAppProps> {
     }
   }
 
-  componentWillMount = this.applyZoom;
+  UNSAFE_componentWillMount = this.applyZoom;
 
   componentDidUpdate = () => {
     const { notify, redirect } = this.props;
