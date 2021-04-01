@@ -32,21 +32,30 @@ function* sendMessage(payload: IPayload) {
   }
 }
 
+const handleNotifications = async () => {
+  await Notification.requestPermission();
+  if (Notification.permission === 'granted') {
+    messaging.usePublicVapidKey(publickVapidKey);
+    const token = await messaging.getToken();
+    const uid = localStorage.getItem('uid');
+
+    const name = uid + '___' + navigator.userAgent.replace(/[\.\$\[\]\/]/g, '_');
+
+    await database.ref('tokens').child(name).set(token);
+  }
+}
+
 let subscribed = false;
 function subscribe() {
   if (subscribed) return;
 
-  messaging.usePublicVapidKey(publickVapidKey);
-  messaging.getToken().then((token) => {
-    const uid = localStorage.getItem('uid');
-    const name = uid + "___" + navigator.userAgent.replace(/[\.\$\[\]\/]/g, '_');
-    database.ref('tokens').child(name).set(token);
-  });
-  actions.getMessages({});
   const handleMessage = (rawMessage: firebase.database.DataSnapshot) => {
     const message = rawMessage.val();
     if (!message) return;
 
+    handleNotifications();
+
+    actions.getMessages({});
     actions.getMessagesSuccess({
       messages: [message],
       concat: true
