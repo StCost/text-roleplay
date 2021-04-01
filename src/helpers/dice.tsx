@@ -49,7 +49,7 @@ export const exportRolls = (str: string) => {
 
 export const importRolls = (body: string, _rolls: IRoll[]) => {
   const rolls = [..._rolls]; // Avoid mutations
-  return body.split(' ').map((word: string, index: number) => {
+  return body.split(/[ |\n]/g).map((word: string, index: number) => {
     const rollIndex = rolls.findIndex(({ roll }) => roll === word);
     if (rollIndex > -1) {
       const {
