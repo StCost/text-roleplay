@@ -88,7 +88,7 @@ const MessageBody = (props: IMessageBodyProps) => {
                       value={formatChange(before)}
                       readOnly
                     />
-                    ->
+                    {'->'}
                     <Input
                       value={formatChange(after)}
                       readOnly

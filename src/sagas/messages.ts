@@ -3,8 +3,9 @@ import { all, takeLatest } from 'redux-saga/effects';
 import firebase from 'firebase/app';
 import { IPayload } from '../reducers/actions';
 import actions from '../reducers/actions';
-import { database } from '../helpers/firebase';
+import { database, messaging } from '../helpers/firebase';
 import { formatMessage } from '../helpers/utils';
+import { publickVapidKey } from '../configs/firebase';
 
 function* sendMessage(payload: IPayload) {
   const { uid, message, data = {} } = payload;
@@ -35,6 +36,8 @@ let subscribed = false;
 function subscribe() {
   if (subscribed) return;
 
+  messaging.usePublicVapidKey(publickVapidKey);
+  messaging.getToken().then((token) => console.log('token', token));
   actions.getMessages({});
   const handleMessage = (rawMessage: firebase.database.DataSnapshot) => {
     const message = rawMessage.val();
