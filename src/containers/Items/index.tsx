@@ -109,6 +109,23 @@ export class Items extends ItemsTable<IItemsProps, IItemsState> {
       condition: (item: IItem) => Boolean((this.props.uid === item.author && !item.approved) || (this.props.currentUser && this.props.currentUser.isAdmin))
     },
     {
+      label: 'Выбросить',
+      condition: () => !!this.props.currentUser?.isSuperAdmin,
+      onClick: (item: IItem) => amountModal({
+        item: item,
+        max: 100,
+        onSubmit: (amount: number) => actions.passItem({
+          id: item.id,
+          uid: this.props.uid,
+          ignoreAmountCheck: true,
+          item: {
+            ...item,
+            amount,
+          },
+        })
+      }),
+    },
+    {
       label: 'В консоль',
       onClick: console.log,
       condition: () => Boolean(this.props.currentUser && this.props.currentUser.isAdmin)

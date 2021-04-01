@@ -8,7 +8,7 @@ import { changeMessage } from './messages';
 import { getItemName } from '../helpers/utils';
 
 function* passItem(payload: IPayload) {
-  const { id, uid, demonstrate, use, item, to } = payload;
+  const { id, uid, demonstrate, use, item, to, ignoreAmountCheck } = payload;
 
   if (id && uid && item) {
     const name = getItemName(item);
@@ -24,7 +24,7 @@ function* passItem(payload: IPayload) {
       return true;
     }
 
-    const removed = yield removeItem({ id, uid, amount: item.amount });
+    const removed = ignoreAmountCheck || (yield removeItem({ id, uid, amount: item.amount }));
     if (!removed) {
       console.error(`passItem error:`, payload);
       actions.passItemFail({ id, uid });
