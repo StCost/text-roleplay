@@ -49,13 +49,13 @@ let subscribed = false;
 function subscribe() {
   if (subscribed) return;
 
+  handleNotifications();
+
+  actions.getMessages({});
   const handleMessage = (rawMessage: firebase.database.DataSnapshot) => {
     const message = rawMessage.val();
     if (!message) return;
 
-    handleNotifications();
-
-    actions.getMessages({});
     actions.getMessagesSuccess({
       messages: [message],
       concat: true
