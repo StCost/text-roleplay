@@ -9,7 +9,7 @@ import store, { sagaMiddleware } from './helpers/store';
 import * as serviceWorker from './serviceWorker';
 import { messaging } from './helpers/firebase';
 
-navigator.serviceWorker.register('text-roleplay/firebase-messaging-sw.js').then(registration => {
+navigator.serviceWorker.register('/firebase-messaging-sw.js').then(registration => {
   messaging.useServiceWorker(registration);
 })
 
