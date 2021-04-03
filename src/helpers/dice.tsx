@@ -9,16 +9,17 @@ export interface IRoll {
   maxResult: number;
   minResult: number;
   sum: number;
+  plus: number;
 }
 
-export const diceRegex = /([1-9]|10)[dд]((10|12|20)|[468])/miu;
-export const diceRegexG = /([1-9]|10)[dд]((10|12|20)|[468])/miug;
+export const diceRegex = /(^| )(10|[1-9])[dд](4|6|8|10|12|20)(\+\d+)?/miu;
+export const diceRegexG = /(^| )(10|[1-9])[dд](4|6|8|10|12|20)(\+\d+)?/miug;
 
 export const getRandomInt = (min: number, max: number) =>
   Math.floor(Math.random() * ((max + 1) - min) + min);
 
 export const hasDice = (str: string) =>
-  /\d+[dд]\d+/imu.test(str);
+  diceRegex.test(str);
 
 export const rollDice = (amount: number, size: number) => {
   return new Array(amount).fill(amount + size).map(() => getRandomInt(1, size));
@@ -28,19 +29,21 @@ export const exportRolls = (str: string) => {
   const rolls = str.match(diceRegexG);
   if (rolls) {
     return rolls.map((roll: string): IRoll => {
-      const [_amount, _size] = roll.split(/[dд]/);
+      const [_amount, _size, _plus] = roll.split(/[dд+]/);
       const amount = parseInt(_amount);
       const size = parseInt(_size);
+      const plus = parseInt(_plus || '0');
       const results = rollDice(amount, size);
 
       return ({
-        maxResult: size * amount,
-        minResult: amount,
-        sum: results.reduce((a, b) => a + b, 0),
+        maxResult: size * amount + plus,
+        minResult: amount + plus,
+        sum: results.reduce((a, b) => a + b, 0) + plus,
         roll,
         results,
         amount,
         size,
+        plus,
       })
     }).splice(0, 10);
   }
@@ -50,17 +53,18 @@ export const exportRolls = (str: string) => {
 export const importRolls = (body: string, _rolls: IRoll[]) => {
   const rolls = [..._rolls]; // Avoid mutations
   return body.split(/[ |\n]/g).map((word: string, index: number) => {
-    const rollIndex = rolls.findIndex(({ roll }) => roll === word);
+    const rollIndex = rolls.findIndex(({ roll }) => roll.trim() === word.trim());
     if (rollIndex > -1) {
       const {
         results,
         maxResult,
         minResult,
-        sum
+        sum,
+        plus,
       } = rolls.splice(rollIndex, 1)[0];
 
       const summing = results.length > 1
-        ? `${sum} = ${results.join(' + ')}`
+        ? `${sum} = ${results.join(' + ')}` + (plus ? ` + ${plus}` : '')
         : `${results.join(' + ')}`;
 
       const className = (sum === maxResult && 'critHit') || (sum === minResult && 'critMiss') || '';
