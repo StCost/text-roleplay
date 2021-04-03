@@ -18,7 +18,7 @@ import {
   message as notify,
   Menu,
   Button,
-  Modal,
+  Modal, Card,
 } from 'antd';
 import { RouteComponentProps, withRouter } from 'react-router';
 
@@ -247,6 +247,11 @@ class Chat extends Component<IChatProps, IChatState> {
 
     return (
       <Menu>
+        <Menu.Item>
+          <Card bodyStyle={{ padding: '4px 15px' }}>
+            {moment(m.time).format('HH:MM:SS DD:MM:YYYY')}
+          </Card>
+        </Menu.Item>
         <Menu.Item>
           <Button onClick={this.onPinMessage(m)}>
             {m.pinned
