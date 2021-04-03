@@ -172,7 +172,7 @@ class Inventory extends ItemsTable<IInventoryProps, IInventoryState> {
         okText: 'Да',
         cancelText: 'Отмена',
       }),
-      condition: (item: IItem) => item.type === 'usable',
+      condition: (item: IItem) => item.type === 'usable' || item.type === 'weapon',
     },
     {
       label: 'Выбросить',
@@ -201,7 +201,7 @@ class Inventory extends ItemsTable<IInventoryProps, IInventoryState> {
       condition: () => Boolean(this.props.currentUser && this.props.currentUser.isAdmin)
     },
     {
-      label: 'Убрать',
+      label: 'Удалить',
       onClick: (item: IItem) => amountModal({
         item: item,
         onSubmit: (amount: number) =>

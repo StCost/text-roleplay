@@ -92,7 +92,7 @@ export class Items extends ItemsTable<IItemsProps, IItemsState> {
       label: 'Взять',
       onClick: (item: IItem) => amountModal({
         item: item,
-        max: 100,
+        max: item.type === 'weapon' ? 1 : 100,
         onSubmit: (amount: number) =>
           actions.giveItem({
             id: item.id,
