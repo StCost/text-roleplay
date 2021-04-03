@@ -127,14 +127,12 @@ class Chat extends Component<IChatProps, IChatState> {
       const time = Date.now();
       if (this.props.currentUser && time > this.lastTyping) {
         if (!this.props.currentUser.isTyping) {
-          console.log('update', this.props.currentUser.isTyping);
           actions.setIsTyping({ isTyping: true, uid: this.props.uid });
         }
         this.timeout !== null && clearTimeout(this.timeout);
 
         this.lastTyping = time + 1000;
         this.timeout = setTimeout(() => {
-          console.log('clear');
           if (Date.now() > this.lastTyping) {
             actions.setIsTyping({ isTyping: false, uid: this.props.uid });
           }
