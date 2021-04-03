@@ -103,7 +103,7 @@ const onFocus = (force: boolean = false) => {
 
 const onBlur = (force: boolean = false) => {
   listeners.afk.forEach((cb: TListener) => cb());
-  changeStatus('afk', force)
+  changeStatus('afk', force);
 };
 
 const onClose = () => {

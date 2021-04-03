@@ -23,11 +23,16 @@ import {
 import { RouteComponentProps, withRouter } from 'react-router';
 
 import '../../styles/chat.scss';
+
 import actions from '../../reducers/actions';
 import { IMessage, IState, IUser, IUsers } from '../../reducers/interfaces';
-import Message from './Message';
-import { validateMessage } from '../../helpers/utils';
+
 import InputUpload from '../../components/InputUpload';
+import TypingUsersList from '../../components/TypingUsersList';
+import Message from './Message';
+
+import { validateMessage } from '../../helpers/utils';
+import { addStatusChangeListener, removeStatusChangeListener } from '../../helpers/activity';
 
 interface IChatProps extends RouteComponentProps {
   messages: IMessage[],
@@ -53,7 +58,15 @@ class Chat extends Component<IChatProps, IChatState> {
   componentDidMount = () => {
     actions.subscribe({});
     this.setState(JSON.parse(localStorage.getItem('chat-state') || '{}'));
+
+    addStatusChangeListener('afk', this.resetIsTyping);
+    addStatusChangeListener('offline', this.resetIsTyping);
   };
+
+  componentWillUnmount() {
+    removeStatusChangeListener('afk', this.resetIsTyping);
+    removeStatusChangeListener('offline', this.resetIsTyping);
+  }
 
   componentDidUpdate = (prevProps: IChatProps, prevState: IChatState) => {
     const { messages, users, loading } = this.props;
@@ -103,26 +116,52 @@ class Chat extends Component<IChatProps, IChatState> {
     this.setState({ message });
   };
 
+  lastTyping = Date.now() - 500;
+  timeout: NodeJS.Timeout | null = null;
   onKeyDown = (event: KeyboardEvent<HTMLTextAreaElement>) => {
     if (event.key === 'Enter' && !event.shiftKey) {
       event.preventDefault();
 
       this.onSendMessage();
-    }
-
-    const { uid } = this.props;
-    if (event.key === 'Up' || event.key === 'ArrowUp') {
-      const message = this.props.messages.find((m: IMessage) => m.author === uid);
-      if (message) {
-        const { currentTarget: { value, selectionStart } } = event;
-        if (value.substr(0, selectionStart).split('\n').length === 1) {
-          const { body } = message;
-          localStorage.setItem('message', body);
-          this.setState({ message: body });
+    } else {
+      const time = Date.now();
+      if (this.props.currentUser && time > this.lastTyping) {
+        if (!this.props.currentUser.isTyping) {
+          console.log('update', this.props.currentUser.isTyping);
+          actions.setIsTyping({ isTyping: true, uid: this.props.uid });
         }
+        this.timeout !== null && clearTimeout(this.timeout);
+
+        this.lastTyping = time + 1000;
+        this.timeout = setTimeout(() => {
+          console.log('clear');
+          if (Date.now() > this.lastTyping) {
+            actions.setIsTyping({ isTyping: false, uid: this.props.uid });
+          }
+        }, 3000);
       }
     }
+
+    // If you press Up - repeat your last message
+    // const { uid } = this.props;
+    // if (event.key === 'Up' || event.key === 'ArrowUp') {
+    //   const message = this.props.messages.find((m: IMessage) => m.author === uid);
+    //   if (message) {
+    //     const { currentTarget: { value, selectionStart } } = event;
+    //     if (value.substr(0, selectionStart).split('\n').length === 1) {
+    //       const { body } = message;
+    //       localStorage.setItem('message', body);
+    //       this.setState({ message: body });
+    //     }
+    //   }
+    // }
   };
+
+  resetIsTyping = () => {
+    const { uid, currentUser } = this.props;
+    if (currentUser?.isTyping)
+      actions.setIsTyping({ isTyping: false, uid });
+  }
 
   onSendMessage = () => {
     const { message } = this.state;
@@ -283,6 +322,7 @@ class Chat extends Component<IChatProps, IChatState> {
         </div>
         <div className="chat-controls">
           <DownOutlined onClick={this.scrollDown}/>
+          <TypingUsersList/>
           <InputUpload
             textArea={true}
             placeholder="Введите сообщение"

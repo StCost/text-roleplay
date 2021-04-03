@@ -204,6 +204,11 @@ function* removeMessage(payload: IPayload) {
   yield database.ref(`messages/${id}`).remove();
 }
 
+function* setIsTyping(payload: IPayload) {
+  if (payload.isTyping !== undefined && payload.uid)
+    yield database.ref(`users/${payload.uid}/isTyping`).set(payload.isTyping);
+}
+
 export default function* watchForActions() {
   yield all([
     takeLatest('SEND_MESSAGE', sendMessage),
@@ -215,5 +220,6 @@ export default function* watchForActions() {
     takeLatest('CHANGE_MESSAGE', changeMessage),
     takeLatest('SET_UNREAD_MESSAGE', setUnreadMessage),
     takeLatest('REMOVE_MESSAGE', removeMessage),
+    takeLatest('SET_IS_TYPING', setIsTyping),
   ]);
 }

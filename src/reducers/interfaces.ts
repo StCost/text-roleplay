@@ -68,6 +68,7 @@ export interface IUser {
   zoom: number;
   enableDisabledFeatures: boolean;
   notificationVolume: number;
+  isTyping?: boolean;
   error?: {
     message: string,
     code: string,
@@ -97,6 +98,7 @@ export const defaultUser: IUser = {
   notesAreVisible: false,
   isSuperAdmin: false,
   status: 'online',
+  isTyping: false,
 };
 
 export type ItemType = 'weapon' | 'usable' | 'wearable' | 'junk' | 'ammo' | 'note' | 'key' | 'misc';
