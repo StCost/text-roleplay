@@ -14,6 +14,7 @@ import { ClearOutlined, CloseOutlined } from '@ant-design/icons';
 
 import { defaultItem, IItem } from '../../reducers/interfaces';
 import Avatar from '../../components/Avatar';
+import InputUpload from '../../components/InputUpload';
 
 interface IItemCreatorProps {
   onSubmit: (item: IItem) => void;
@@ -120,9 +121,10 @@ class ItemCreator extends Component<IItemCreatorProps, Partial<IItem>> {
     image: (value: string, key: string) => (
       <div>
         <div style={{ display: 'flex' }}>
-          <Input
+          <InputUpload
             value={value}
             onChange={(e: ChangeEvent<HTMLInputElement>) => this.onChange(key, e.currentTarget.value)}
+            onUpload={(link: string) => this.onChange(key, this.state[key] + ' ' + link)}
           />
           <Popconfirm
             title="Очистить картинку?"
