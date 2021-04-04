@@ -5,6 +5,10 @@ div.ant-card.char {
   max-width: initial;
   width: auto;
 
+  @media (max-width: 767px) {
+    margin: 0;
+  }
+
   .char-controls button {
     overflow: hidden;
     white-space: nowrap;
@@ -275,7 +279,6 @@ div.ant-card.char {
 @media(max-width: 767px) {
   div.ant-card.char {
     max-width: 100vw;
-    margin: 48px 0 0 0;
 
     .ant-card-body {
       padding: 4px;

@@ -8,8 +8,8 @@ div.ant-card.perks {
   max-width: initial;
 
   @media (max-width: 767px) {
-    margin: 48px 0 0 0;
     border: none;
+    margin: 0;
 
     > .ant-card-body {
       padding: 0;

@@ -6,8 +6,8 @@ div.ant-card.status {
   width: fit-content;
 
   @media (max-width: 767px) {
-    margin: 48px 0 0 0;
     border: none;
+    margin: 0;
 
     > .ant-card-body {
       padding: 0;

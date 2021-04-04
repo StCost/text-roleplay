@@ -51,6 +51,7 @@ class Menu extends Component<IMenuProps, IMenuState> {
         className={(showDisabledMenus && value.path === '/chat' && this.props.unreadMessage) ? 'unread' : ''}
         key={value.path.split('/').pop()}
         disabled={value.path === this.props.location.pathname}
+        onClick={() => window.innerWidth < 767 && this.setState({ openedKeys: [] })}
       >
         <Link to={value.path}>
           {value.icon}
@@ -70,9 +71,13 @@ class Menu extends Component<IMenuProps, IMenuState> {
     }
   };
 
-  getDesktopMenu = () => {
+  getMenu = () => {
     const { location } = this.props;
     const { openedKeys } = this.state;
+    const isMobile = window.innerWidth < 767;
+    const mode = isMobile
+      ? 'horizontal'
+      : 'vertical';
 
     const userSubMenu = (
       <AntdMenu.SubMenu
@@ -96,33 +101,20 @@ class Menu extends Component<IMenuProps, IMenuState> {
       </AntdMenu.SubMenu>
     );
 
-    const restMenu = menu.map(this.getMenuItem);
+    const preMenu = isMobile ? this.getMenuItem(menu[1]) : false;
+    const restMenu = (isMobile ? [menu[0], menu[2]] : menu).map(this.getMenuItem);
 
     return (
       <div className="menu">
         <AntdMenu
-          mode="inline"
+          mode={mode}
           selectedKeys={[location.pathname.split('/').pop() || '']}
           openKeys={openedKeys}
         >
+          {preMenu}
           {characterSubMenu}
           {userSubMenu}
           {restMenu}
-        </AntdMenu>
-      </div>
-    );
-  };
-
-  getMobileMenu = () => {
-    const { location } = this.props;
-
-    return (
-      <div className="menu">
-        <AntdMenu
-          mode="horizontal"
-          selectedKeys={[location.pathname.split('/').pop() || '']}
-        >
-          {[...characterMenu, ...userMenu, ...menu].map(this.getMenuItem)}
         </AntdMenu>
       </div>
     );
@@ -135,14 +127,7 @@ class Menu extends Component<IMenuProps, IMenuState> {
       return <React.Fragment/>;
     }
 
-    const mode = window.innerWidth < 767
-      ? 'horizontal'
-      : 'inline';
-
-    if (mode === 'inline')
-      return this.getDesktopMenu();
-
-    return this.getMobileMenu();
+    return this.getMenu();
   };
 }
 
