@@ -25,7 +25,7 @@ interface IItemCreatorProps {
 }
 
 class ItemCreator extends Component<IItemCreatorProps, Partial<IItem>> {
-  state = {};
+  state: Partial<IItem> = {};
 
   labels = {
     id: 'ID',
@@ -77,7 +77,6 @@ class ItemCreator extends Component<IItemCreatorProps, Partial<IItem>> {
   ];
 
   onChange = (key: string, value: string | boolean | number) =>
-
     this.setState({ [key]: value });
 
   clearImage = () =>
@@ -167,9 +166,9 @@ class ItemCreator extends Component<IItemCreatorProps, Partial<IItem>> {
     capacity: (value: number, key: string, item: IItem) => (
       item.type === 'weapon' && <InputNumber
         value={value}
-        min={1}
+        min={0}
         step={1}
-        onChange={(value?: number) => this.onChange(key, value || 1)}
+        onChange={(value?: number) => this.onChange(key, value || 0)}
       />
     ),
     armor: (value: number, key: string, item: IItem) => (
@@ -238,15 +237,17 @@ class ItemCreator extends Component<IItemCreatorProps, Partial<IItem>> {
   };
 
   content = () => {
-    const { state } = this;
+    const { state, props: { item } } = this;
+    const mergedItem = { ...item, ...state };
 
+    console.log(state.type);
     return (
       <div className="item-creator">
         <div className="item-creator__body">
           {Object
             .keys(defaultItem)
             .map((key: string) => {
-                const field = this.getField(key, this.getValue(key), state);
+                const field = this.getField(key, this.getValue(key), mergedItem);
                 return field && (
                   <Card
                     className={key}
