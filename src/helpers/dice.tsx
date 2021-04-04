@@ -39,7 +39,7 @@ export const exportRolls = (str: string) => {
         maxResult: size * amount + plus,
         minResult: amount + plus,
         sum: results.reduce((a, b) => a + b, 0) + plus,
-        roll,
+        roll: roll.trim(),
         results,
         amount,
         size,
@@ -64,8 +64,8 @@ export const importRolls = (body: string, _rolls: IRoll[]) => {
       } = rolls.splice(rollIndex, 1)[0];
 
       const summing = results.length > 1
-        ? `${sum} = ${results.join(' + ')}` + (plus ? ` + ${plus}` : '')
-        : `${results.join(' + ')}`;
+        ? `${results.join(' + ')}${(plus ? ` + ${plus}` : '')} = ${sum}`
+        : `${results} ${(plus ? ` + ${plus} = ${results}` : '')}`;
 
       const className = (sum === maxResult && 'critHit') || (sum === minResult && 'critMiss') || '';
 
@@ -80,6 +80,6 @@ export const importRolls = (body: string, _rolls: IRoll[]) => {
         </React.Fragment>
       )
     }
-    return ` ${word}`;
+    return `${word}`;
   });
 };
