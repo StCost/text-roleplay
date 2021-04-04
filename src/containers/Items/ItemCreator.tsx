@@ -240,7 +240,6 @@ class ItemCreator extends Component<IItemCreatorProps, Partial<IItem>> {
     const { state, props: { item } } = this;
     const mergedItem = { ...item, ...state };
 
-    console.log(state.type);
     return (
       <div className="item-creator">
         <div className="item-creator__body">
