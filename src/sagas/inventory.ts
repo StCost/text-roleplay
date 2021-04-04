@@ -24,11 +24,13 @@ function* passItem(payload: IPayload) {
       return true;
     }
 
-    const removed = ignoreAmountCheck || (yield removeItem({ id, uid, amount: item.amount }));
-    if (!removed) {
-      console.error(`passItem error:`, payload);
-      actions.passItemFail({ id, uid });
-      return false;
+    if (!ignoreAmountCheck && item.type !== 'weapon') {
+      const removed = yield removeItem({ id, uid, amount: item.amount });
+      if (!removed) {
+        console.error(`passItem error:`, payload);
+        actions.passItemFail({ id, uid });
+        return false;
+      }
     }
 
     if (use) {

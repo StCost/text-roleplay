@@ -15,9 +15,6 @@ import { ClearOutlined, CloseOutlined } from '@ant-design/icons';
 import { defaultItem, IItem } from '../../reducers/interfaces';
 import Avatar from '../../components/Avatar';
 
-interface IPItem extends Partial<IItem> {
-}
-
 interface IItemCreatorProps {
   onSubmit: (item: IItem) => void;
   onClose: () => void;
@@ -26,7 +23,7 @@ interface IItemCreatorProps {
   isAdmin?: boolean;
 }
 
-class ItemCreator extends Component<IItemCreatorProps, IPItem> {
+class ItemCreator extends Component<IItemCreatorProps, Partial<IItem>> {
   state = {};
 
   labels = {
@@ -190,8 +187,7 @@ class ItemCreator extends Component<IItemCreatorProps, IPItem> {
     ),
   };
 
-  getField = (key: string, value: string | number | boolean, item: IPItem) => {
-
+  getField = (key: string, value: string | number | boolean, item: Partial<IItem>) => {
     const field = this.fields[key];
     return field && field(value, key, item);
   };
