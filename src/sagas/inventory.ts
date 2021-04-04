@@ -24,7 +24,7 @@ function* passItem(payload: IPayload) {
       return true;
     }
 
-    if (!ignoreAmountCheck && item.type !== 'weapon') {
+    if (!ignoreAmountCheck && !(item.type === 'weapon' && !to)) {
       const removed = yield removeItem({ id, uid, amount: item.amount });
       if (!removed) {
         console.error(`passItem error:`, payload);
