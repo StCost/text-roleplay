@@ -49,6 +49,11 @@ function* passItem(payload: IPayload) {
     if (to) {
       actions.giveItem({ uid: to.uid, id, itemType: item.type, amount: item.amount });
       actions.notify({ message: `Вы передали '${item.name}' игроку '${to.nickname}'` });
+      actions.sendMessage({
+        uid,
+        message: `*передал ${item.name} игроку '${to.nickname}'`,
+        data: { itemId: id },
+      });
       actions.passItemSuccess({});
       return;
     }
