@@ -149,6 +149,18 @@
     @media(max-width: 767px) {
       margin: -1px 0;
       border-bottom: none;
+
+      .ant-card-head {
+        border-top: 2px solid $border-color;
+        border-bottom: none;
+      }
+
+      .ant-card-head-title {
+        padding: 0 !important;
+        .user-info {
+          align-items: flex-start;
+        }
+      }
     }
 
     &.mentioned .ant-card-body {
