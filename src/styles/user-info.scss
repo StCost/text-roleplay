@@ -51,6 +51,11 @@
       display: block;
       box-sizing: content-box;
       transition-duration: 0.5s;
+
+      @media (max-width: 767px) {
+        width: 24px;
+        height: 24px;
+      }
     }
 
     .user-info-nickname {
