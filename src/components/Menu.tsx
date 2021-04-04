@@ -77,7 +77,7 @@ class Menu extends Component<IMenuProps, IMenuState> {
     const isMobile = window.innerWidth < 767;
     const mode = isMobile
       ? 'horizontal'
-      : 'vertical';
+      : 'inline';
 
     const userSubMenu = (
       <AntdMenu.SubMenu
