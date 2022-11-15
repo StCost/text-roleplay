@@ -10,6 +10,7 @@ function* login(payload: IPayload) {
   const { email, password } = payload;
 
   try {
+    // @ts-ignore
     const user = yield auth.signInWithEmailAndPassword(email, password);
     actions.loginSuccess({ user });
     localStorage.setItem('user', JSON.stringify(user.user));
@@ -32,6 +33,7 @@ function* register(payload: IPayload) {
   try {
     yield auth.createUserWithEmailAndPassword(email, password);
     actions.registerSuccess({});
+    // @ts-ignore
     const user = yield login(payload);
     if (user) {
       const { uid } = user;

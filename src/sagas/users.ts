@@ -70,6 +70,7 @@ function* getUser(payload: IPayload) {
 
 function* getAllUsers() {
   try {
+    // @ts-ignore
     const rawUsers = yield database.ref('users').once('value');
     const users = rawUsers.val() || {};
     actions.getAllUsersSuccess({ users });

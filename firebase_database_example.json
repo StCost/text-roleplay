@@ -1,0 +1,230 @@
+{
+  "characters": {
+    "QLCnftDpIJgb0JWO4m8ZOQKJ2Eo2": {
+      "bio": "",
+      "gifts": [
+        "smallGuns",
+        "science",
+        "repair"
+      ],
+      "inventory": {
+        "_b5j5u4fcx|1617132180585": {
+          "amount": 1,
+          "id": "_b5j5u4fcx",
+          "time": 1617132180585,
+          "type": "usable"
+        }
+      },
+      "limbs": {
+        "handL": "fine",
+        "handR": "fine",
+        "head": "fine",
+        "legL": "fine",
+        "legR": "fine",
+        "torso": "fine"
+      },
+      "notes": "",
+      "skills": {
+        "barter": {
+          "base": 16,
+          "change": 5,
+          "total": 21
+        },
+        "bigGuns": {
+          "base": 16,
+          "change": 0,
+          "total": 16
+        },
+        "energyGuns": {
+          "base": 16,
+          "change": 0,
+          "total": 16
+        },
+        "lockpick": {
+          "base": 25,
+          "change": 0,
+          "total": 25
+        },
+        "medicine": {
+          "base": 42,
+          "change": 28,
+          "total": 70
+        },
+        "meleeWeapons": {
+          "base": 48,
+          "change": 0,
+          "total": 48
+        },
+        "repair": {
+          "base": 21,
+          "change": 20,
+          "total": 71
+        },
+        "science": {
+          "base": 28,
+          "change": 21,
+          "total": 80
+        },
+        "smallGuns": {
+          "base": 37,
+          "change": 24,
+          "total": 95
+        },
+        "sneak": {
+          "base": 29,
+          "change": 0,
+          "total": 29
+        },
+        "speech": {
+          "base": 20,
+          "change": 0,
+          "total": 20
+        },
+        "steal": {
+          "base": 11,
+          "change": 0,
+          "total": 11
+        },
+        "survival": {
+          "base": 26,
+          "change": 1,
+          "total": 27
+        },
+        "traps": {
+          "base": 25,
+          "change": 0,
+          "total": 25
+        },
+        "unarmed": {
+          "base": 58,
+          "change": 22,
+          "total": 80
+        }
+      },
+      "special": {
+        "agility": {
+          "base": 8,
+          "change": 0,
+          "total": 8
+        },
+        "charisma": {
+          "base": 4,
+          "change": 0,
+          "total": 4
+        },
+        "endurance": {
+          "base": 6,
+          "change": 0,
+          "total": 6
+        },
+        "intelligence": {
+          "base": 7,
+          "change": 0,
+          "total": 7
+        },
+        "luck": {
+          "base": 7,
+          "change": 0,
+          "total": 7
+        },
+        "perception": {
+          "base": 7,
+          "change": 0,
+          "total": 7
+        },
+        "strength": {
+          "base": 6,
+          "change": 0,
+          "total": 6
+        }
+      },
+      "stats": {
+        "actionPoints": 9,
+        "armorClass": {
+          "base": 8,
+          "change": 0,
+          "total": 8
+        },
+        "carryWeight": 0,
+        "criticalChance": 7,
+        "exp": 50000,
+        "healingRate": 2,
+        "healthPoints": 88,
+        "hpPerLevel": 6,
+        "level": 10,
+        "maxHealthPoints": 93,
+        "meleeDamage": 1,
+        "nextLevel": 55000,
+        "resistance": 30,
+        "sequence": 14,
+        "skillPoints": 0,
+        "spentSkillPoints": 121,
+        "wounds": ""
+      },
+      "uid": "QLCnftDpIJgb0JWO4m8ZOQKJ2Eo2"
+    }
+  },
+  "items": {
+    "_akwljvjkf": {
+      "amount": 0,
+      "approved": true,
+      "armor": 0,
+      "author": "SjZGEKJcnGOFY2YQ8owTXmQgxL43",
+      "capacity": 0,
+      "description": "Все вы знаете, что это такое и как им пользоваться",
+      "discriminator": "IItem",
+      "effect": "",
+      "id": "_akwljvjkf",
+      "image": " https://i.imgur.com/7GqRTBi.jpg",
+      "name": "Коктейль Молотова",
+      "price": 50,
+      "time": 1668166368066,
+      "type": "usable",
+      "weight": 1
+    }
+  },
+  "messages": {
+    "1616771203507": {
+      "author": "SjZGEKJcnGOFY2YQ8owTXmQgxL43",
+      "body": "Вы караванщики, которых перехватили и поймали рейдеры на дороге. Брамины мертвы и разграблены, а остальные участники каравана отправились к праотцам. Вы уже 2 недели сидите в клетке, где вас изредка кормят полусырым неизвестным мясом, а жажду утоляете из соседней протекающей трубы. Неизвестно, чего они ждут и почему вы живы. \n \nНо наконец-то удача повернулась к Вам лицом. Охранник клетки ширнулся психо, и через пару минут упал на пол в кольвунсиях. Здесь и начинается история. \n ",
+      "grouped": false,
+      "pinned": false,
+      "time": 1616771203507
+    }
+  },
+"tokens": {
+    "asdasd90a8087s0a8d7___Mozilla_5_0 (Linux; Android 10; Redmi Note 8 Pro) AppleWebKit_999_99 (KHTML, like Gecko)": "dasda123:asdsadasdaskjdpoasjdipwqhje"
+  },
+  "users": {
+    "3B6MTY9QEgbwIsKxFZMyfRzqa9x2": {
+      "nickname": "SuperAdmin",
+      "isAdmin": true,
+      "isSuperAdmin": true,
+      "approved": true,
+      "avatar": "",
+      "enableDisabledFeatures": true,
+      "isTyping": false,
+      "lastOnline": 1668521397280,
+      "notesAreVisible": false,
+      "notificationVolume": 50,
+      "status": "afk",
+      "uid": "3B6MTY9QEgbwIsKxFZMyfRzqa9x2",
+      "zoom": 100
+    },
+    "QLCnftDpIJgb0JWO4m8ZOQKJ2Eo2": {
+      "nickname": "Regular user",
+      "uid": "QLCnftDpIJgb0JWO4m8ZOQKJ2Eo2",
+      "approved": true,
+      "avatar": "https://i.imgur.com/qPiPEWV.png",
+      "enableDisabledFeatures": true,
+      "isAdmin": false,
+      "isSuperAdmin": false,
+      "isTyping": false,
+      "lastOnline": 1667170181176,
+      "notesAreVisible": true,
+      "notificationVolume": 50,
+      "status": "offline",
+      "zoom": 100
+    }
+  }
+}

@@ -89,4 +89,4 @@ lerna-debug.log
 # System Files
 .DS_Store
 Thumbs.db
-src/configs/firebase.js
+src/configs/firebase.json

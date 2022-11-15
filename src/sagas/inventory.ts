@@ -25,6 +25,7 @@ function* passItem(payload: IPayload) {
     }
 
     if (!ignoreAmountCheck && !(item.type === 'weapon' && !to)) {
+      // @ts-ignore
       const removed = yield removeItem({ id, uid, amount: item.amount });
       if (!removed) {
         console.error(`passItem error:`, payload);
@@ -81,6 +82,7 @@ function* removeItem(payload: IPayload) {
     .child(uid)
     .child('inventory');
 
+  // @ts-ignore
   const sameItem = yield getInventoryItem({ id, uid });
   if (sameItem) {
     if (sameItem.amount - amount >= 1) {
@@ -108,6 +110,7 @@ function* removeItem(payload: IPayload) {
 function* getInventoryItem(payload: IPayload) {
   const { id, uid } = payload;
 
+  // @ts-ignore
   const rawItems = yield database
     .ref('characters')
     .child(uid)
@@ -135,6 +138,7 @@ function* giveItem(payload: IPayload) {
   let item: IInventoryItem = { id, time, type: itemType, amount: amount };
 
   if (itemType !== 'weapon' && itemType !== 'wearable') {
+    // @ts-ignore
     const sameItem = yield getInventoryItem({ id, uid });
     if (sameItem) {
       item.amount = (sameItem.amount || 1) + amount;
@@ -160,8 +164,10 @@ function* takeItem(payload: IPayload) {
 
   message.data.taken = true;
 
+  // @ts-ignore
   const took = yield changeMessage({ uid, message });
   if (took && type) {
+    // @ts-ignore
     const item = yield giveItem({
       id: itemId,
       uid,

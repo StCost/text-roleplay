@@ -52,6 +52,7 @@ function unsubscribe() {
 }
 
 function* getItems() {
+  // @ts-ignore
   const rawItems = yield database
     .ref('items')
     .orderByKey()
@@ -65,6 +66,7 @@ function* getItems() {
 function* getItemById(payload: IPayload) {
   const { id } = payload;
 
+  // @ts-ignore
   const rawItem = yield database
     .ref('items')
     .child(id)
@@ -84,6 +86,7 @@ function* getMoreItems(payload: IPayload) {
     return;
   }
 
+  // @ts-ignore
   const rawItems = yield database
     .ref('items')
     .orderByKey()
@@ -108,6 +111,7 @@ function* deleteItem(payload: IPayload) {
   };
 
   // Delete item from all messages
+  // @ts-ignore
   const messages: IMessage[] = Object.values((yield database.ref(`messages`).once('value')).val() || {});
   let clearedMessages = 0;
 
@@ -133,6 +137,7 @@ function* deleteItem(payload: IPayload) {
   yield checkMessages(0);
 
   // Delete item from all users
+  // @ts-ignore
   const chars: ICharacter[] = Object.values((yield database.ref(`characters`).once('value')).val() || {});
   let clearedUsers = 0;
 

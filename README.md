@@ -74,10 +74,18 @@ If your friends too busy to schedule meetings to play together - you can play te
   - Notes
     - Can be shown or hidden to all users
 
-[Live demo] (stcost.github.io/text-roleplay)
+[Live demo]
 =
-(you can see our short play history (pure russian language, sorry))
+[(you can see our short play history (pure russian language, sorry)](stcost.github.io/text-roleplay)
 
 Login and Password: phktybmvrmgoswhcgz@tmmcv.net
 
 Or you can register new user. Anyway you need permsission to make any changes on website (you can ask me for access by my github email, if you really want to try it out)
+
+Start the project
+=
+At this point I hope you already know how to use firebase database
+1. Clone project
+2. Create firebase config in src/configs/firebase.json
+2.1 If needed, import database example firebase_database_example.json
+3. npm i && npm start

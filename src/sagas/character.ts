@@ -28,6 +28,7 @@ function* getCharacter(payload: IPayload) {
     actions.getCharacterSuccess({ uid, updatedData });
   };
 
+  // @ts-ignore
   const rawChar = yield ref.once('value');
   const char = rawChar.val() || getInitialCharacter();
   actions.getCharacterSuccess({

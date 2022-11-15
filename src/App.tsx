@@ -32,7 +32,7 @@ class App extends Component<IAppProps> {
   applyZoom = () => {
     const root: HTMLElement | null = document.querySelector('html');
     if (root) {
-      root.style.zoom = `${this.getZoom()/100}`;
+      root.style["zoom"] = `${this.getZoom()/100}`;
     }
   }
 
