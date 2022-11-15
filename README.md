@@ -77,7 +77,7 @@ If your friends too busy to schedule meetings to play together - you can play te
 
 [Live demo]
 =
-[(you can see our short play history (pure russian language, sorry)](stcost.github.io/text-roleplay)
+[(you can see our short play history (pure russian language, sorry)](https://stcost.github.io/text-roleplay)
 
 Login and Password: `phktybmvrmgoswhcgz@tmmcv.net`
 
