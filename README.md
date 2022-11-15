@@ -89,3 +89,10 @@ At this point I hope you already know how to use firebase database
 2. Create firebase config in `src/configs/firebase.json`
 3 If needed, import database example `firebase_database_example.json`
 3. npm i && npm start
+
+Deploy to Github pages
+-
+You can deploy project to your GitHub Pages
+1. Enable `GitHub Pages` for your project
+2. In Branch select `master` and `/docs`
+3. Run `npm run deploy`.  It will build project, move it to docs, and deploy to master
