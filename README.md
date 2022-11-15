@@ -38,7 +38,7 @@ App behaves like character sheet. To keep information mostly about players and t
   - List of perks
 
 What about other features for full tabletop game?
-- In basic mode (Character sheet mode) this app only handles character info. But things such as playing surface, tockens, dices throwing, cards, etc - all this was handled by [Tabletop Simulator](https://store.steampowered.com/app/286160/Tabletop_Simulator/). I was the Dungeon Master and prepared great table for us to play there. But point is, we had this app opened on phones or in browser. Were proved to be useful to plan future in-game actions before we even start to play
+- In basic mode (Character sheet mode) this app only handles character info. But things such as playing surface, tokens, dices throwing, cards, etc. - all this was handled by [Tabletop Simulator](https://store.steampowered.com/app/286160/Tabletop_Simulator/). I was the Dungeon Master and prepared great table for us to play there. But point is, we had this app opened on phones or in browser. Were proved to be useful to plan future in-game actions before we even start to play
 
 Full text mode
 =
@@ -69,7 +69,7 @@ If your friends too busy to schedule meetings to play together - you can play te
   - Giving items to someone specific
   - Inactive item in chat is faded out
 - Character
-  - Status (limbs state, health, armor points, etc)
+  - Status (limbs state, health, armor points, etc.)
   - Own Inventory
   - Notes
     - Can be shown or hidden to all users
@@ -78,14 +78,14 @@ If your friends too busy to schedule meetings to play together - you can play te
 =
 [(you can see our short play history (pure russian language, sorry)](stcost.github.io/text-roleplay)
 
-Login and Password: phktybmvrmgoswhcgz@tmmcv.net
+Login and Password: `phktybmvrmgoswhcgz@tmmcv.net`
 
-Or you can register new user. Anyway you need permsission to make any changes on website (you can ask me for access by my github email, if you really want to try it out)
+Or you can register new user. Anyway you need permissions to make any changes on website (you can ask me for access by my github email, if you really want to try it out)
 
 Start the project
 =
 At this point I hope you already know how to use firebase database
 1. Clone project
-2. Create firebase config in src/configs/firebase.json
-2.1 If needed, import database example firebase_database_example.json
+2. Create firebase config in `src/configs/firebase.json`
+3 If needed, import database example `firebase_database_example.json`
 3. npm i && npm start
