@@ -5,7 +5,7 @@
   "dependencies": {
     "antd": "^4.2.0",
     "deep-object-diff": "^1.1.0",
-    "firebase": "^7.14.3",
+    "firebase": "^9.14.0",
     "moment": "^2.26.0",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
