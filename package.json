@@ -38,7 +38,7 @@
     "insert-date": "sed -i '' s/buildDate=\\\".*\\\"/buildDate=\\\"$(date '+%T'_'%d'.'%m'.'%y')\\\"/g public/index.html",
     "build-to-docs": "rm -r docs && mv build docs",
     "prepare-index": "sed -i '' s/href=\\\"/href=\\\"./g docs/index.html && sed -i '' s/src=\\\"/src=\\\"./g docs/index.html && sed -i '' s/\\\"static/\\\".\\\\/text-roleplay\\\\/static/g docs/index.html",
-    "prepare-main": "sed -i '' s/\\\"static\\\\//\\\".\\\\/text-roleplay\\\\/static\\\\//g docs/static/js/main.cb1fa5cd.js",
+    "prepare-main": "sed -i '' s/\\\"static\\\\//\\\".\\\\/text-roleplay\\\\/static\\\\//g docs/static/js/main.f1d07153.js",
     "remove-maps": "find docs -name '*.map' -delete",
     "deploy": "npm run build && git add . && git commit -m 'Update build' && git push origin master",
     "eject": "react-scripts eject"

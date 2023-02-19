@@ -1,22 +1,21 @@
 # text-roleplay
 
-Tech stack
-=
+Tech Stack
+---
 - React
 - TypeScript
 - Redux
 - Firebase
 - Ant Design
-- moment
+- Moment
 
 Main Goal
-=
-I wanted to create handy tool for managing tabletop/text role-playing game Fallout PnP (kinda like Dungeons & Dragons). For me and my friends to keep every piece of information about our game on one single website.
-[More info about game](https://falloutpnp.fandom.com/wiki/Main_Page)
+---
+I wanted to create a handy tool for managing the tabletop/text role-playing game Fallout PnP (similar to Dungeons & Dragons). The goal was to keep every piece of information about our game in one place on a single website. [More information about the game can be found here](https://falloutpnp.fandom.com/wiki/Main_Page).
 
 Basic Features
-=
-Basic stuff to keep app working
+---
+The app has some basic features to keep it working:
 - Registration
 - Login
 - Password reset
@@ -27,32 +26,33 @@ Basic stuff to keep app working
   - Online, AFK, Offline status
   - Changing UI size (for in-game tablets)
   - Push Notifications
-  - Any input supports image uploading. Image will be uploaded and returned as link
-  - Build date in left top corner
+  - Any input supports image uploading. Images will be uploaded and returned as a link
+  - Build date in the top-left corner
 
-Character sheet features
-=
-App behaves like character sheet. To keep information mostly about players and their in-game characters
+Character Sheet Features
+---
+The app behaves like a character sheet, helping to keep information about players and their in-game characters:
 - Character sheet
   - Special, Skills, Traits, Perks, Health and Armor points, experience, prize skills, and other stats. Everything for full tabletop gameplay
   - Character bio
   - List of perks
 
-What about other features for full tabletop game?
-- In basic mode (Character sheet mode) this app only handles character info. But things such as playing surface, tokens, dices throwing, cards, etc. - all this was handled by [Tabletop Simulator](https://store.steampowered.com/app/286160/Tabletop_Simulator/). I was the Dungeon Master and prepared great table for us to play there. But point is, we had this app opened on phones or in browser. Were proved to be useful to plan future in-game actions before we even start to play
+What About Other Features for Full Tabletop Game?
+---
+In the basic mode (Character sheet mode), this app only handles character information. However, things such as playing surfaces, tokens, dice throwing, cards, etc. were all handled by [Tabletop Simulator](https://store.steampowered.com/app/286160/Tabletop_Simulator/). I was the Dungeon Master and prepared a great table for us to play there. The point is, we had this app opened on phones or in browsers. It was useful to plan future in-game actions before we even started to play.
 
-Full text mode
-=
-If your friends too busy to schedule meetings to play together - you can play text games. As was previously said, app supports full text role play experience without need for other apps or websites (mostly).
+Full Text Mode
+---
+If your friends are too busy to schedule meetings to play together, you can play text games. As previously mentioned, the app supports a full text role-play experience without the need for other apps or websites (mostly).
 - Chat
   - Writing, deleting messages
-    - no editing on purpose. if In-Character message were sent - action was made. You can't edit it anymore
+    - No editing on purpose. If an In-Character message was sent, the action was made. You can't edit it anymore.
   - History of messages (lazy loading)
   - Out-Of-Character (OOC) and In-Character (IC) messages
   - Rolling dice
   - Message date
   - Message attaching (admin)
-- Inventory and items
+- Inventory and Items
   - List of in-game items
   - Creating, editing, deleting, hiding, validating items
   - Inventory for storing items (including their quantity)
@@ -75,7 +75,7 @@ If your friends too busy to schedule meetings to play together - you can play te
   - Notes
     - Can be shown or hidden to all users
 
-[Live demo]
+Live demo
 =
 [(you can see our short play history (pure russian language, sorry)](https://stcost.github.io/text-roleplay)
 
