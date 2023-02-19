@@ -12,13 +12,16 @@ import {
   EyeInvisibleOutlined,
   ReloadOutlined,
   SyncOutlined,
+  CodeOutlined,
 } from '@ant-design/icons';
 import {
   Dropdown,
   message as notify,
   Menu,
   Button,
-  Modal, Card,
+  Modal,
+  Card,
+  Tooltip,
 } from 'antd';
 import { RouteComponentProps, withRouter } from 'react-router';
 
@@ -33,6 +36,7 @@ import Message from './Message';
 
 import { validateMessage } from '../../helpers/utils';
 import { addStatusChangeListener, removeStatusChangeListener } from '../../helpers/activity';
+import {AndroidFilled} from "@ant-design/icons/lib/icons";
 
 interface IChatProps extends RouteComponentProps {
   messages: IMessage[],
@@ -119,10 +123,12 @@ class Chat extends Component<IChatProps, IChatState> {
   lastTyping = Date.now() - 500;
   timeout: NodeJS.Timeout | null = null;
   onKeyDown = (event: KeyboardEvent<HTMLTextAreaElement>) => {
+    console.log(event.key);
     if (event.key === 'Enter' && !event.shiftKey) {
       event.preventDefault();
 
-      this.onSendMessage();
+      console.log(1);
+      this.onSendMessage(event.getModifierState("Alt"))();
     } else {
       const time = Date.now();
       if (this.props.currentUser && time > this.lastTyping) {
@@ -161,9 +167,10 @@ class Chat extends Component<IChatProps, IChatState> {
       actions.setIsTyping({ isTyping: false, uid });
   }
 
-  onSendMessage = () => {
+  onSendMessage = (aiComplete: boolean = false) => () => {
     const { message } = this.state;
     const { currentUser, loading, uid } = this.props;
+    console.log(2);
 
     if (loading) {
       return;
@@ -184,15 +191,26 @@ class Chat extends Component<IChatProps, IChatState> {
       return;
     }
 
+    console.log(3);
+
     if (!validateMessage(message)) {
       return;
     }
 
+    console.log('4', message);
     this.setState({ sending: true });
-    actions.sendMessage({
-      uid,
-      message,
-    });
+    if (aiComplete)
+        actions.sendMessageAi({
+            message,
+          uid,
+        });
+    else {
+      console.log('send', message);
+      actions.sendMessage({
+        uid,
+        message,
+      });
+    }
   };
 
   getMoreMessages = () => {
@@ -253,7 +271,12 @@ class Chat extends Component<IChatProps, IChatState> {
           </Card>
         </Menu.Item>
         <Menu.Item>
-          <Button onClick={() => actions.sendMessageAi({})}>Помощь ИИ</Button>
+          <Tooltip title="OpenAI продолжит текст, зная РП и нон-РП текст">
+            <Button onClick={() => actions.sendMessageAi({ IC: true, OOC: true })}>OpenAI</Button>
+          </Tooltip>
+            <Tooltip title="ИИ продолжит зная только РП текст">
+            <Button onClick={() => actions.sendMessageAi({ IC: true, OOC: false })}>IC</Button>
+        </Tooltip>
         </Menu.Item>
         <Menu.Item>
           <Button onClick={this.onPinMessage(m)}>
@@ -342,7 +365,9 @@ class Chat extends Component<IChatProps, IChatState> {
               actions.notify({ message: 'Файл успешно загружен!' });
             }}
           />
-          <SendOutlined onClick={this.onSendMessage}/>
+          <Tooltip title={<CodeOutlined onClick={this.onSendMessage(true)}/>} placement="right">
+            <SendOutlined onClick={this.onSendMessage(false)}/>
+          </Tooltip>
         </div>
       </div>
     )
