@@ -1,6 +1,8 @@
 import actions, {IPayload} from "../reducers/actions";
 import {all, select, takeLatest} from "redux-saga/effects";
-import {IMessage} from "../reducers/interfaces";
+import {IMessage, IState, IUser} from "../reducers/interfaces";
+import {getStateUser} from "../helpers/utils";
+import {useSelector} from "react-redux";
 
 const MAX_TOKENS = 500;
 
@@ -47,12 +49,14 @@ function* sendMessageAI(payload: IPayload) {
     const {message = '\n\n'} = payload;
 
     const context: string = yield getContext();
+    const userData: IUser = yield select(({ users, userData }) => users[userData.uid]);
+    console.log(userData);
 
     fetch("https://api.openai.com/v1/completions", {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
-            "Authorization": "Bearer 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" // TODO hide
+            "Authorization": "Bearer " + userData.aiApiKey,
         },
         body: JSON.stringify(
             {

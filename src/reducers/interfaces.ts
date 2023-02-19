@@ -58,6 +58,8 @@ export type TStatus = 'online' | 'offline' | 'afk';
 export interface IUser {
   nickname: string;
   avatar: string;
+
+  aiApiKey?: string;
   uid: string,
   lastOnline: number;
   status: TStatus;
@@ -91,6 +93,7 @@ export const defaultUser: IUser = {
   zoom: 100,
   enableDisabledFeatures: false,
   notificationVolume: 50,
+  aiApiKey: '',
 
   approved: false,
   uid: '',

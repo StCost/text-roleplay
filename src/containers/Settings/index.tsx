@@ -164,15 +164,21 @@ export class Settings extends React.Component<ISettingsProps, IUser> {
       case 'approved':
         return <>
           {(hasRight && (currentUser && currentUser.uid !== uid)) && (
-            <>
-              <Switch
-                checked={!!value}
-                onChange={(isAdmin: boolean) => this.rawOnChange(key, isAdmin)}
-              />
-            </>
+              <>
+                <Switch
+                    checked={!!value}
+                    onChange={(isAdmin: boolean) => this.rawOnChange(key, isAdmin)}
+                />
+              </>
           )}
           {value ? 'Активирован' : 'Не активирован'}
         </>;
+
+      case 'aiApiKey':
+        return <Input
+              value={value}
+              onChange={this.onChange(key)}
+          />;
 
       case 'isAdmin':
         return <>
@@ -246,6 +252,7 @@ export class Settings extends React.Component<ISettingsProps, IUser> {
     'isAdmin': 'Права админа',
     'uid': 'UID',
     'approved': 'Активирован',
+    'aiApiKey': "OpenAI API key",
     'zoom': 'Размер приложения %',
     'enableDisabledFeatures': 'Дополнительные функции',
     'notificationVolume': 'Громкость оповещения о новом сообщении'
