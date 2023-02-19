@@ -28,6 +28,7 @@ Basic stuff to keep app working
   - Changing UI size (for in-game tablets)
   - Push Notifications
   - Any input supports image uploading. Image will be uploaded and returned as link
+  - Build date in left top corner
 
 Character sheet features
 =
@@ -76,7 +77,7 @@ If your friends too busy to schedule meetings to play together - you can play te
 
 [Live demo]
 =
-[(you can see our short play history (pure russian language, sorry)](stcost.github.io/text-roleplay)
+[(you can see our short play history (pure russian language, sorry)](https://stcost.github.io/text-roleplay)
 
 Login and Password: `phktybmvrmgoswhcgz@tmmcv.net`
 
@@ -87,8 +88,8 @@ Start the project
 At this point I hope you already know how to use firebase database
 1. Clone project
 2. Create firebase config in `src/configs/firebase.json`
-3 If needed, import database example `firebase_database_example.json`
-3. npm i && npm start
+3. If needed, import database example `firebase_database_example.json`
+4. `npm i && npm start`
 
 Deploy to Github pages
 -
