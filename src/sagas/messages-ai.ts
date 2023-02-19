@@ -48,77 +48,52 @@ const ai = localStorage.getItem('ai');
 if (ai) window.ai = JSON.parse(ai);
 
 const AI_UID = 'V59PbTTratf4XuFRg7lEnIQrtxf1';
-
 function* sendMessageAI(payload: IPayload) {
-    const {message = '\n\n'} = payload;
+    const { message = '\n\n' } = payload;
 
     const context: string = yield getContext();
-    const userData: IUser = yield select(({users, userData}) => users[userData.uid]);
+    const userData: IUser = yield select(({ users, userData }) => users[userData.uid]);
     console.log(userData);
 
     // @ts-ignore
     localStorage.setItem('ai', JSON.stringify(window.ai));
 
-    actions.setIsTyping({isTyping: true, uid: AI_UID});
-    fetch("https://api.openai.com/v1/completions", {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-            "Authorization": "Bearer " + userData.aiApiKey,
-        },
-        body: JSON.stringify(
-            {
+    actions.setIsTyping({ isTyping: true, uid: AI_UID });
+
+    try {
+        const response: Response = yield fetch("https://api.openai.com/v1/completions", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": "Bearer " + userData.aiApiKey,
+            },
+            body: JSON.stringify({
                 //@ts-ignore
                 ...window.ai,
                 "prompt": context + message,
             })
-    })
-        .then((response) => {
-            // @ts-ignore
-            const reader = response.body.getReader();
-            return new ReadableStream({
-                start(controller) {
-                    return pump();
+        });
 
-                    // @ts-ignore
-                    function pump() {
-                        return reader.read().then(({done, value}) => {
-                            // When no more data needs to be consumed, close the stream
-                            if (done) {
-                                controller.close();
-                                return;
-                            }
-                            // Enqueue the next data chunk into our target stream
-                            controller.enqueue(value);
-                            return pump();
-                        });
-                    }
-                }
-            })
-        })
-        // Create a new response out of the stream
-        .then((stream) => new Response(stream))
-        // Create an object URL for the response
-        .then((response) => response.json())
-        .then(result => {
-            console.log('ai message response', result);
+        // @ts-ignore
+        const result = yield response.json();
+        console.log('ai message response', result);
 
-            const choices = result.choices;
-            const choice = choices[Math.floor(Math.random() * choices.length)];
-            actions.sendMessage({
-                uid: AI_UID, // dev user
-                message: choice.text.trim()
-            });
-            actions.sendMessageAiSuccess({});
-            actions.setIsTyping({isTyping: false, uid: AI_UID});
-        }).catch(() => {
+        const choices = result.choices;
+        const choice = choices[Math.floor(Math.random() * choices.length)];
+        actions.sendMessage({
+            uid: AI_UID, // dev user
+            message: choice.text.trim()
+        });
+        actions.sendMessageAiSuccess({});
+        actions.setIsTyping({ isTyping: false, uid: AI_UID });
+    } catch {
         actions.sendMessageAiFail({});
-
-        actions.setIsTyping({isTyping: false, uid: AI_UID});
-    })
+        actions.setIsTyping({ isTyping: false, uid: AI_UID });
+    }
 
     return true;
 }
+
 
 
 export default function* watchForActions() {
