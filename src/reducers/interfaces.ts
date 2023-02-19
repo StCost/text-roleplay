@@ -93,7 +93,6 @@ export const defaultUser: IUser = {
   zoom: 100,
   enableDisabledFeatures: false,
   notificationVolume: 50,
-  aiApiKey: '',
 
   approved: false,
   uid: '',
@@ -101,6 +100,7 @@ export const defaultUser: IUser = {
   notesAreVisible: false,
   isSuperAdmin: false,
   status: 'online',
+  aiApiKey: '',
   isTyping: false,
 };
 

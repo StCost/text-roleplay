@@ -47,6 +47,8 @@ const ai = localStorage.getItem('ai');
 // @ts-ignore
 if (ai) window.ai = JSON.parse(ai);
 
+const AI_UID = 'V59PbTTratf4XuFRg7lEnIQrtxf1';
+
 function* sendMessageAI(payload: IPayload) {
     const {message = '\n\n'} = payload;
 
@@ -57,6 +59,7 @@ function* sendMessageAI(payload: IPayload) {
     // @ts-ignore
     localStorage.setItem('ai', JSON.stringify(window.ai));
 
+    actions.setIsTyping({isTyping: true, uid: AI_UID});
     fetch("https://api.openai.com/v1/completions", {
         method: "POST",
         headers: {
@@ -103,11 +106,16 @@ function* sendMessageAI(payload: IPayload) {
             const choices = result.choices;
             const choice = choices[Math.floor(Math.random() * choices.length)];
             actions.sendMessage({
-                uid: 'V59PbTTratf4XuFRg7lEnIQrtxf1', // dev user
+                uid: AI_UID, // dev user
                 message: choice.text.trim()
             });
             actions.sendMessageAiSuccess({});
-        }).catch(() => actions.sendMessageAiFail({}))
+            actions.setIsTyping({isTyping: false, uid: AI_UID});
+        }).catch(() => {
+        actions.sendMessageAiFail({});
+
+        actions.setIsTyping({isTyping: false, uid: AI_UID});
+    })
 
     return true;
 }

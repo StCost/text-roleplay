@@ -24,6 +24,7 @@ import Avatar from '../../components/Avatar';
 import { getFullTime, getStateUser, redirectToUserPage } from '../../helpers/utils';
 import InputUpload from '../../components/InputUpload';
 import { addStatusChangeListener, removeStatusChangeListener } from '../../helpers/activity';
+import {Link} from "react-router-dom";
 
 interface ISettingsProps extends RouteComponentProps {
   loading: boolean;
@@ -174,11 +175,15 @@ export class Settings extends React.Component<ISettingsProps, IUser> {
           {value ? 'Активирован' : 'Не активирован'}
         </>;
 
-      case 'aiApiKey':
-        return <Input
+      case 'aiApiKey': {
+        const apiLink = 'https://platform.openai.com/account/api-keys'
+          return <Tooltip title={<a href={apiLink} target="_blank" rel="noreferrer">{apiLink}</a>}>
+          <Input
               value={value}
               onChange={this.onChange(key)}
-          />;
+          />
+        </Tooltip>
+      }
 
       case 'isAdmin':
         return <>
