@@ -253,6 +253,9 @@ class Chat extends Component<IChatProps, IChatState> {
           </Card>
         </Menu.Item>
         <Menu.Item>
+          <Button onClick={() => actions.sendMessageAi({})}>Помощь ИИ</Button>
+        </Menu.Item>
+        <Menu.Item>
           <Button onClick={this.onPinMessage(m)}>
             {m.pinned
               ? 'Открепить'

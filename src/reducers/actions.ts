@@ -58,6 +58,7 @@ const actions: IActions = {
   ...createAsyncAction('SET_CHARACTER_NOTES'),
   ...createAsyncAction('REMOVE_MESSAGE'),
   ...createAsyncAction('SET_IS_TYPING'),
+  ...createAsyncAction('SEND_MESSAGE_AI'),
   setUnreadMessage: createAction('SET_UNREAD_MESSAGE'),
   deleteItemProgress: createAction('DELETE_ITEM_PROGRESS'),
   updateLastOnline: createAction('UPDATE_LAST_ONLINE'),

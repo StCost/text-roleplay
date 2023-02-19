@@ -5,6 +5,7 @@ import actions from '../reducers/actions';
 import auth from './auth';
 import users from './users';
 import messages from './messages';
+import messagesAI from './messages-ai';
 import items from './items';
 import inventory from './inventory';
 import character from './character';
@@ -15,6 +16,7 @@ export default function* watchAll() {
       auth(),
       users(),
       messages(),
+      messagesAI(),
       items(),
       inventory(),
       character(),

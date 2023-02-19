@@ -6,6 +6,7 @@ import actions from '../reducers/actions';
 import { database, messaging } from '../helpers/firebase';
 import { formatMessage } from '../helpers/utils';
 import config from '../configs/firebase.json';
+import {IMessage} from "../reducers/interfaces";
 
 function* sendMessage(payload: IPayload) {
   const { uid, message, data = {} } = payload;
@@ -101,7 +102,22 @@ function* getMessages() {
     .limitToLast(30)
     .once('value');
 
-  const messages = Object.values(rawMessages.val() || {});
+  const messages: IMessage[] = Object.values(rawMessages.val() || {});
+
+  // let removed = 0;
+  // messages.forEach(m => {
+  //   if (m.body == "%Их ответ: ") {
+  //     actions.removeMessage({ id: m.time });
+  //     removed++;
+  //   }
+  // })
+  //
+  // if (removed > 0) {
+  //   setTimeout(( ) => {
+  //   actions.getMessages({});
+  //   }, 50)
+  // }
+
   actions.getMessagesSuccess({ messages });
 }
 
