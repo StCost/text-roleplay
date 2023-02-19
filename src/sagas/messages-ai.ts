@@ -1,8 +1,6 @@
 import actions, {IPayload} from "../reducers/actions";
 import {all, select, takeLatest} from "redux-saga/effects";
-import {IMessage, IState, IUser} from "../reducers/interfaces";
-import {getStateUser} from "../helpers/utils";
-import {useSelector} from "react-redux";
+import {IMessage, IUser} from "../reducers/interfaces";
 
 const MAX_TOKENS = 500;
 
@@ -36,21 +34,28 @@ window.ai = {
     "model": "text-davinci-003",
     // @ts-ignore
     "max_tokens": MAX_TOKENS,
-    "temperature": 0.3,
+    "temperature": 0.7,
     "top_p": 1,
     "n": 1,
     // @ts-ignore
     "stream": false,
-    "logprobs": null
-    // @ts-ignore
+    "logprobs": null,
+    "stop": "\n\n",
 };
+
+const ai = localStorage.getItem('ai');
+// @ts-ignore
+if (ai) window.ai = JSON.parse(ai);
 
 function* sendMessageAI(payload: IPayload) {
     const {message = '\n\n'} = payload;
 
     const context: string = yield getContext();
-    const userData: IUser = yield select(({ users, userData }) => users[userData.uid]);
+    const userData: IUser = yield select(({users, userData}) => users[userData.uid]);
     console.log(userData);
+
+    // @ts-ignore
+    localStorage.setItem('ai', JSON.stringify(window.ai));
 
     fetch("https://api.openai.com/v1/completions", {
         method: "POST",
@@ -60,7 +65,7 @@ function* sendMessageAI(payload: IPayload) {
         },
         body: JSON.stringify(
             {
-//@ts-ignore
+                //@ts-ignore
                 ...window.ai,
                 "prompt": context + message,
             })

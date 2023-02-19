@@ -82,6 +82,7 @@ const reducer = (state = initialState, action: IAction) => {
       }
     }
     case 'LOGIN_SUCCESS': {
+
       return {
         ...state,
         uid: action.user.uid,
