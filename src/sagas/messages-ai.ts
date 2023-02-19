@@ -52,7 +52,7 @@ function* sendMessageAI(payload: IPayload) {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
-            "Authorization": "Bearer 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" // TODO hide
+            "Authorization": "Bearer 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" // TODO hide
         },
         body: JSON.stringify(
             {
