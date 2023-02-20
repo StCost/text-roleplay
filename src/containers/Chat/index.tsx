@@ -36,7 +36,6 @@ import Message from './Message';
 
 import { validateMessage } from '../../helpers/utils';
 import { addStatusChangeListener, removeStatusChangeListener } from '../../helpers/activity';
-import {AndroidFilled} from "@ant-design/icons/lib/icons";
 
 interface IChatProps extends RouteComponentProps {
   messages: IMessage[],
