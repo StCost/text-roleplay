@@ -123,11 +123,9 @@ class Chat extends Component<IChatProps, IChatState> {
   lastTyping = Date.now() - 500;
   timeout: NodeJS.Timeout | null = null;
   onKeyDown = (event: KeyboardEvent<HTMLTextAreaElement>) => {
-    console.log(event.key);
     if (event.key === 'Enter' && !event.shiftKey) {
       event.preventDefault();
 
-      console.log(1);
       this.onSendMessage(event.getModifierState("Alt"))();
     } else {
       const time = Date.now();
@@ -170,7 +168,6 @@ class Chat extends Component<IChatProps, IChatState> {
   onSendMessage = (aiComplete: boolean = false) => () => {
     const { message } = this.state;
     const { currentUser, loading, uid } = this.props;
-    console.log(2);
 
     if (loading) {
       return;
@@ -191,21 +188,17 @@ class Chat extends Component<IChatProps, IChatState> {
       return;
     }
 
-    console.log(3);
-
     if (!validateMessage(message)) {
       return;
     }
 
-    console.log('4', message);
     this.setState({ sending: true });
     if (aiComplete)
         actions.sendMessageAi({
-            message,
-          uid,
+            message: currentUser.nickname + ": " + message,
+            uid,
         });
     else {
-      console.log('send', message);
       actions.sendMessage({
         uid,
         message,
