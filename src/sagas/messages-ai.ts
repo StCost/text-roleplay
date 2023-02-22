@@ -59,7 +59,12 @@ function* getContext(IC: boolean, OOC: boolean) {
 }
 
 function* sendMessageAI(payload: IPayload) {
-    const { message = '\n\n', IC = true, OOC = true, uid = AI_CONFIG.AI_UID } = payload;
+    const {
+        message = '\n\n',
+        IC = true,
+        OOC = true,
+        uid = AI_CONFIG.AI_UID
+    } = payload;
     const context: string = yield getContext(IC, OOC);
     const userData: IUser = yield select(({ users, userData }) => users[userData.uid]);
 
@@ -92,17 +97,60 @@ function* sendMessageAI(payload: IPayload) {
 
         actions.sendMessage({
             uid,
-            message: `${message}${uid == AI_CONFIG.AI_UID ? '\n\n' : ''}${choice.text}`.trim(),
+            message: `${message}${choice.text}`.trim(),
         });
 
         actions.sendMessageAiSuccess({});
-        actions.setIsTyping({ isTyping: false, uid: AI_CONFIG.AI_UID });
     } catch(error) {
         actions.sendMessageAiFail({});
-        actions.setIsTyping({ isTyping: false, uid: AI_CONFIG.AI_UID });
         console.error(error);
         actions.notify({ message: "ИИ ошибка, смотри консоль "});
     }
+
+    actions.setIsTyping({ isTyping: false, uid: AI_CONFIG.AI_UID });
+    return true;
+}
+
+function* sendMessagePhotoAI(payload: IPayload) {
+    const {
+        message,
+        // uid
+    } = payload;
+    const uid = AI_CONFIG.AI_UID;
+
+    console.log(message);
+    const userData: IUser = yield select(({ users, userData }) => users[userData.uid]);
+
+    actions.setIsTyping({ isTyping: true, uid: AI_CONFIG.AI_UID });
+    try {
+        const response: Response = yield fetch("https://api.openai.com/v1/images/generations", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${userData.aiApiKey}`,
+            },
+            body: JSON.stringify({
+                prompt: message,
+                size: '256x256'
+            })
+        });
+
+        const result: { data: [ {url: string } ] } = yield response.json();
+
+        console.log('ai message response', result);
+
+        const data = result.data;
+        const url = data[Math.floor(Math.random() * data.length)].url;
+        console.log(url);
+
+        actions.sendMessage({ uid, message: url })
+        actions.sendMessagePhotoAiSuccess({});
+    } catch(error) {
+        actions.sendMessagePhotoAiFail({});
+        console.error(error);
+        actions.notify({ message: "ИИ ошибка, смотри консоль "});
+    }
+    actions.setIsTyping({ isTyping: false, uid: AI_CONFIG.AI_UID });
 
     return true;
 }
@@ -110,5 +158,6 @@ function* sendMessageAI(payload: IPayload) {
 export default function* watchForActions() {
     yield all([
         takeLatest('SEND_MESSAGE_AI', sendMessageAI),
+        takeLatest('SEND_MESSAGE_PHOTO_AI', sendMessagePhotoAI),
     ]);
 }

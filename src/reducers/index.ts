@@ -47,6 +47,7 @@ const reducer = (state = initialState, action: IAction) => {
     case 'GET_ALL_USERS':
     case 'REMOVE_MESSAGE':
     case 'SEND_MESSAGE_AI':
+    case 'SEND_MESSAGE_PHOTO_AI':
     case 'UPLOAD_FILE': {
       return {
         ...state,
@@ -72,6 +73,8 @@ const reducer = (state = initialState, action: IAction) => {
     case 'GET_MORE_ITEMS_FAIL':
     case 'SET_CHARACTER_NOTES_FAIL':
     case 'SET_CHARACTER_NOTES_SUCCESS':
+    case 'SEND_MESSAGE_PHOTO_AI_SUCCESS':
+    case 'SEND_MESSAGE_PHOTO_AI_FAIL':
     case 'SEND_MESSAGE_AI_SUCCESS':
     case 'SEND_MESSAGE_AI_FAIL':
     case 'SEND_MESSAGE_SUCCESS':

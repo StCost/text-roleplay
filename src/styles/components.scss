@@ -53,6 +53,13 @@ img.chat-image {
 }
 
 .image-modal {
+  a {
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+    width: 512px;
+  }
+
   .ant-modal-header {
     position: sticky;
     top: 0;

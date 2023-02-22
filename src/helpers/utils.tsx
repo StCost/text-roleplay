@@ -175,7 +175,7 @@ export const replaceString = (string: string, callback: (word: string, index: nu
 
 export const urlRegex = /https?:\/\/[-a-zA-Z0-9@:%._+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_+.~#?&//=]*)/igm;
 export const youtubeRegex = /(^| )https?:\/\/(www\.)?((youtube\.com(\/embed)?\/watch\?v=)|(youtu.be\/))[a-z0-9-_]{11}(\?t=[0-9]+)?(&feature=related)?(&list=[a-z0-9-_]{13})?(&index=[0-9]+)?(&t=[0-9]+)?/igm;
-export const imageRegex = /(^| )https?:\/\/(.*)\.(gif|jpe?g|tiff|png|webp|bmp)($| )/igm;
+export const imageRegex = /(^| )https?:\/\/(.*)\.(gif|jpe?g|tiff|png|webp|bmp)($| |(\?.*))/igm;
 
 export const isURL = (str: string) => urlRegex.test(str);
 export const getURLs = (str: string) => str.match(urlRegex);
@@ -186,21 +186,25 @@ export const processLinks = (body: string) => {
   if (links && links.length > 0) {
     const linkedBody = replaceString(body, (word: string, index: number) => {
       const match = links.find((link: string) => link.trim() === word.trim());
-      return match
-        ? (
-          <React.Fragment key={word + index}>
-            {' '}
-            <a
-              href={word}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              {word}
-            </a>
-          </React.Fragment>
-        ) : (
-          ` ${word}`
+
+      if (match) {
+        return (
+            <React.Fragment key={word + index}>
+              {' '}
+              <a
+                  href={word}
+                  target="_blank"
+                  rel="noopener noreferrer"
+              >
+                {match.match(imageRegex) ? '[image]' : word}
+              </a>
+            </React.Fragment>
         )
+      }
+      else {
+
+        return ` ${word}`
+      }
     });
 
     const images = body.match(imageRegex);
