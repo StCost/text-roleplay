@@ -1,4 +1,4 @@
-# text-roleplay
+# text role play
 
 Tech Stack
 ---
@@ -12,6 +12,18 @@ Tech Stack
 Main Goal
 ---
 I wanted to create a handy tool for managing the tabletop/text role-playing game Fallout PnP (similar to Dungeons & Dragons). The goal was to keep every piece of information about our game in one place on a single website. [More information about the game can be found here](https://falloutpnp.fandom.com/wiki/Main_Page).
+
+Features I'm proud of
+---
+- Integrated OpenAI
+  - Ask AI to tell something about recent events
+  - Complete your message
+  - AI is aware of game context
+  - AI is aware of last events in the game
+  - Generate picture based on your prompt
+- Expandable list of items and personal inventory
+- Detailed copy of Fallout's S.P.E.C.I.A.L. and skills, including formulas
+- Actually helped me to play great stories with friends
 
 Basic Features
 ---
@@ -81,7 +93,7 @@ Live demo
 
 Login and Password: `phktybmvrmgoswhcgz@tmmcv.net`
 
-Or you can register new user. Anyway you need permissions to make any changes on website (you can ask me for access by my github email, if you really want to try it out)
+Or you can register new user. Anyway you need permissions to make any changes on website (you can ask me for access by my GitHub email, if you really want to try it out)
 
 Start the project
 =
@@ -91,7 +103,7 @@ At this point I hope you already know how to use firebase database
 3. If needed, import database example `firebase_database_example.json`
 4. `npm i && npm start`
 
-Deploy to Github pages
+Deploy to GitHub pages
 -
 You can deploy project to your GitHub Pages
 1. Enable `GitHub Pages` for your project
