@@ -28,6 +28,7 @@ const UserInfo = (props: IUserInfoProps) => {
         >
           <Avatar
             avatar={user ? user.avatar : ''}
+            size={26}
             // eslint-disable-next-line
             nickname={user && (user.nickname || user.uid) || ''}
           />
