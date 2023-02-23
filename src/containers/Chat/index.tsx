@@ -20,7 +20,6 @@ import {
     message as notify,
     Menu,
     Button,
-    Modal,
     Card,
     Tooltip,
 } from 'antd';
@@ -37,7 +36,6 @@ import Message from './Message';
 
 import {getUserStatus, validateMessage} from '../../helpers/utils';
 import {addStatusChangeListener, removeStatusChangeListener} from '../../helpers/activity';
-import {Link} from "react-router-dom";
 
 interface IChatProps extends RouteComponentProps {
     messages: IMessage[],
@@ -76,7 +74,7 @@ class Chat extends Component<IChatProps, IChatState> {
     quickDisplayActiveUsers = () => {
         return <div className="active-users-list">
             {[...Object.values(this.props.users)]
-            .filter((user) => getUserStatus(user) != 'offline')
+            .filter((user) => getUserStatus(user) !== 'offline')
             .map((user) => (
                 <div
                     className={`active-user ${getUserStatus(user)}`}
@@ -276,7 +274,7 @@ class Chat extends Component<IChatProps, IChatState> {
         const {currentUser} = this.props;
 
         const isAdmin = currentUser?.isAdmin;
-        const canDelete = isAdmin || currentUser?.uid == m.author;
+        const canDelete = isAdmin || currentUser?.uid === m.author;
         const canWrite = currentUser?.approved;
 
 

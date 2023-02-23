@@ -36,7 +36,7 @@ function* getContext(IC: boolean, OOC: boolean) {
     for (const message of messages) {
         if ((IC && message.isRP) || (OOC && !message.isRP)) {
             const nickPrefix = `${users[message.author].nickname}: `;
-            const fullPrefix = message.body.indexOf(nickPrefix) == 0 ? '' : nickPrefix;
+            const fullPrefix = message.body.indexOf(nickPrefix) === 0 ? '' : nickPrefix;
             const body = message.body.replace(urlRegex, '').trim(); // remove urls, AI doesnt need them
 
             if (!body) continue; // dont send empty messages
@@ -141,7 +141,6 @@ function* sendMessagePhotoAI(payload: IPayload) {
         // uid,
         setMessageInsteadCallback
     } = payload;
-    const uid = AI_CONFIG.AI_UID;
 
     console.log(message);
     const userData: IUser = yield select(({ users, userData }) => users[userData.uid]);
