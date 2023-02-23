@@ -1,5 +1,5 @@
 import actions, { IPayload } from "../reducers/actions";
-import { all, select, takeLatest, call } from "redux-saga/effects";
+import { all, select, takeLatest } from "redux-saga/effects";
 import { IMessage, IUser } from "../reducers/interfaces";
 import {base64ToUrl, uploadFile} from "../components/InputUpload";
 import {urlRegex} from "../helpers/utils";
@@ -15,7 +15,7 @@ const AI_CONFIG = {
     logprobs: null,
     stop: "\n\n",
 
-    SETTING_CONTEXT: `context: tabletop text roleplaying game in Fallout setting. you are GameMaster, make text adventures for players. world is dangerous and tricky.\n\n`,
+    SETTING_CONTEXT: `context: tabletop text roleplaying game in Fallout 2 setting. desert, dust, nevada, everyone armed and suspicious. you are GameMaster, make text adventures for players. world is dangerous and tricky. add challenge to players often\n\n`,
     AI_UID: 'V59PbTTratf4XuFRg7lEnIQrtxf1',
 };
 
@@ -67,7 +67,8 @@ function* sendMessageAI(payload: IPayload) {
         message = '\n\n',
         IC = true,
         OOC = true,
-        uid = AI_CONFIG.AI_UID
+        uid = AI_CONFIG.AI_UID,
+        setMessageInsteadCallback,
     } = payload;
     const context: string = yield getContext(IC, OOC);
     const userData: IUser = yield select(({ users, userData }) => users[userData.uid]);
@@ -99,10 +100,20 @@ function* sendMessageAI(payload: IPayload) {
         const choices = result.choices;
         const choice = choices[Math.floor(Math.random() * choices.length)];
 
-        actions.sendMessage({
-            uid,
-            message: `${message}${choice.text}`.trim(),
-        });
+        const text = `${message}${choice.text}`.trim();
+
+        if (setMessageInsteadCallback)
+            setMessageInsteadCallback(text)
+        else {
+
+            if (!choice.text)
+                actions.notify({ message: "ИИ нечего сказать" })
+            else
+            actions.sendMessage({
+                uid,
+                message: text,
+            });
+        }
 
         actions.sendMessageAiSuccess({});
     } catch(error) {

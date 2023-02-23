@@ -75,7 +75,7 @@ class Chat extends Component<IChatProps, IChatState> {
     componentDidUpdate = (prevProps: IChatProps, prevState: IChatState) => {
         const {messages, users, loading} = this.props;
 
-        if (this.state.sending && prevProps.messages !== messages) {
+        if (this.state.sending && prevProps.messages.length <= messages.length) {
             localStorage.setItem('message', '');
             this.setState({
                 message: '',
@@ -203,8 +203,9 @@ class Chat extends Component<IChatProps, IChatState> {
 
             case 'complete':
                 actions.sendMessageAi({
-                    message: currentUser.nickname + ": " + message,
+                    message: '\n' + message,
                     uid,
+                    setMessageInsteadCallback: this.changeMessage
                 });
                 break;
 
