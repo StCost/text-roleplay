@@ -1,6 +1,7 @@
 import actions, { IPayload } from "../reducers/actions";
-import { all, select, takeLatest } from "redux-saga/effects";
+import { all, select, takeLatest, call } from "redux-saga/effects";
 import { IMessage, IUser } from "../reducers/interfaces";
+import {base64ToUrl, uploadFile} from "../components/InputUpload";
 
 
 const AI_CONFIG = {
@@ -111,6 +112,15 @@ function* sendMessageAI(payload: IPayload) {
     return true;
 }
 
+function dataURLtoFile(dataurl: string, filename: string) {
+    var arr = dataurl.split(','), mime = 'image',
+        bstr = atob(arr[1]), n = bstr.length, u8arr = new Uint8Array(n);
+    while(n--){
+        u8arr[n] = bstr.charCodeAt(n);
+    }
+    return new File([u8arr], filename, {type:mime});
+}
+
 function* sendMessagePhotoAI(payload: IPayload) {
     const {
         message,
@@ -131,20 +141,32 @@ function* sendMessagePhotoAI(payload: IPayload) {
             },
             body: JSON.stringify({
                 prompt: message,
+                response_format: 'b64_json',
                 size: '256x256'
             })
         });
 
-        const result: { data: [ {url: string } ] } = yield response.json();
+        const result: { data: [ {b64_json: string } ] } = yield response.json();
 
         console.log('ai message response', result);
 
         const data = result.data;
-        const url = data[Math.floor(Math.random() * data.length)].url;
-        console.log(url);
 
-        actions.sendMessage({ uid, message: url })
-        actions.sendMessagePhotoAiSuccess({});
+        const b64_json = data[Math.floor(Math.random() * data.length)].b64_json;
+        console.log(b64_json);
+        const url = base64ToUrl(b64_json);
+
+        // const res: Response = yield call(fetch, url);
+        // const buffer: ArrayBuffer = yield call(res.arrayBuffer);
+        // const file: File = new File([buffer], message, {type: 'image'});
+        const file: File = dataURLtoFile(base64ToUrl(b64_json), 'a.png');
+
+        uploadFile(file, (imgurLink: string) => {
+            actions.sendMessage({ uid, message: imgurLink })
+            actions.sendMessagePhotoAiSuccess({});
+        })
+
+        // uploadFile
     } catch(error) {
         actions.sendMessagePhotoAiFail({});
         console.error(error);
