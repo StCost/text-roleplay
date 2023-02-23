@@ -37,6 +37,7 @@ import Message from './Message';
 
 import {validateMessage} from '../../helpers/utils';
 import {addStatusChangeListener, removeStatusChangeListener} from '../../helpers/activity';
+import {Link} from "react-router-dom";
 
 interface IChatProps extends RouteComponentProps {
     messages: IMessage[],
@@ -80,6 +81,7 @@ class Chat extends Component<IChatProps, IChatState> {
                 <div
                     className={`active-user ${user.status}`}
                     key={user.uid}
+                    onClick={() => this.props.history.push(`/${user.uid}/notes`)}
                 >{user.nickname}</div>
             ))}
         </div>
@@ -346,7 +348,7 @@ class Chat extends Component<IChatProps, IChatState> {
                 user={users[m.author]}
                 uid={uid}
                 extra={this.getMessageControls(m)}
-                onUserClick={() => history.push(`/${m.author}/stats`)}
+                onUserClick={() => history.push(`/${m.author}/notes`)}
             />
         );
     };

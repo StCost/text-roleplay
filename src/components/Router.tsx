@@ -49,7 +49,7 @@ function Router(props: IRouterProps) {
           />
         )
       })}
-      <Redirect to="/stats"/>
+      <Redirect to="/notes"/>
     </Switch>
   );
 }

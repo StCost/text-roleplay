@@ -99,6 +99,7 @@ class Notebook extends Component<INotebookProps, { notes?: string }> {
             onChange={(e: ChangeEvent<HTMLTextAreaElement>) => this.setState({ notes: e.currentTarget.value })}
             onBlur={this.onSave}
             readOnly={!hasRight}
+            autoSize
           />
         </Card>
       ) : (
