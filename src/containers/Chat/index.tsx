@@ -262,19 +262,23 @@ class Chat extends Component<IChatProps, IChatState> {
         const canDelete = isAdmin || currentUser?.uid == m.author;
         const canWrite = currentUser?.approved;
 
-        const onDelete = (e: React.MouseEvent) =>
-            e.shiftKey
-                ? actions.removeMessage({id: m.time})
-                : Modal.confirm({
-                    title: 'Удалить?',
-                    content: 'Вы уверены, что хотите удалить сообщение? Это действите нельзя будет отменить',
-                    okText: 'Удалить',
-                    cancelText: 'Отмена',
-                    onOk: (close) => {
-                        actions.removeMessage({id: m.time});
-                        close();
-                    },
-                });
+
+        const onDelete = (e: React.MouseEvent) => // instant delete
+            actions.removeMessage({id: m.time});
+
+        // const onDelete = (e: React.MouseEvent) => // confirm delete
+        //     e.shiftKey
+        //         ? actions.removeMessage({id: m.time})
+        //         : Modal.confirm({
+        //             title: 'Удалить?',
+        //             content: 'Вы уверены, что хотите удалить сообщение? Это действите нельзя будет отменить',
+        //             okText: 'Удалить',
+        //             cancelText: 'Отмена',
+        //             onOk: (close) => {
+        //                 actions.removeMessage({id: m.time});
+        //                 close();
+        //             },
+        //         });
 
         return (
             <Menu>

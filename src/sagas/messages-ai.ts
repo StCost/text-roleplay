@@ -2,6 +2,7 @@ import actions, { IPayload } from "../reducers/actions";
 import { all, select, takeLatest, call } from "redux-saga/effects";
 import { IMessage, IUser } from "../reducers/interfaces";
 import {base64ToUrl, uploadFile} from "../components/InputUpload";
+import {urlRegex} from "../helpers/utils";
 
 
 const AI_CONFIG = {
@@ -29,17 +30,19 @@ function* getContext(IC: boolean, OOC: boolean) {
     const messages: IMessage[] = yield select(({ messages }) => messages);
     const users: IMessage[] = yield select(({ users }) => users);
 
-    console.log('messages', messages);
-    console.log('users', users);
-
     const contextMessages = [];
     let tokens = 0;
 
     for (const message of messages) {
         if ((IC && message.isRP) || (OOC && !message.isRP)) {
             const nickPrefix = `${users[message.author].nickname}: `;
-            const text = `${message.body.indexOf(nickPrefix) == 0 ? '' : nickPrefix}${message.body}`;
-            tokens += text.split(' ').length * 4;
+            const fullPrefix = message.body.indexOf(nickPrefix) == 0 ? '' : nickPrefix;
+            const body = message.body.replace(urlRegex, '').trim(); // remove urls, AI doesnt need them
+
+            if (!body) continue; // dont send empty messages
+
+            const text =`${fullPrefix}${body}`.trim();
+            tokens += text.split(' ').length * 6;
 
             // @ts-ignore
             if (tokens < window.ai.max_tokens / 2) {
