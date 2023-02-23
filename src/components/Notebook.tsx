@@ -5,10 +5,11 @@ import { Input, Card, Switch, Empty } from 'antd';
 import { BookOutlined } from '@ant-design/icons';
 
 import '../styles/notebook.scss';
-import { getStateUser, redirectToUserPage } from '../helpers/utils';
+import {formatMessage, getStateUser, redirectToUserPage} from '../helpers/utils';
 import { ICharacter } from '../containers/Character/config';
 import { IUser } from '../reducers/interfaces';
 import actions from '../reducers/actions';
+import MessageBody from "../containers/Chat/MessageBody";
 
 interface INotebookProps extends RouteComponentProps {
   character: ICharacter;
@@ -18,8 +19,8 @@ interface INotebookProps extends RouteComponentProps {
   hasRight: boolean;
 }
 
-class Notebook extends Component<INotebookProps, { notes?: string }> {
-  state = { notes: undefined };
+class Notebook extends Component<INotebookProps, { notes?: string, editMode?: boolean }> {
+  state = { notes: undefined, editMode: false };
 
   componentDidMount = () => {
     const { character, user, uid, currentUser, history } = this.props;
@@ -82,17 +83,30 @@ class Notebook extends Component<INotebookProps, { notes?: string }> {
         >
           <div className="notebook-switch">
             <Switch
-              checked={notesAreVisible}
-              onChange={() => actions.setUser({ uid, user: { ...user, notesAreVisible: !notesAreVisible } })}
-              disabled={!hasRight}
+                checked={notesAreVisible}
+                onChange={() => actions.setUser({ uid, user: { ...user, notesAreVisible: !notesAreVisible } })}
+                disabled={!hasRight}
             />
             <span>
-            {notesAreVisible
-              ? 'Записи видны всем'
-              : 'Записи видны только Вам'
-            }
-          </span>
+              {notesAreVisible
+                  ? 'Записи видны всем'
+                  : 'Записи видны только Вам'
+              }
+            </span>
+            <br/>
+            <Switch
+                checked={this.state.editMode}
+                onChange={() => this.setState({ editMode: !this.state.editMode })}
+                disabled={!hasRight}
+            />
+            <span>
+              {this.state.editMode
+                  ? 'Режим редактирования'
+                  : 'Режим просмотра'
+              }
+            </span>
           </div>
+          {this.state.editMode ? (
           <Input.TextArea
             className="notebook-input"
             value={this.state.notes}
@@ -101,6 +115,9 @@ class Notebook extends Component<INotebookProps, { notes?: string }> {
             readOnly={!hasRight}
             autoSize
           />
+          ) : (
+              <MessageBody message={({ body: this.state.notes || '', author: user.uid, time: 0 })}/>
+          )}
         </Card>
       ) : (
         <Empty description="Пользователь скрыл свои записи от посторонних"/>

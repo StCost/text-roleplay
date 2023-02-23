@@ -173,56 +173,68 @@ export const replaceString = (string: string, callback: (word: string, index: nu
 };
 
 
-export const urlRegex = /https?:\/\/[-a-zA-Z0-9@:%._+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_+.~#?&//=]*)/igm;
-export const youtubeRegex = /(^| )https?:\/\/(www\.)?((youtube\.com(\/embed)?\/watch\?v=)|(youtu.be\/))[a-z0-9-_]{11}(\?t=[0-9]+)?(&feature=related)?(&list=[a-z0-9-_]{13})?(&index=[0-9]+)?(&t=[0-9]+)?/igm;
-export const imageRegex = /(^| )https?:\/\/(.*)\.(gif|jpe?g|tiff|png|webp|bmp)($| |(\?.*))/igm;
+export const urlRegex = /http?s?:\/\/[-a-zA-Z0-9@:%._+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_+.~#?&/=]*)/igm;
+export const youtubeRegex = /http?s?:\/\/(www\.)?((youtube\.com(\/embed)?\/watch\?v=)|(youtu.be\/))[a-z0-9-_]{11}(\?t=[0-9]+)?(&feature=related)?(&list=[a-z0-9-_]{13})?(&index=[0-9]+)?(&t=[0-9]+)?/igm;
+export const imageRegex = /http?s?:\/\/(.*)\.(gif|jpe?g|tiff|png|webp|bmp)($| |(\?.*))/igmu;
 
 export const isURL = (str: string) => urlRegex.test(str);
 export const getURLs = (str: string) => str.match(urlRegex);
 
 export const processLinks = (body: string) => {
-  const links = getURLs(body);
+    const links = getURLs(body);
 
-  if (links && links.length > 0) {
-    const linkedBody = replaceString(body, (word: string, index: number) => {
-      const match = links.find((link: string) => link.trim() === word.trim());
+    if (links && links.length > 0) {
+        const linkedBody = replaceString(body, (word: string, index: number) => {
+            // const match = links.find((link: string) => link.trim() === word.trim());
 
-      if (match) {
+
+            if (imageRegex.test(word)) {
+                return (
+                    <React.Fragment key={word + index}>
+                        {' '}
+                        <a
+                            href={word}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                        >
+                            [image]
+                        </a>
+                    </React.Fragment>
+                )
+            } else if (urlRegex.test(word)) {
+                return (
+                    <React.Fragment key={word + index}>
+                        {' '}
+                        <a
+                            href={word}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                        >
+                            [link]
+                        </a>
+                    </React.Fragment>
+                )
+            } else {
+                return ` ${word}`
+            }
+        });
+
+        const images = body.match(imageRegex);
+        const youtube = body.match(youtubeRegex);
+
         return (
-            <React.Fragment key={word + index}>
-              {' '}
-              <a
-                  href={word}
-                  target="_blank"
-                  rel="noopener noreferrer"
-              >
-                {match.match(imageRegex) ? '[image]' : word}
-              </a>
-            </React.Fragment>
-        )
-      }
-      else {
-
-        return ` ${word}`
-      }
-    });
-
-    const images = body.match(imageRegex);
-    const youtube = body.match(youtubeRegex);
-
-    return (
-      <>
-        <span>{linkedBody}</span>
-        {images && images.map((image: string, index: number) => (
-          <Image src={image} key={image + index}/>
-        ))}
-        {youtube && youtube.map((link: string, index: number) => (
-          <YoutubeEmbed link={link} key={link + index}/>
-        ))}
-      </>
-    );
-  }
-  return null;
+            <>
+                <span>{linkedBody}</span>
+                {images && images.map((image: string, index: number) => (
+                    <Image src={image} key={image + index}/>
+                ))}
+                {youtube && youtube.map((link: string, index: number) => (
+                    <YoutubeEmbed link={link} key={link + index}/>
+                ))}
+            </>
+        );
+    }
+    return null;
 };
 
 export const getUserStatus = (user: IUser | null) => {
