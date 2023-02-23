@@ -138,7 +138,8 @@ function dataURLtoFile(dataurl: string, filename: string) {
 function* sendMessagePhotoAI(payload: IPayload) {
     const {
         message,
-        // uid
+        // uid,
+        setMessageInsteadCallback
     } = payload;
     const uid = AI_CONFIG.AI_UID;
 
@@ -146,6 +147,7 @@ function* sendMessagePhotoAI(payload: IPayload) {
     const userData: IUser = yield select(({ users, userData }) => users[userData.uid]);
 
     actions.setIsTyping({ isTyping: true, uid: AI_CONFIG.AI_UID });
+    setMessageInsteadCallback(message);
     try {
         const response: Response = yield fetch("https://api.openai.com/v1/images/generations", {
             method: "POST",
@@ -170,7 +172,6 @@ function* sendMessagePhotoAI(payload: IPayload) {
 
         const b64_json = data[Math.floor(Math.random() * data.length)].b64_json;
         console.log(b64_json);
-        const url = base64ToUrl(b64_json);
 
         // const res: Response = yield call(fetch, url);
         // const buffer: ArrayBuffer = yield call(res.arrayBuffer);
@@ -178,9 +179,10 @@ function* sendMessagePhotoAI(payload: IPayload) {
         const file: File = dataURLtoFile(base64ToUrl(b64_json), 'a.png');
 
         uploadFile(file, (imgurLink: string) => {
-            actions.sendMessage({ uid, message: imgurLink });
+            setMessageInsteadCallback(imgurLink);
             actions.sendMessagePhotoAiSuccess({});
         }, () => {
+            setMessageInsteadCallback(message);
             actions.sendMessagePhotoAiSuccess({});
         })
 

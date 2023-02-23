@@ -35,7 +35,7 @@ import InputUpload from '../../components/InputUpload';
 import TypingUsersList from '../../components/TypingUsersList';
 import Message from './Message';
 
-import {validateMessage} from '../../helpers/utils';
+import {getUserStatus, validateMessage} from '../../helpers/utils';
 import {addStatusChangeListener, removeStatusChangeListener} from '../../helpers/activity';
 import {Link} from "react-router-dom";
 
@@ -76,10 +76,10 @@ class Chat extends Component<IChatProps, IChatState> {
     quickDisplayActiveUsers = () => {
         return <div className="active-users-list">
             {[...Object.values(this.props.users)]
-            .filter((user) => user.status == 'online' || user.status == 'afk')
+            .filter((user) => getUserStatus(user) != 'offline')
             .map((user) => (
                 <div
-                    className={`active-user ${user.status}`}
+                    className={`active-user ${getUserStatus(user)}`}
                     key={user.uid}
                     onClick={() => this.props.history.push(`/${user.uid}/notes`)}
                 >{user.nickname}</div>
@@ -213,6 +213,7 @@ class Chat extends Component<IChatProps, IChatState> {
                 actions.sendMessagePhotoAi({
                     message,
                     uid,
+                    setMessageInsteadCallback: this.changeMessage
                 });
                 break;
 

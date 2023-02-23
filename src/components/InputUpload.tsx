@@ -30,7 +30,8 @@ export const uploadFile = function(file: File, onFinish: (imgurLink: string) => 
                 close();
                 actions.uploadFile({
                   file,
-                  onFinish
+                  onFinish,
+                  onFail: onCancel
                 });
               },
               onCancel,

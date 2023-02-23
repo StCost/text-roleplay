@@ -137,7 +137,7 @@ function* getMoreMessages(payload: IPayload) {
 }
 
 function uploadFile(payload: IPayload) {
-  const { file, onFinish } = payload;
+  const { file, onFinish, onFail } = payload;
 
   try {
     const request = new XMLHttpRequest();
@@ -151,15 +151,28 @@ function uploadFile(payload: IPayload) {
       if (request.status === 200 && request.readyState === 4) {
         let res = JSON.parse(request.responseText);
 
-        actions.uploadFileSuccess({});
         onFinish(res.data.link);
+        actions.uploadFileSuccess({});
+      } else if (request.status >= 400 && request.readyState === 4) {
+        actions.notify({ message: 'Изображение не было загружено! ' +request.responseText });
+        console.error(request.responseText);
+        onFail();
+        actions.uploadFileFail({ error: request.responseText });
       }
     };
+    request.onerror = () => {
+      console.log('onerror');
+      actions.notify({ message: 'Изображение не было загружено! Проверьте консоль' });
+      console.error(request.responseText);
+      onFail();
+      actions.uploadFileFail({ error: request.responseText });
+    }
 
     request.send(formData);
   } catch (error) {
     actions.notify({ message: 'Изображение не было загружено! Проверьте консоль' });
     console.error(error);
+    onFail();
     actions.uploadFileFail({ error });
   }
 }
