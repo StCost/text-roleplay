@@ -119,7 +119,7 @@ function* sendMessageAI(payload: IPayload) {
     } catch(error) {
         actions.sendMessageAiFail({});
         console.error(error);
-        actions.notify({ message: "ИИ ошибка, смотри консоль "});
+        actions.notify({ message: "ИИ ошибка, смотри консоль " + JSON.stringify(error)});
     }
 
     actions.setIsTyping({ isTyping: false, uid: AI_CONFIG.AI_UID });
@@ -160,11 +160,13 @@ function* sendMessagePhotoAI(payload: IPayload) {
             })
         });
 
-        const result: { data: [ {b64_json: string } ] } = yield response.json();
+        const result: { data: [ {b64_json: string } ], error: any } = yield response.json();
 
         console.log('ai message response', result);
 
         const data = result.data;
+        if (!data)
+            throw result.error;
 
         const b64_json = data[Math.floor(Math.random() * data.length)].b64_json;
         console.log(b64_json);
@@ -186,7 +188,7 @@ function* sendMessagePhotoAI(payload: IPayload) {
     } catch(error) {
         actions.sendMessagePhotoAiFail({});
         console.error(error);
-        actions.notify({ message: "ИИ ошибка, смотри консоль "});
+        actions.notify({ message: "ИИ ошибка, смотри консоль " + JSON.stringify(error)});
     }
     actions.setIsTyping({ isTyping: false, uid: AI_CONFIG.AI_UID });
 
