@@ -72,6 +72,19 @@ class Chat extends Component<IChatProps, IChatState> {
         removeStatusChangeListener('offline', this.resetIsTyping);
     }
 
+    quickDisplayActiveUsers = () => {
+        return <div className="active-users-list">
+            {[...Object.values(this.props.users)]
+            .filter((user) => user.status == 'online' || user.status == 'afk')
+            .map((user) => (
+                <div
+                    className={`active-user ${user.status}`}
+                    key={user.uid}
+                >{user.nickname}</div>
+            ))}
+        </div>
+    }
+
     componentDidUpdate = (prevProps: IChatProps, prevState: IChatState) => {
         const {messages, users, loading} = this.props;
 
@@ -366,6 +379,7 @@ class Chat extends Component<IChatProps, IChatState> {
                     {messages.map(this.getMessage)}
                 </div>
                 <div className="chat-controls">
+                    {this.quickDisplayActiveUsers()}
                     <DownOutlined onClick={this.scrollDown}/>
                     <TypingUsersList/>
                     <InputUpload

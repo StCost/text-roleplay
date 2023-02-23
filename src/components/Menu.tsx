@@ -6,7 +6,7 @@ import { UserOutlined, RobotOutlined } from '@ant-design/icons';
 
 import '../styles/menu.scss';
 import menu, { IMenuItem, characterMenu, userMenu } from '../configs/menu';
-import { IState, IUser } from '../reducers/interfaces';
+import {IState, IUser, IUsers} from '../reducers/interfaces';
 
 interface TitleEventEntity {
   key: string;
@@ -17,6 +17,7 @@ interface IMenuProps extends RouteComponentProps {
   isLoggedIn: boolean;
   unreadMessage: boolean;
   currentUser: IUser | null;
+  users: IUsers;
 }
 
 interface IMenuState {
@@ -135,6 +136,7 @@ const mapStateToProps = (state: IState) => ({
   isLoggedIn: state.isLoggedIn,
   unreadMessage: state.unreadMessage,
   currentUser: state.currentUser,
+  users: state.users,
 });
 
 

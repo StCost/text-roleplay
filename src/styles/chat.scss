@@ -37,6 +37,7 @@
 
       &:hover {
         background: $background-color-light;
+
         svg {
           fill: $background-color-selected;
         }
@@ -90,6 +91,7 @@
 
       &:hover {
         background: $background-color-light;
+
         svg {
           fill: $background-color-selected;
         }
@@ -157,6 +159,7 @@
 
       .ant-card-head-title {
         padding: 0 !important;
+
         .user-info {
           align-items: flex-start;
         }
@@ -165,6 +168,7 @@
 
     &.mentioned .ant-card-body {
       background: #e8b339;
+
       * {
         color: $background-color-light;
       }
@@ -183,7 +187,7 @@
         border-top: none;
       }
 
-      .ant-collapse-header,.ant-collapse-content,.ant-collapse-item  {
+      .ant-collapse-header, .ant-collapse-content, .ant-collapse-item {
         border-color: $border-color !important;
       }
     }
@@ -324,5 +328,35 @@
         }
       }
     }
+  }
+}
+
+.active-users-list {
+  position: absolute;
+  left: 44px;
+  bottom: 0;
+  display: grid;
+  grid-auto-flow: column;
+  column-gap: 4px;
+}
+
+.active-user {
+  transition-duration: .3s;
+  opacity: 0.2;
+  font-size: 8px;
+  line-height: 12px;
+  cursor: default;
+
+  &:hover {
+    opacity: 1;
+    font-size: 12px;
+  }
+
+  &.online {
+    color: $background-color-selected;
+  }
+
+  &.afk {
+    color: #dcc825;
   }
 }
