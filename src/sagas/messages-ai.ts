@@ -162,7 +162,9 @@ function* sendMessagePhotoAI(payload: IPayload) {
         const file: File = dataURLtoFile(base64ToUrl(b64_json), 'a.png');
 
         uploadFile(file, (imgurLink: string) => {
-            actions.sendMessage({ uid, message: imgurLink })
+            actions.sendMessage({ uid, message: imgurLink });
+            actions.sendMessagePhotoAiSuccess({});
+        }, () => {
             actions.sendMessagePhotoAiSuccess({});
         })
 

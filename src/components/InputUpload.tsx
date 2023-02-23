@@ -14,7 +14,7 @@ interface IInputUploadProps {
 
 export const base64ToUrl = (base64: string) => `data:image/png;base64,${base64}`;
 
-export const uploadFile = function(file: File, onFinish: (imgurLink: string) => void) {
+export const uploadFile = function(file: File, onFinish: (imgurLink: string) => void, onCancel?: () => void) {
   console.log('file', file);
   if (file) {
     if (file.type.indexOf('image') > -1)
@@ -33,6 +33,7 @@ export const uploadFile = function(file: File, onFinish: (imgurLink: string) => 
                   onFinish
                 });
               },
+              onCancel,
               okText: 'Загрузить',
               cancelText: 'Отмена',
               maskClosable: true,
