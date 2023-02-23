@@ -47,6 +47,8 @@ class Notebook extends Component<INotebookProps, { notes?: string, editMode?: bo
 
     if (uid && notes !== undefined)
       actions.setCharacterNotes({ uid, notes });
+
+      this.setState({ editMode: false })
   };
 
   componentWillUnmount = this.onSave;
@@ -93,18 +95,6 @@ class Notebook extends Component<INotebookProps, { notes?: string, editMode?: bo
                   : 'Записи видны только Вам'
               }
             </span>
-            <br/>
-            <Switch
-                checked={this.state.editMode}
-                onChange={() => this.setState({ editMode: !this.state.editMode })}
-                disabled={!hasRight}
-            />
-            <span>
-              {this.state.editMode
-                  ? 'Режим редактирования'
-                  : 'Режим просмотра'
-              }
-            </span>
           </div>
           {this.state.editMode ? (
           <Input.TextArea
@@ -113,10 +103,13 @@ class Notebook extends Component<INotebookProps, { notes?: string, editMode?: bo
             onChange={(e: ChangeEvent<HTMLTextAreaElement>) => this.setState({ notes: e.currentTarget.value })}
             onBlur={this.onSave}
             readOnly={!hasRight}
+            autoFocus
             autoSize
           />
           ) : (
-              <MessageBody message={({ body: this.state.notes || '', author: user.uid, time: 0 })}/>
+            <pre onClick={() => this.setState({ editMode: true })}>
+                <MessageBody message={({ body: this.state.notes || '', author: user.uid, time: 0 })}/>
+            </pre>
           )}
         </Card>
       ) : (

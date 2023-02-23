@@ -5,7 +5,10 @@ import { CloseOutlined } from '@ant-design/icons';
 class Image extends Component<{ src: string, noTitle?: boolean }, { visible: boolean }> {
   state = { visible: false };
 
-  toggleModal = () => {
+  toggleModal = (e: React.MouseEvent<HTMLElement>) => {
+      e.preventDefault();
+      e.stopPropagation();
+
     this.setState({
       visible: !this.state.visible,
     });
