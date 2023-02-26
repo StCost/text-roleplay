@@ -347,11 +347,17 @@
   cursor: pointer;
   opacity: 0;
 
+  &:hover > div {
+    opacity: 1;
+  }
+
   > div {
     font-size: 6px;
     height: 0;
     width: 0;
     color: $text-color;
+    opacity: 0.5;
+    transition-duration: .3s;
   }
 
   // testing
