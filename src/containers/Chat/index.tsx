@@ -93,9 +93,11 @@ class Chat extends Component<IChatProps, IChatState> {
         const {messages, users, loading} = this.props;
 
         if (this.state.sending && prevProps.messages.length <= messages.length) {
-            localStorage.setItem('message', '');
+            const lastIsRp = this.state.message.substring(0, 1) == '*';
+            const newMessage = lastIsRp ? '*' : '';
+            localStorage.setItem('message', newMessage);
             this.setState({
-                message: '',
+                message: newMessage,
                 sending: false,
             });
         }
@@ -323,7 +325,7 @@ class Chat extends Component<IChatProps, IChatState> {
         return (
             <Dropdown
                 overlay={this.getMessageControlsOverlay(m)}
-                trigger={['click']}
+                trigger={['hover']}
                 placement="topLeft"
             >
                 <div className="chat-time">

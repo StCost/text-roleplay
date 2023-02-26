@@ -64,7 +64,7 @@ function* getContext(IC: boolean, OOC: boolean) {
 
 function* sendMessageAI(payload: IPayload) {
     const {
-        message = '\n\n',
+        message = '',
         IC = true,
         OOC = true,
         uid = AI_CONFIG.AI_UID,
@@ -78,6 +78,9 @@ function* sendMessageAI(payload: IPayload) {
     localStorage.setItem('ai', JSON.stringify(AI_CONFIG));
     actions.setIsTyping({ isTyping: true, uid: AI_CONFIG.AI_UID });
 
+    console.log(!setMessageInsteadCallback, uid == AI_CONFIG.AI_UID);
+    const prefix = !setMessageInsteadCallback && uid == AI_CONFIG.AI_UID ? '\n\nGM: ' : ''; // ai must respond from face of self
+
     try {
         const response: Response = yield fetch("https://api.openai.com/v1/completions", {
             method: "POST",
@@ -89,7 +92,7 @@ function* sendMessageAI(payload: IPayload) {
                 ...AI_CONFIG,
                 SETTING_CONTEXT: undefined,
                 AI_UID: undefined,
-                prompt: `${context}${message}`,
+                prompt: `${context}${prefix}${message}`,
             })
         });
 
@@ -105,7 +108,6 @@ function* sendMessageAI(payload: IPayload) {
         if (setMessageInsteadCallback)
             setMessageInsteadCallback(text)
         else {
-
             if (!choice.text)
                 actions.notify({ message: "ИИ нечего сказать" })
             else
