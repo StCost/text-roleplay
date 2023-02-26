@@ -199,7 +199,7 @@
       position: absolute;
       width: fit-content;
       top: 0;
-      right: 8px;
+      right: 0;
       transition-duration: 0.3s;
       border-radius: 4px;
       text-align: right;
@@ -207,7 +207,7 @@
       margin-top: -6px;
       padding: 6px;
       z-index: 10;
-      opacity: 0.15;
+      opacity: 0.075;
 
       &:hover {
         opacity: 1;
@@ -225,7 +225,7 @@
     .ant-card-body {
       word-break: break-word;
       white-space: pre-line;
-      padding: 12px 40px 12px 12px;
+      padding: 12px;
 
       .critMiss {
         background: rgba(255, 0, 0, 0.275);

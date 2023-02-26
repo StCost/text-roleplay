@@ -1,6 +1,6 @@
 import { all, takeLatest } from 'redux-saga/effects';
 
-import { IInventoryItem } from '../reducers/interfaces';
+import {IInventoryItem, IItem} from '../reducers/interfaces';
 import { database } from '../helpers/firebase';
 import { IPayload } from '../reducers/actions';
 import actions from '../reducers/actions';
@@ -76,14 +76,13 @@ function* passItem(payload: IPayload) {
 }
 
 function* removeItem(payload: IPayload) {
-  const { id, uid, amount = 1 } = payload;
+  const { id, uid, amount = 1, time } = payload;
   const ref = database
     .ref(`characters`)
     .child(uid)
     .child('inventory');
 
-  // @ts-ignore
-  const sameItem = yield getInventoryItem({ id, uid });
+  const sameItem: IInventoryItem = yield getInventoryItem({ id, uid, time });
   if (sameItem) {
     if (sameItem.amount - amount >= 1) {
       const item = {
@@ -108,7 +107,7 @@ function* removeItem(payload: IPayload) {
 }
 
 function* getInventoryItem(payload: IPayload) {
-  const { id, uid } = payload;
+  const { id, uid, time } = payload;
 
   // @ts-ignore
   const rawItems = yield database
@@ -119,7 +118,7 @@ function* getInventoryItem(payload: IPayload) {
 
   const items: IInventoryItem[] = Object.values(rawItems.val() || {});
   if (items.length) {
-    const item: IInventoryItem | undefined = items.find(item => item.id === id);
+    const item: IInventoryItem | undefined = items.find(item => item.id === id && item.time == time);
     if (item)
       return item;
   }

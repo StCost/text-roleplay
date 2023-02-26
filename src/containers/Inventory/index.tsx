@@ -205,7 +205,7 @@ class Inventory extends ItemsTable<IInventoryProps, IInventoryState> {
       onClick: (item: IItem) => amountModal({
         item: item,
         onSubmit: (amount: number) =>
-          actions.removeItem({ id: item.id, uid: this.props.uid, amount })
+          actions.removeItem({ ...item, id: item.id, uid: this.props.uid, amount })
       }),
       condition: () => Boolean(this.props.currentUser && this.props.currentUser.isAdmin)
     },

@@ -14,7 +14,7 @@ interface IActions {
 const createAction =
   (type: string) =>
     (payload?: IPayload) =>
-      dispatch({ type, ...payload });
+      dispatch({ ...payload, type });
 
 const createAsyncAction = (type: string) => {
   const typeName = camelize(type);

@@ -279,8 +279,6 @@ class Chat extends Component<IChatProps, IChatState> {
 
         const isAdmin = currentUser?.isAdmin;
         const canDelete = isAdmin || currentUser?.uid === m.author;
-        const canWrite = currentUser?.approved;
-
 
         const onDelete = (e: React.MouseEvent) => // instant delete
             actions.removeMessage({id: m.time});
@@ -301,6 +299,11 @@ class Chat extends Component<IChatProps, IChatState> {
 
         return (
             <Menu>
+                <Menu.Item>
+                    <Card bodyStyle={{padding: '4px 15px'}}>
+                        {moment(m.time).format('HH:MM:SS DD:MM:YYYY')}
+                    </Card>
+                </Menu.Item>
                 {isAdmin && <Menu.Item>
                     <Button onClick={this.onPinMessage(m)}>
                         {m.pinned
@@ -308,17 +311,6 @@ class Chat extends Component<IChatProps, IChatState> {
                             : 'Прикрепить'
                         }
                     </Button>
-                </Menu.Item>}
-                <Menu.Item>
-                    <Card bodyStyle={{padding: '4px 15px'}}>
-                        {moment(m.time).format('HH:MM:SS DD:MM:YYYY')}
-                    </Card>
-                </Menu.Item>
-                {canWrite &&
-                <Menu.Item>
-                    <Tooltip title="OpenAI продолжит текст, зная РП и нон-РП текст">
-                        <Button onClick={() => actions.sendMessageAi({IC: true, OOC: true})}>OpenAI</Button>
-                    </Tooltip>
                 </Menu.Item>}
                 {canDelete && <Menu.Item>
                     <Button onClick={onDelete}>Удалить</Button>
@@ -331,7 +323,7 @@ class Chat extends Component<IChatProps, IChatState> {
         return (
             <Dropdown
                 overlay={this.getMessageControlsOverlay(m)}
-                trigger={['hover']}
+                trigger={['click']}
                 placement="topLeft"
             >
                 <div className="chat-time">
