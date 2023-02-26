@@ -14,6 +14,10 @@ import {
     ReloadOutlined,
     SyncOutlined,
     CodeOutlined,
+    PhoneOutlined,
+    FieldTimeOutlined,
+    EditOutlined,
+    VideoCameraAddOutlined,
 } from '@ant-design/icons';
 import {
     Dropdown,
@@ -297,19 +301,6 @@ class Chat extends Component<IChatProps, IChatState> {
 
         return (
             <Menu>
-                <Menu.Item>
-                    <Card bodyStyle={{padding: '4px 15px'}}>
-                        {moment(m.time).format('HH:MM:SS DD:MM:YYYY')}
-                    </Card>
-                </Menu.Item>
-                {canWrite && <Menu.Item>
-                    <Tooltip title="OpenAI продолжит текст, зная РП и нон-РП текст">
-                        <Button onClick={() => actions.sendMessageAi({IC: true, OOC: true})}>OpenAI</Button>
-                    </Tooltip>
-                    <Tooltip title="ИИ продолжит зная только РП текст">
-                        <Button onClick={() => actions.sendMessageAi({IC: true, OOC: false})}>IC</Button>
-                    </Tooltip>
-                </Menu.Item>}
                 {isAdmin && <Menu.Item>
                     <Button onClick={this.onPinMessage(m)}>
                         {m.pinned
@@ -317,6 +308,17 @@ class Chat extends Component<IChatProps, IChatState> {
                             : 'Прикрепить'
                         }
                     </Button>
+                </Menu.Item>}
+                <Menu.Item>
+                    <Card bodyStyle={{padding: '4px 15px'}}>
+                        {moment(m.time).format('HH:MM:SS DD:MM:YYYY')}
+                    </Card>
+                </Menu.Item>
+                {canWrite &&
+                <Menu.Item>
+                    <Tooltip title="OpenAI продолжит текст, зная РП и нон-РП текст">
+                        <Button onClick={() => actions.sendMessageAi({IC: true, OOC: true})}>OpenAI</Button>
+                    </Tooltip>
                 </Menu.Item>}
                 {canDelete && <Menu.Item>
                     <Button onClick={onDelete}>Удалить</Button>
@@ -332,7 +334,11 @@ class Chat extends Component<IChatProps, IChatState> {
                 trigger={['hover']}
                 placement="topLeft"
             >
-                <div className="chat-time">{moment(m.time).fromNow()}</div>
+                <div className="chat-time">
+                    <FieldTimeOutlined />
+                    {' '}
+                    {moment(m.time).fromNow(true)}
+                </div>
             </Dropdown>
         )
     };
@@ -396,10 +402,18 @@ class Chat extends Component<IChatProps, IChatState> {
                             actions.notify({message: 'Файл успешно загружен!'});
                         }}
                     />
-                    <div>
-                        <CodeOutlined onClick={this.onSendMessage('complete')}/>
+                    <div className="ai-buttons">
+                        {/* call GM mode */}
+                        <PhoneOutlined onClick={() => actions.sendMessageAi({IC: true, OOC: true})}/>
+                        <div>call_AI</div>
                         <br/>
-                        <FileImageOutlined onClick={this.onSendMessage('picture')}/>
+                        {/* Complete user text */}
+                        <EditOutlined  onClick={this.onSendMessage('complete')}/>
+                        <div>write</div>
+                        <br/>
+                        {/* Generate image from text*/}
+                        <VideoCameraAddOutlined onClick={this.onSendMessage('picture')}/>
+                        <div>image</div>
                     </div>
                     <SendOutlined onClick={this.onSendMessage('none')}/>
                 </div>
