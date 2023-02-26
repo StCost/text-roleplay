@@ -9,9 +9,11 @@ import store, { sagaMiddleware } from './helpers/store';
 import * as serviceWorker from './serviceWorker';
 import { messaging } from './helpers/firebase';
 
-navigator.serviceWorker.register('sw/firebase-messaging-sw.js').then(registration => {
-  messaging.useServiceWorker(registration);
-})
+if (navigator.serviceWorker) {
+    navigator.serviceWorker.register('sw/firebase-messaging-sw.js').then(registration => {
+        messaging.useServiceWorker(registration);
+    })
+}
 
 sagaMiddleware.run(saga);
 ReactDOM.render(

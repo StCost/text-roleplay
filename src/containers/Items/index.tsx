@@ -89,7 +89,7 @@ export class Items extends ItemsTable<IItemsProps, IItemsState> {
 
   cardControls: IControl[] = [
     {
-      label: 'Взять',
+      label: 'Взять в инвентарь',
       onClick: (item: IItem) => amountModal({
         item: item,
         max: item.type === 'weapon' ? 1 : 100,
@@ -109,8 +109,8 @@ export class Items extends ItemsTable<IItemsProps, IItemsState> {
       condition: (item: IItem) => Boolean((this.props.uid === item.author && !item.approved) || (this.props.currentUser && this.props.currentUser.isAdmin))
     },
     {
-      label: 'Выбросить',
-      condition: () => !!this.props.currentUser?.isSuperAdmin,
+      label: 'Бросить в чат',
+      condition: () => !!this.props.currentUser?.isAdmin,
       onClick: (item: IItem) => amountModal({
         item: item,
         max: 100,
@@ -126,12 +126,12 @@ export class Items extends ItemsTable<IItemsProps, IItemsState> {
       }),
     },
     {
-      label: 'В консоль',
+      label: 'Вывести в консоль',
       onClick: console.log,
       condition: () => Boolean(this.props.currentUser && this.props.currentUser.isAdmin)
     },
     {
-      label: 'Удалить',
+      label: 'Удалить предмет',
       onClick: (item: IItem) => this.deleteModal(item),
       condition: (item: IItem) => Boolean((this.props.uid === item.author && !item.approved) || (this.props.currentUser && this.props.currentUser.isAdmin))
     },

@@ -37,13 +37,13 @@ class Item extends Component<IItemProps> {
     weapon: 'Магазин',
   };
 
-  getFooter = () => {
+  getHeaderButton = () => {
     const { footer, uid } = this.props;
     const { failed, id } = this.props.item;
 
     if (failed) {
       return (
-        <div className="item-footer">
+        <div className="item-header-button">
           <Button
             disabled={!uid}
             onClick={() => actions.removeItem({ uid, id, all: true })}
@@ -56,7 +56,7 @@ class Item extends Component<IItemProps> {
 
     if (footer)
       return (
-        <div className="item-footer">
+        <div className="item-header-button">
           {footer}
         </div>
       );
@@ -81,7 +81,10 @@ class Item extends Component<IItemProps> {
     return (
       <Card className={`item ${(approved && !disabled) ? '' : 'disabled'}`}>
         <div className="item-info">
-          <div className="item-name">{name}</div>
+          <div className="item-name">
+            {name}
+            {this.getHeaderButton()}
+          </div>
           <div className="item-subinfo">
             <div className="item-price">
               {price > 0 && `Цена: ${price}`}
@@ -108,7 +111,6 @@ class Item extends Component<IItemProps> {
             <div className="item-effect">{effect}</div>
           </div>
         )}
-        {this.getFooter()}
       </Card>
     )
   }
