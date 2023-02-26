@@ -110,11 +110,13 @@
     display: flex;
     flex-direction: column-reverse;
     align-items: center;
+    overflow: scroll;
     height: 100%;
-    overflow: overlay;
+    overflow-y: overlay;
     position: relative;
-    margin-bottom: 57px;
+    padding: 0;
     transition-duration: 0.3s;
+    margin-bottom: -12px;
 
     &::-webkit-scrollbar-track {
       display: none;
@@ -302,7 +304,6 @@
     display: flex;
     align-items: center;
     width: inherit;
-    position: absolute;
     z-index: 1000;
     background: $background-color-light;
     padding: 12px;

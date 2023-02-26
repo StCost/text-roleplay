@@ -396,15 +396,12 @@ class Chat extends Component<IChatProps, IChatState> {
                             actions.notify({message: 'Файл успешно загружен!'});
                         }}
                     />
-                    <Tooltip title={
-                        <div>
-                            <CodeOutlined onClick={this.onSendMessage('complete')}/>
-                            <br/>
-                            <FileImageOutlined onClick={this.onSendMessage('picture')}/>
-                        </div>
-                    } placement="right">
-                        <SendOutlined onClick={this.onSendMessage('none')}/>
-                    </Tooltip>
+                    <div>
+                        <CodeOutlined onClick={this.onSendMessage('complete')}/>
+                        <br/>
+                        <FileImageOutlined onClick={this.onSendMessage('picture')}/>
+                    </div>
+                    <SendOutlined onClick={this.onSendMessage('none')}/>
                 </div>
             </div>
         )
