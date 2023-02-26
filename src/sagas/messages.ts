@@ -5,7 +5,6 @@ import { IPayload } from '../reducers/actions';
 import actions from '../reducers/actions';
 import { database, messaging } from '../helpers/firebase';
 import { formatMessage } from '../helpers/utils';
-import config from '../configs/firebase.json';
 import {IMessage} from "../reducers/interfaces";
 
 function* sendMessage(payload: IPayload) {
@@ -35,8 +34,8 @@ function* sendMessage(payload: IPayload) {
 
 const handleNotifications = async () => {
   await Notification.requestPermission();
-  if (config["publickVapidKey"] && Notification.permission === 'granted') {
-    messaging.usePublicVapidKey(config["publickVapidKey"]);
+  if (process.env.publickVapidKey && Notification.permission === 'granted') {
+    messaging.usePublicVapidKey(process.env.publickVapidKey);
     const token = await messaging.getToken();
     const uid = localStorage.getItem('uid');
 

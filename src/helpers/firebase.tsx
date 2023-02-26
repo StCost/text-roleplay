@@ -10,12 +10,18 @@ const firebase = _firebase.initializeApp(firebaseConfig);
 const auth = firebase.auth();
 auth.languageCode = 'ru';
 const database = firebase.database();
-// const messaging = firebase.messaging();
-const messaging = {
-  getToken: () => '',
-  usePublicVapidKey: (v: any) => '',
-  useServiceWorker: (v: any) => '',
-}
+
+const messaging = (() => {
+  try {
+    return firebase.messaging();
+  }  catch {
+    return {
+      getToken: () => '',
+      usePublicVapidKey: (v: any) => '',
+      useServiceWorker: (v: any) => '',
+    };
+  }
+})();
 
 auth.onAuthStateChanged((user) => {
   if (user) {
