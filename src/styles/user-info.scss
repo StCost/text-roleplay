@@ -1,4 +1,4 @@
-@import "./colors";
+@import "colors.css";
 
 .user-info {
   height: auto;
@@ -34,7 +34,7 @@
 
     &.online {
       .ant-avatar {
-        border-color: $background-color-selected;
+        border-color: #157ddc;
       }
     }
 
@@ -46,7 +46,7 @@
 
     .ant-avatar {
       background-color: transparent;
-      border: 2px solid $border-color;
+      border: 2px solid var(--border-color);
       margin: -4px 0;
       display: block;
       box-sizing: content-box;

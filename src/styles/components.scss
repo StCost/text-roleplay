@@ -1,4 +1,4 @@
-@import "./colors";
+@import "colors.css";
 
 .loader {
   display: block !important;
@@ -79,7 +79,7 @@ img.chat-image {
         border-radius: 4px;
 
         &:hover {
-          background: $background-color-light;
+          background: var(--background-color-light);
         }
       }
     }

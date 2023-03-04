@@ -1,4 +1,4 @@
-@import './colors';
+@import 'colors.css';
 
 div.ant-card.items {
   max-width: initial;
@@ -19,7 +19,7 @@ div.ant-card.items {
     position: sticky;
     top: 0;
     z-index: 1;
-    background-color: $background-color-light;
+    background-color: var(--background-color-light);
     border-radius: 2px 2px 0 0;
 
     @media(max-width: 767px) {
@@ -46,7 +46,7 @@ div.ant-card.items {
 
       &:hover {
         svg {
-          fill: $background-color-selected;
+          fill: var(--background-color-selected);
         }
       }
     }
@@ -97,19 +97,19 @@ div.ant-card.items {
   display: flex;
   justify-content: flex-start;
   align-items: center;
-  border: 1px solid $border-color-interactive;
-  background: $background-color-interactive;
-  color: $text-color;
+  border: 1px solid var(--border-color-interactive);
+  background: var(--background-color-interactive);
+  color: var(--text-color);
   padding: 4px 15px;
   cursor: pointer;
 
   &:hover {
-    background-color: $border-color-interactive;
+    background-color: var(--border-color-interactive);
     border-color: #40a9ff;
   }
 
   &:focus {
-    background-color: $background-color-interactive-lighter;
+    background-color: var(--background-color-interactive-lighter);
     border-color: #40a9ff;
     color: #40a9ff !important;
     outline: none;
@@ -148,8 +148,8 @@ div.ant-card.items {
     bottom: 0;
     display: flex;
     justify-content: flex-end;
-    background: $background-color-light;
-    border: 1px solid $border-color;
+    background: var(--background-color-light);
+    border: 1px solid var(--border-color);
 
     > button {
       width: fit-content;
@@ -167,7 +167,7 @@ div.ant-card.items {
   left: 0;
   height: 100vh;
   width: 100vw;
-  background: $background-color-light;
+  background: var(--background-color-light);
   z-index: 1000;
   display: flex;
   flex-direction: column;
@@ -177,8 +177,8 @@ div.ant-card.items {
   > div {
     margin: 6px;
     padding: 6px;
-    background: $background-color-lighter;
-    border: 1px solid $border-color-lighter;
+    background: var(--background-color-lighter);
+    border: 1px solid var(--border-color-lighter);
     border-radius: 4px;
     width: 300px;
   }

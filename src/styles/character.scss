@@ -1,4 +1,4 @@
-@import "./colors";
+@import "colors.css";
 
 div.ant-card.char {
   margin: 32px;
@@ -49,12 +49,12 @@ div.ant-card.char {
   }
   .ant-input {
     &:disabled {
-      color: $text-color;
+      color: var(--text-color);
     }
   }
   .ant-input-number {
     input:disabled {
-      color: $text-color;
+      color: var(--text-color);
     }
   }
 
@@ -98,8 +98,8 @@ div.ant-card.char {
         }
 
         &input.total {
-          //border: 1px solid $border-color-light;
-          background-color: $background-color-light;
+          //border: 1px solid var(--border-color-light);
+          background-color: var(--background-color-light);
         }
       }
     }
@@ -123,7 +123,7 @@ div.ant-card.char {
           cursor: auto;
 
           &.gift {
-            color: $selected;
+            color: var(--selected);
           }
         }
       }
@@ -135,7 +135,7 @@ div.ant-card.char {
         padding: 6px;
 
         &.gift {
-          color: $background-color-selected;
+          color: var(--background-color-selected);
           font-weight: bolder;
         }
       }
@@ -153,8 +153,8 @@ div.ant-card.char {
         }
 
         &input.total {
-          //border: 1px solid $border-color-light;
-          background-color: $background-color-light;
+          //border: 1px solid var(--border-color-light);
+          background-color: var(--background-color-light);
         }
       }
     }
@@ -225,8 +225,8 @@ div.ant-card.char {
         display: flex;
         font-size: 20px;
         padding: 6px;
-        border: 1px solid $border-color-lighter;
-        background: $background-color-lightest;
+        border: 1px solid var(--border-color-lighter);
+        background: var(--background-color-lightest);
 
         .ant-input-number, input {
           width: 64px;
@@ -238,8 +238,8 @@ div.ant-card.char {
       display: flex;
       flex-direction: column;
       padding: 6px;
-      border: 1px solid $border-color-lighter;
-      background: $background-color-lightest;
+      border: 1px solid var(--border-color-lighter);
+      background: var(--background-color-lightest);
       margin-top: 6px;
 
       .char-main-stats-ap {

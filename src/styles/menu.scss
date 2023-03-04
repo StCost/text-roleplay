@@ -1,9 +1,9 @@
-@import "./colors";
+@import "colors.css";
 
 .menu {
   display: flex;
   align-items: center;
-  background-color: $background-color-light;
+  background-color: var(--background-color-light);
 
   @media(max-width: 767px) {
     position: fixed;
@@ -26,14 +26,14 @@
       &.ant-menu-submenu-active {
         .ant-menu-submenu-arrow {
           &:before, &:after {
-            background: $background-color-selected;
+            background: var(--background-color-selected);
           }
         }
       }
 
       .ant-menu-submenu-arrow {
         &:before, &:after {
-          background: $background-color-lightest;
+          background: var(--background-color-lightest);
         }
       }
     }

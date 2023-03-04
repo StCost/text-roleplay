@@ -1,4 +1,4 @@
-@import "./colors";
+@import "colors.css";
 
 div.ant-card.status {
   margin: 32px;
@@ -33,12 +33,12 @@ div.ant-card.status {
 
   .ant-input {
     &:disabled {
-      color: $text-color;
+      color: var(--text-color);
     }
   }
   .ant-input-number {
     input:disabled {
-      color: $text-color;
+      color: var(--text-color);
     }
   }
 
@@ -104,8 +104,8 @@ div.ant-card.status {
         display: flex;
         font-size: 20px;
         padding: 6px;
-        border: 1px solid $border-color-lighter;
-        background: $background-color-lightest;
+        border: 1px solid var(--border-color-lighter);
+        background: var(--background-color-lightest);
 
         .ant-input-number,input {
           width: 64px;
@@ -117,8 +117,8 @@ div.ant-card.status {
       display: flex;
       flex-direction: column;
       padding: 6px;
-      border: 1px solid $border-color-lighter;
-      background: $background-color-lightest;
+      border: 1px solid var(--border-color-lighter);
+      background: var(--background-color-lightest);
       margin-top: 6px;
       width: fit-content;
 

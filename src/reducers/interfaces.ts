@@ -58,6 +58,7 @@ export type TStatus = 'online' | 'offline' | 'afk';
 export interface IUser {
   nickname: string;
   avatar: string;
+  theme: 'blue' | 'red' | 'volcano' | 'orange' | 'gold' | 'yellow' | 'lime' | 'green' | 'cyan' | 'purple' | 'magenta';
 
   aiApiKey?: string;
   uid: string,
@@ -90,6 +91,7 @@ export const defaultUser: IUser = {
 
   nickname: '',
   avatar: '',
+  theme: 'blue',
   zoom: 100,
   enableDisabledFeatures: false,
   notificationVolume: 50,

@@ -1,0 +1,127 @@
+/*// Grey: https://ant.design/docs/spec/colors*/
+/*// And blue: https://ant.design/docs/spec/dark*/
+:root {
+    --background-color: #000;
+    --background-color-light: #141414;
+    --background-color-lighter: #1f1f1f;
+    --background-color-lightest: #262626;
+
+    --border-color: #2b2b2b;
+    --border-color-light: #333333;
+    --border-color-lighter: #3e3e3e;
+
+    --text-color: #a7a7a7;
+
+    --size: 64px;
+}
+
+/*'blue' | 'red' | 'volcano' | 'orange' | 'gold' | 'yellow' | 'lime' | 'green' | 'cyan' | 'purple' | 'magenta'*/
+.blue-theme,.undefined-theme {
+    --background-color-interactive: #111a2c; /* 1 */
+    --border-color-interactive: #112a45; /* 2 */
+    --background-color-interactive-light: #15395b; /* 3 */
+    --selected: #15395b; /* 3 */
+    --background-color-interactive-lighter: #15417e; /* 4 */
+    --background-color-selected: #157ddc; /* 6 */
+    --text-color-selected: #b9d5f3; /* 8 */
+}
+
+.red-theme {
+    --background-color-interactive: #2a1215; /* 1 */
+    --border-color-interactive: #431418; /* 2 */
+    --background-color-interactive-light: #58181c; /* 3 */
+    --selected: #58181c; /* 3 */
+    --background-color-interactive-lighter: #791a1f; /* 4 */
+    --background-color-selected: #d32029; /* 6 */
+    --text-color-selected: #f37370; /* 8 */
+}
+
+.volcano-theme {
+    --background-color-interactive: #2b1611; /* 1 */
+    --border-color-interactive: #441d12; /* 2 */
+    --background-color-interactive-light: #592716; /* 3 */
+    --selected: #592716; /* 3 */
+    --background-color-interactive-lighter: #7c3118; /* 4 */
+    --background-color-selected: #d84a1b; /* 6 */
+    --text-color-selected: #f3956a; /* 8 */
+}
+
+.gold-theme {
+    --background-color-interactive: #2b2111; /* 1 */
+    --border-color-interactive: #443111; /* 2 */
+    --background-color-interactive-light: #594214; /* 3 */
+    --selected: #594214; /* 3 */
+    --background-color-interactive-lighter: #7c5914; /* 4 */
+    --background-color-selected: #d89614; /* 6 */
+    --text-color-selected: #f3cc62; /* 8 */
+}
+
+.yellow-theme {
+    --background-color-interactive: #2b2611; /* 1 */
+    --border-color-interactive: #443b11; /* 2 */
+    --background-color-interactive-light: #595014; /* 3 */
+    --selected: #595014; /* 3 */
+    --background-color-interactive-lighter: #7c6e14; /* 4 */
+    --background-color-selected: #d8bd14; /* 6 */
+    --text-color-selected: #f3ea62; /* 8 */
+}
+
+.lime-theme {
+    --background-color-interactive: #1f2611; /* 1 */
+    --border-color-interactive: #2e3c10; /* 2 */
+    --background-color-interactive-light: #3e4f13; /* 3 */
+    --selected: #3e4f13; /* 3 */
+    --background-color-interactive-lighter: #536d13; /* 4 */
+    --background-color-selected: #8bbb11; /* 6 */
+    --text-color-selected: #c9e75d; /* 8 */
+}
+
+.green-theme {
+    --background-color-interactive: #162312; /* 1 */
+    --border-color-interactive: #1d3712; /* 2 */
+    --background-color-interactive-light: #274916; /* 3 */
+    --selected: #274916; /* 3 */
+    --background-color-interactive-lighter: #306317; /* 4 */
+    --background-color-selected: #49aa19; /* 6 */
+    --text-color-selected: #8fd460; /* 8 */
+}
+
+.cyan-theme {
+    --background-color-interactive: #112123; /* 1 */
+    --border-color-interactive: #113536; /* 2 */
+    --background-color-interactive-light: #144848; /* 3 */
+    --selected: #144848; /* 3 */
+    --background-color-interactive-lighter: #146262; /* 4 */
+    --background-color-selected: #13a8a8; /* 6 */
+    --text-color-selected: #8fd460; /* 8 */
+}
+
+.purple-theme {
+    --background-color-interactive: #1a1325; /* 1 */
+    --border-color-interactive: #24163a; /* 2 */
+    --background-color-interactive-light: #301c4d; /* 3 */
+    --selected: #301c4d; /* 3 */
+    --background-color-interactive-lighter: #3e2069; /* 4 */
+    --background-color-selected: #642ab5; /* 6 */
+    --text-color-selected: #ab7ae0; /* 8 */
+}
+
+.magenta-theme {
+    --background-color-interactive: #291321; /* 1 */
+    --border-color-interactive: #40162f; /* 2 */
+    --background-color-interactive-light: #551c3b; /* 3 */
+    --selected: #551c3b; /* 3 */
+    --background-color-interactive-lighter: #75204f; /* 4 */
+    --background-color-selected: #cb2b83; /* 6 */
+    --text-color-selected: #f37fb7; /* 8 */
+}
+
+.orange-theme {
+    --background-color-interactive: #2b1d11; /* 1 */
+    --border-color-interactive: #442a11; /* 2 */
+    --background-color-interactive-light: #593815; /* 3 */
+    --selected: #593815; /* 3 */
+    --background-color-interactive-lighter: #7c4a15; /* 4 */
+    --background-color-selected: #d87a16; /* 6 */
+    --text-color-selected: #f3b765; /* 8 */
+}

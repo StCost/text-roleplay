@@ -1,4 +1,4 @@
-@import "./colors";
+@import "colors.css";
 
 .settings {
   position: relative;
@@ -37,7 +37,7 @@
 
   .avatar button:hover {
     svg {
-      fill: $background-color-selected;
+      fill: var(--background-color-selected);
     }
   }
 }

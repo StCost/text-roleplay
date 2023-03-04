@@ -1,7 +1,7 @@
-import React, { Component } from 'react';
-import { HashRouter, Redirect } from 'react-router-dom';
-import { connect } from 'react-redux';
-import { message, Spin } from 'antd';
+import React, {Component} from 'react';
+import {HashRouter, Redirect} from 'react-router-dom';
+import {connect} from 'react-redux';
+import {message, Spin} from 'antd';
 import moment from 'moment';
 import 'moment/locale/ru';
 import 'antd/dist/antd.css';
@@ -12,7 +12,7 @@ import Router from './components/Router';
 import './App.css';
 import './styles/antd-dark.scss';
 import './styles/components.scss';
-import { defaultUser, IState, IUser } from './reducers/interfaces';
+import {defaultUser, IState, IUser} from './reducers/interfaces';
 import actions from './reducers/actions';
 import ErrorBoundary from './components/ErrorBoundary';
 import Loader from './components/Loader';
@@ -22,71 +22,71 @@ const buildDate = (<div className="build-date">build date {window.buildDate.repl
 moment().locale('ru');
 
 interface IAppProps {
-  redirect?: string;
-  notify?: string,
-  loading: boolean
-  currentUser: IUser | null;
+    redirect?: string;
+    notify?: string,
+    loading: boolean
+    currentUser: IUser | null;
 }
 
 class App extends Component<IAppProps> {
-  applyZoom = () => {
-    const root: HTMLElement | null = document.querySelector('html');
-    if (root) {
-      root.style["zoom"] = `${this.getZoom()/100}`;
-    }
-  }
-
-  UNSAFE_componentWillMount = this.applyZoom;
-
-  componentDidUpdate = () => {
-    const { notify, redirect } = this.props;
-
-    if (notify) {
-      message.info(notify);
-      actions.notifySuccess({});
-    }
-    if (redirect) {
-      actions.redirectSuccess({});
+    applyZoom = () => {
+        const root: HTMLElement | null = document.querySelector('html');
+        if (root) {
+            root.style["zoom"] = `${this.getZoom() / 100}`;
+        }
     }
 
-    this.applyZoom();
-  };
+    UNSAFE_componentWillMount = this.applyZoom;
 
-  getRedirect = () => {
-    const { redirect } = this.props;
-    return redirect && <Redirect to={redirect}/>;
-  };
+    componentDidUpdate = () => {
+        const {notify, redirect} = this.props;
 
-  getZoom = () => {
-    return parseInt(localStorage.getItem('zoom') || `${defaultUser.zoom}`);
-  };
+        if (notify) {
+            message.info(notify);
+            actions.notifySuccess({});
+        }
+        if (redirect) {
+            actions.redirectSuccess({});
+        }
 
-  render = () => {
-    const { loading } = this.props;
+        this.applyZoom();
+    };
 
-    return (
-      <ErrorBoundary>
-        {buildDate}
-        <Loader loading={loading}/>
-        <HashRouter>
-          {this.getRedirect()}
-          <Menu/>
-          <Spin spinning={loading}>
-            <div className="app">
-              <Router/>
-            </div>
-          </Spin>
-        </HashRouter>
-      </ErrorBoundary>
-    );
-  }
+    getRedirect = () => {
+        const {redirect} = this.props;
+        return redirect && <Redirect to={redirect}/>;
+    };
+
+    getZoom = () => {
+        return parseInt(localStorage.getItem('zoom') || `${defaultUser.zoom}`);
+    };
+
+    render = () => {
+        const {loading} = this.props;
+
+        return (
+            <ErrorBoundary>
+                {buildDate}
+                <Loader loading={loading}/>
+                <HashRouter>
+                    {this.getRedirect()}
+                    <Menu/>
+                    <Spin spinning={loading}>
+                        <div className="app">
+                            <Router/>
+                        </div>
+                    </Spin>
+                </HashRouter>
+            </ErrorBoundary>
+        );
+    }
 }
 
 const mapStateToProps = (state: IState) => ({
-  redirect: state.redirect,
-  notify: state.notify,
-  loading: state.loading,
-  currentUser: state.currentUser,
+    redirect: state.redirect,
+    notify: state.notify,
+    loading: state.loading,
+    currentUser: state.currentUser,
 });
 
 export default connect(mapStateToProps)(App);

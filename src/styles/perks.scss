@@ -1,4 +1,4 @@
-@import "./colors";
+@import "colors.css";
 
 div.ant-card.perks {
   margin: 32px;
@@ -29,18 +29,18 @@ div.ant-card.perks {
   .perks-controls {
     margin: 24px -24px -24px -24px;
     padding: 24px;
-    border-top: 1px solid $border-color;
+    border-top: 1px solid var(--border-color);
     display: flex;
     position: sticky;
     bottom: 0;
-    background: $background-color-light;
+    background: var(--background-color-light);
 
     button {
       transition-duration: 0.3s;
 
       &:hover {
         svg {
-          fill: $background-color-selected;
+          fill: var(--background-color-selected);
         }
       }
     }
@@ -61,8 +61,8 @@ div.ant-card.perks {
 .perks-item {
   width: 265px;
   height: auto;
-  background: $background-color-lighter;
-  border: 1px solid $border-color;
+  background: var(--background-color-lighter);
+  border: 1px solid var(--border-color);
   margin: 6px;
   border-radius: 4px;
   position: relative;
@@ -92,14 +92,14 @@ div.ant-card.perks {
 
     &:hover {
       svg {
-        fill: $background-color-selected;
+        fill: var(--background-color-selected);
       }
     }
   }
 
   .perks-item-label {
     padding: 12px;
-    border-bottom: 1px solid $border-color;
+    border-bottom: 1px solid var(--border-color);
     font-weight: bolder;
   }
   .perks-item-description {

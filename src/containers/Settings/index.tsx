@@ -1,6 +1,6 @@
-import React, { ChangeEvent } from 'react';
-import { connect } from 'react-redux';
-import { withRouter } from 'react-router';
+import React, {ChangeEvent} from 'react';
+import {connect} from 'react-redux';
+import {withRouter} from 'react-router';
 import moment from 'moment';
 import {
   Card,
@@ -10,20 +10,20 @@ import {
   Switch,
   Modal,
   InputNumber,
-  Tooltip,
+  Tooltip, Select,
 } from 'antd';
-import { RouteComponentProps } from 'react-router';
-import { diff } from 'deep-object-diff';
+import {RouteComponentProps} from 'react-router';
+import {diff} from 'deep-object-diff';
 
-import { ClearOutlined, SettingOutlined } from '@ant-design/icons';
+import {ClearOutlined, SettingOutlined} from '@ant-design/icons';
 
 import '../../styles/settings.scss';
 import actions from '../../reducers/actions';
-import { IUser, defaultUser } from '../../reducers/interfaces';
+import {IUser, defaultUser} from '../../reducers/interfaces';
 import Avatar from '../../components/Avatar';
-import { getFullTime, getStateUser, redirectToUserPage } from '../../helpers/utils';
+import {getFullTime, getStateUser, redirectToUserPage} from '../../helpers/utils';
 import InputUpload from '../../components/InputUpload';
-import { addStatusChangeListener, removeStatusChangeListener } from '../../helpers/activity';
+import {addStatusChangeListener, removeStatusChangeListener} from '../../helpers/activity';
 import {Link} from "react-router-dom";
 
 interface ISettingsProps extends RouteComponentProps {
@@ -38,9 +38,9 @@ export class Settings extends React.Component<ISettingsProps, IUser> {
   state = defaultUser;
 
   componentDidMount = () => {
-    const { user, uid, currentUser, history } = this.props;
+    const {user, uid, currentUser, history} = this.props;
     if (!user)
-      actions.getUser({ uid });
+      actions.getUser({uid});
     else
       this.setState(user);
     redirectToUserPage(user, currentUser, history);
@@ -50,7 +50,7 @@ export class Settings extends React.Component<ISettingsProps, IUser> {
   };
 
   componentDidUpdate = (prevProps: ISettingsProps) => {
-    const { user, currentUser, history } = this.props;
+    const {user, currentUser, history} = this.props;
     redirectToUserPage(user, currentUser, history);
 
     if (this.props !== prevProps)
@@ -84,7 +84,7 @@ export class Settings extends React.Component<ISettingsProps, IUser> {
       this.rawOnChange(field, event.target.value);
 
   setSettings = (newSettings: {}) => {
-    const { user } = this.props;
+    const {user} = this.props;
     if (user) {
       actions.setUser({
         uid: user.uid,
@@ -99,22 +99,22 @@ export class Settings extends React.Component<ISettingsProps, IUser> {
   });
 
   getField = (key: string, value: string, user: IUser) => {
-    const { nickname = '' } = user;
-    const { hasRight, currentUser, uid } = this.props;
+    const {nickname = ''} = user;
+    const {hasRight, currentUser, uid} = this.props;
     const disabled = !hasRight;
 
     switch (key) {
       case 'avatar':
         return (
           <div>
-            <div style={{ display: 'flex' }}>
+            <div style={{display: 'flex'}}>
               <InputUpload
                 placeholder="Введите сообщение"
                 onChange={this.onChange(key)}
                 value={value}
                 readOnly={disabled}
                 onUpload={(avatar: string) => {
-                  actions.notify({ message: 'Файл успешно загружен!' });
+                  actions.notify({message: 'Файл успешно загружен!'});
                   this.rawOnChange(key, avatar);
                 }}
               />
@@ -123,7 +123,7 @@ export class Settings extends React.Component<ISettingsProps, IUser> {
                 onConfirm={this.clearAvatar}
                 okText="Да"
                 cancelText="Нет"
-                icon={<ClearOutlined style={{ color: '#ff4d4f' }}/>}
+                icon={<ClearOutlined style={{color: '#ff4d4f'}}/>}
                 disabled={!value}
               >
                 <Button
@@ -138,7 +138,7 @@ export class Settings extends React.Component<ISettingsProps, IUser> {
               avatar={value}
               nickname={nickname || uid}
               size={128}
-              style={{ margin: '8px auto', display: 'block' }}
+              style={{margin: '8px auto', display: 'block'}}
             />
           </div>
         );
@@ -165,22 +165,22 @@ export class Settings extends React.Component<ISettingsProps, IUser> {
       case 'approved':
         return <>
           {(hasRight && (currentUser && currentUser.uid !== uid)) && (
-              <>
-                <Switch
-                    checked={!!value}
-                    onChange={(isAdmin: boolean) => this.rawOnChange(key, isAdmin)}
-                />
-              </>
+            <>
+              <Switch
+                checked={!!value}
+                onChange={(isAdmin: boolean) => this.rawOnChange(key, isAdmin)}
+              />
+            </>
           )}
           {value ? 'Активирован' : 'Не активирован'}
         </>;
 
       case 'aiApiKey': {
         const apiLink = 'https://platform.openai.com/account/api-keys'
-          return <Tooltip title={<a href={apiLink} target="_blank" rel="noreferrer">{apiLink}</a>}>
+        return <Tooltip title={<a href={apiLink} target="_blank" rel="noreferrer">{apiLink}</a>}>
           <Input
-              value={value}
-              onChange={this.onChange(key)}
+            value={value}
+            onChange={this.onChange(key)}
           />
         </Tooltip>
       }
@@ -189,12 +189,12 @@ export class Settings extends React.Component<ISettingsProps, IUser> {
         return <>
           {
             (hasRight && (currentUser && currentUser.uid !== uid)) &&
-            <>
-              <Switch
-                checked={!!value}
-                onChange={(isAdmin: boolean) => this.rawOnChange(key, isAdmin)}
-              />
-            </>
+              <>
+                  <Switch
+                      checked={!!value}
+                      onChange={(isAdmin: boolean) => this.rawOnChange(key, isAdmin)}
+                  />
+              </>
           }
           {value ? 'Имеются' : 'Отсутствуют'}
         </>;
@@ -214,6 +214,21 @@ export class Settings extends React.Component<ISettingsProps, IUser> {
             />
           </Tooltip>
         );
+
+      case 'theme':
+        return user && (
+          <Select
+            value={user.theme}
+            onChange={(theme => this.rawOnChange(key, theme, true))}
+          >
+            {['blue', 'red', 'volcano', 'orange', 'gold', 'yellow', 'lime', 'green', 'cyan', 'purple', 'magenta']
+              .map(color => (
+                <Select.Option value={color} key={color}>
+                  {color}
+                </Select.Option>
+              ))}
+          </Select>
+        )
 
       case 'enableDisabledFeatures':
         return currentUser && currentUser.uid === uid && (
@@ -254,6 +269,7 @@ export class Settings extends React.Component<ISettingsProps, IUser> {
     'avatar': 'Аватар',
     'nickname': 'Никнейм',
     'lastOnline': 'Последняя активность',
+    'theme': 'Цветовая тема',
     'isAdmin': 'Права админа',
     'uid': 'UID',
     'approved': 'Активирован',
@@ -264,7 +280,7 @@ export class Settings extends React.Component<ISettingsProps, IUser> {
   };
 
   getDeleteUser = () => {
-    const { currentUser, uid } = this.props;
+    const {currentUser, uid} = this.props;
 
     const showModal = () =>
       Modal.confirm({
@@ -273,7 +289,7 @@ export class Settings extends React.Component<ISettingsProps, IUser> {
         okText: '',
         cancelText: '',
         onOk: (close) => {
-          actions.fullDeleteUser({ uid });
+          actions.fullDeleteUser({uid});
           close();
         }
       });
