@@ -26,7 +26,7 @@ function* passItem(payload: IPayload) {
 
     if (!ignoreAmountCheck && !(item.type === 'weapon' && !to)) {
       // @ts-ignore
-      const removed = yield removeItem({ id, uid, amount: item.amount });
+      const removed = yield removeItem({ id, uid, amount: item.amount, time: item.time });
       if (!removed) {
         console.error(`passItem error:`, payload);
         actions.passItemFail({ id, uid });
