@@ -1,206 +1,213 @@
-import actions, { IPayload } from "../reducers/actions";
-import { all, select, takeLatest } from "redux-saga/effects";
-import { IMessage, IUser } from "../reducers/interfaces";
+import actions, {IPayload} from "../reducers/actions";
+import {all, select, takeLatest} from "redux-saga/effects";
+import {IMessage, IUser} from "../reducers/interfaces";
 import {base64ToUrl, uploadFile} from "../components/InputUpload";
 import {urlRegex} from "../helpers/utils";
 
 
-const AI_CONFIG = {
-    model: "text-davinci-003",
-    max_tokens: 2000,
-    temperature: 0.7,
-    top_p: 1,
-    n: 1,
-    stream: false,
-    logprobs: null,
-    stop: "\n\n",
+let AI_CONFIG = {
+  model: "text-davinci-003",
+  max_tokens: 2000,
+  temperature: 0.7,
+  top_p: 1,
+  n: 1,
+  stream: false,
+  logprobs: null,
+  stop: "\n\n",
 
-    SETTING_CONTEXT: `context: tabletop text roleplaying game in Fallout 2 setting. desert, dust, nevada, everyone armed and suspicious. you are GameMaster, make text adventures for players. world is dangerous and tricky. add challenge to players often\n\n`,
-    AI_UID: 'V59PbTTratf4XuFRg7lEnIQrtxf1',
+  SETTING_CONTEXT: `context: tabletop text roleplaying game in Fallout 2 setting. desert, dust, nevada, everyone armed and suspicious. you are GameMaster, make text adventures for players. world is dangerous and tricky. add challenge to players often\n\n`,
+  AI_UID: 'V59PbTTratf4XuFRg7lEnIQrtxf1',
+
+  imageSize: 256
 };
 
 // @ts-ignore
 window.ai = AI_CONFIG;
 
 const ai = localStorage.getItem('ai');
+if (ai) {
 // @ts-ignore
-if (ai) window.ai = JSON.parse(ai);
+  AI_CONFIG = window.ai = {
+    ...AI_CONFIG,
+    ...JSON.parse(ai)
+  };
+}
 
 function* getContext(IC: boolean, OOC: boolean) {
-    const messages: IMessage[] = yield select(({ messages }) => messages);
-    const users: IMessage[] = yield select(({ users }) => users);
+  const messages: IMessage[] = yield select(({messages}) => messages);
+  const users: IMessage[] = yield select(({users}) => users);
 
-    const contextMessages = [];
-    let tokens = 0;
+  const contextMessages = [];
+  let tokens = 0;
 
-    for (const message of messages) {
-        if ((IC && message.isRP) || (OOC && !message.isRP)) {
-            const nickPrefix = `${users[message.author].nickname}: `;
-            const fullPrefix = message.body.indexOf(nickPrefix) === 0 ? '' : nickPrefix;
-            const body = message.body.replace(urlRegex, '').trim(); // remove urls, AI doesnt need them
+  for (const message of messages) {
+    if ((IC && message.isRP) || (OOC && !message.isRP)) {
+      const nickPrefix = `${users[message.author].nickname}: `;
+      const fullPrefix = message.body.indexOf(nickPrefix) === 0 ? '' : nickPrefix;
+      const body = message.body.replace(urlRegex, '').trim(); // remove urls, AI doesnt need them
 
-            if (!body) continue; // dont send empty messages
+      if (!body) continue; // dont send empty messages
 
-            const text =`${fullPrefix}${body}`.trim();
-            tokens += text.split(' ').length * 6;
+      const text = `${fullPrefix}${body}`.trim();
+      tokens += text.split(' ').length * 6;
 
-            // @ts-ignore
-            if (tokens < window.ai.max_tokens / 2) {
-                contextMessages.push(`\n${text}`);
-            } else {
-                break;
-            }
-        }
+      // @ts-ignore
+      if (tokens < window.ai.max_tokens / 2) {
+        contextMessages.push(`\n${text}`);
+      } else {
+        break;
+      }
     }
+  }
 
-    contextMessages.push(AI_CONFIG.SETTING_CONTEXT);
+  contextMessages.push(AI_CONFIG.SETTING_CONTEXT);
 
-    const context = contextMessages.reverse().join('\n');
+  const context = contextMessages.reverse().join('\n');
 
-    console.log('ai context', context);
+  console.log('ai context', context);
 
-    return context.trim();
+  return context.trim();
 }
 
 function* sendMessageAI(payload: IPayload) {
-    const {
-        message = '',
-        IC = true,
-        OOC = true,
-        uid = AI_CONFIG.AI_UID,
-        setMessageInsteadCallback,
-    } = payload;
-    const context: string = yield getContext(IC, OOC);
-    const userData: IUser = yield select(({ users, userData }) => users[userData.uid]);
+  const {
+    message = '',
+    IC = true,
+    OOC = true,
+    uid = AI_CONFIG.AI_UID,
+    setMessageInsteadCallback,
+  } = payload;
+  const context: string = yield getContext(IC, OOC);
+  const userData: IUser = yield select(({users, userData}) => users[userData.uid]);
 
-    console.log(userData);
+  console.log(userData);
 
-    localStorage.setItem('ai', JSON.stringify(AI_CONFIG));
-    actions.setIsTyping({ isTyping: true, uid: AI_CONFIG.AI_UID });
+  localStorage.setItem('ai', JSON.stringify(AI_CONFIG));
+  actions.setIsTyping({isTyping: true, uid: AI_CONFIG.AI_UID});
 
-    console.log(!setMessageInsteadCallback, uid == AI_CONFIG.AI_UID);
-    const prefix = !setMessageInsteadCallback && uid == AI_CONFIG.AI_UID ? '\n\nGM: ' : ''; // ai must respond from face of self
+  console.log(!setMessageInsteadCallback, uid == AI_CONFIG.AI_UID);
+  const prefix = !setMessageInsteadCallback && uid == AI_CONFIG.AI_UID ? '\n\nGM: ' : ''; // ai must respond from face of self
 
-    try {
-        const response: Response = yield fetch("https://api.openai.com/v1/completions", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                "Authorization": `Bearer ${userData.aiApiKey}`,
-            },
-            body: JSON.stringify({
-                ...AI_CONFIG,
-                SETTING_CONTEXT: undefined,
-                AI_UID: undefined,
-                prompt: `${context}${prefix}${message}`,
-            })
+  try {
+    const response: Response = yield fetch("https://api.openai.com/v1/completions", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${userData.aiApiKey}`,
+      },
+      body: JSON.stringify({
+        ...AI_CONFIG,
+        SETTING_CONTEXT: undefined,
+        AI_UID: undefined,
+        prompt: `${context}${prefix}${message}`,
+      })
+    });
+
+    const result: { choices: [{ text: string }] } = yield response.json();
+
+    console.log('ai message response', result);
+
+    const choices = result.choices;
+    const choice = choices[Math.floor(Math.random() * choices.length)];
+
+    const text = `${message}${choice.text}`.trim();
+
+    if (setMessageInsteadCallback)
+      setMessageInsteadCallback(text)
+    else {
+      if (!choice.text)
+        actions.notify({message: "ИИ нечего сказать"})
+      else
+        actions.sendMessage({
+          uid,
+          message: text,
         });
-
-        const result: { choices: [ {text: string } ] } = yield response.json();
-
-        console.log('ai message response', result);
-
-        const choices = result.choices;
-        const choice = choices[Math.floor(Math.random() * choices.length)];
-
-        const text = `${message}${choice.text}`.trim();
-
-        if (setMessageInsteadCallback)
-            setMessageInsteadCallback(text)
-        else {
-            if (!choice.text)
-                actions.notify({ message: "ИИ нечего сказать" })
-            else
-            actions.sendMessage({
-                uid,
-                message: text,
-            });
-        }
-
-        actions.sendMessageAiSuccess({});
-    } catch(error) {
-        actions.sendMessageAiFail({});
-        console.error(error);
-        actions.notify({ message: "ИИ ошибка, смотри консоль " + JSON.stringify(error)});
     }
 
-    actions.setIsTyping({ isTyping: false, uid: AI_CONFIG.AI_UID });
-    return true;
+    actions.sendMessageAiSuccess({});
+  } catch (error) {
+    actions.sendMessageAiFail({});
+    console.error(error);
+    actions.notify({message: "ИИ ошибка, смотри консоль " + JSON.stringify(error)});
+  }
+
+  actions.setIsTyping({isTyping: false, uid: AI_CONFIG.AI_UID});
+  return true;
 }
 
 function dataURLtoFile(dataurl: string, filename: string) {
-    var arr = dataurl.split(','), mime = 'image',
-        bstr = atob(arr[1]), n = bstr.length, u8arr = new Uint8Array(n);
-    while(n--){
-        u8arr[n] = bstr.charCodeAt(n);
-    }
-    return new File([u8arr], filename, {type:mime});
+  var arr = dataurl.split(','), mime = 'image',
+    bstr = atob(arr[1]), n = bstr.length, u8arr = new Uint8Array(n);
+  while (n--) {
+    u8arr[n] = bstr.charCodeAt(n);
+  }
+  return new File([u8arr], filename, {type: mime});
 }
 
 function* sendMessagePhotoAI(payload: IPayload) {
-    const {
-        message,
-        // uid,
-        setMessageInsteadCallback
-    } = payload;
+  const {
+    message,
+    // uid,
+    setMessageInsteadCallback
+  } = payload;
 
-    console.log(message);
-    const userData: IUser = yield select(({ users, userData }) => users[userData.uid]);
+  console.log(message);
+  const userData: IUser = yield select(({users, userData}) => users[userData.uid]);
 
-    actions.setIsTyping({ isTyping: true, uid: AI_CONFIG.AI_UID });
-    setMessageInsteadCallback(message);
-    try {
-        const response: Response = yield fetch("https://api.openai.com/v1/images/generations", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                "Authorization": `Bearer ${userData.aiApiKey}`,
-            },
-            body: JSON.stringify({
-                prompt: message,
-                response_format: 'b64_json',
-                size: '256x256'
-            })
-        });
+  actions.setIsTyping({isTyping: true, uid: AI_CONFIG.AI_UID});
+  setMessageInsteadCallback(message);
+  try {
+    const response: Response = yield fetch("https://api.openai.com/v1/images/generations", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${userData.aiApiKey}`,
+      },
+      body: JSON.stringify({
+        prompt: message,
+        response_format: 'b64_json',
+        size: `${AI_CONFIG.imageSize}x${AI_CONFIG.imageSize}`//'256x256'
+      })
+    });
 
-        const result: { data: [ {b64_json: string } ], error: any } = yield response.json();
+    const result: { data: [{ b64_json: string }], error: any } = yield response.json();
 
-        console.log('ai message response', result);
+    console.log('ai message response', result);
 
-        const data = result.data;
-        if (!data)
-            throw result.error;
+    const data = result.data;
+    if (!data)
+      throw result.error;
 
-        const b64_json = data[Math.floor(Math.random() * data.length)].b64_json;
-        console.log(b64_json);
+    const b64_json = data[Math.floor(Math.random() * data.length)].b64_json;
+    console.log(b64_json);
 
-        // const res: Response = yield call(fetch, url);
-        // const buffer: ArrayBuffer = yield call(res.arrayBuffer);
-        // const file: File = new File([buffer], message, {type: 'image'});
-        const file: File = dataURLtoFile(base64ToUrl(b64_json), 'a.png');
+    // const res: Response = yield call(fetch, url);
+    // const buffer: ArrayBuffer = yield call(res.arrayBuffer);
+    // const file: File = new File([buffer], message, {type: 'image'});
+    const file: File = dataURLtoFile(base64ToUrl(b64_json), 'a.png');
 
-        uploadFile(file, (imgurLink: string) => {
-            setMessageInsteadCallback(imgurLink);
-            actions.sendMessagePhotoAiSuccess({});
-        }, () => {
-            setMessageInsteadCallback(message);
-            actions.sendMessagePhotoAiSuccess({});
-        })
+    uploadFile(file, (imgurLink: string) => {
+      setMessageInsteadCallback(imgurLink);
+      actions.sendMessagePhotoAiSuccess({});
+    }, () => {
+      setMessageInsteadCallback(message);
+      actions.sendMessagePhotoAiSuccess({});
+    })
 
-        // uploadFile
-    } catch(error) {
-        actions.sendMessagePhotoAiFail({});
-        console.error(error);
-        actions.notify({ message: "ИИ ошибка, смотри консоль " + JSON.stringify(error)});
-    }
-    actions.setIsTyping({ isTyping: false, uid: AI_CONFIG.AI_UID });
+    // uploadFile
+  } catch (error) {
+    actions.sendMessagePhotoAiFail({});
+    console.error(error);
+    actions.notify({message: "ИИ ошибка, смотри консоль " + JSON.stringify(error)});
+  }
+  actions.setIsTyping({isTyping: false, uid: AI_CONFIG.AI_UID});
 
-    return true;
+  return true;
 }
 
 export default function* watchForActions() {
-    yield all([
-        takeLatest('SEND_MESSAGE_AI', sendMessageAI),
-        takeLatest('SEND_MESSAGE_PHOTO_AI', sendMessagePhotoAI),
-    ]);
+  yield all([
+    takeLatest('SEND_MESSAGE_AI', sendMessageAI),
+    takeLatest('SEND_MESSAGE_PHOTO_AI', sendMessagePhotoAI),
+  ]);
 }
